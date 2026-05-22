@@ -33,23 +33,25 @@ El sistema está configurado actualmente para funcionar con datos estáticos inc
 
 3. Generar el cliente de Prisma:
     ```bash
-    pnpm prisma generate
+    pnpm build
     ```
 
 4. Iniciar el servidor en modo desarrollo:
     ```bash
-    pnpm dev
+    pnpm --filter backend dev
     ```
 
 El servidor estará disponible en http://localhost:3001.
 
 ## Endpoints Disponibles
-- GET `/api/health`: Estado de salud de la API.
-- GET `/api/secciones`: Lista de secciones de aprendizaje (Economía Doméstica, Construcción, etc).
-- GET `/api/secciones/:id`: Detalle de una sección específica incluyendo sus escenarios.
-- GET `/api/secciones/:id/escenarios`: Lista de escenarios para una sección.
-- GET `/api/secciones/:id/escenarios/:escenarioId`: Detalle de un escenario con sus ejercicios mockeados.
-- POST `/api/usuarios/registro`: Registro de nuevos usuarios o sincronización de perfil.
+- `GET /api/health`: Estado de salud de la API.
+- `GET /api/secciones`: Lista de secciones de aprendizaje (Economía Doméstica, Construcción, etc).
+- `GET /api/secciones/:id`: Detalle de una sección específica incluyendo sus escenarios.
+- `GET /api/secciones/:id/escenarios`: Lista de escenarios para una sección.
+- `GET /api/secciones/:id/escenarios/:escenarioId`: Detalle de un escenario con sus ejercicios mockeados.
+- `POST /api/usuarios/registro`: Registro de nuevos usuarios o sincronización de perfil.
+- `PUT /api/usuarios/perfil`: Actualizaciones de nombre o preferencias del usuario.
+- `POST /api/progreso`: Envíar respuestas del usuario, calcula los puntos (Tk) y devuelve el feedback de la IA, si se implementa.
 
 ## Transición a base de datos externa
 El código cuenta con lógica "dormida" lista para activar.
@@ -64,21 +66,35 @@ Para activar la base de datos:
 ## Estructura del Proyecto
 
 ```text
-proyecto-matematicas-grupo8/ (Raíz Monorepo)
-├── Back-End/
+proyecto-matematicas-grupo8/        # Directorio principal del proyecto
+├── Back-End/                       # Espacio para desarrollo de lógica
+|   ├── (node_modules/)             # Dependencias instaladas por pnpm (no en la nube)
 │   ├── prisma/
-│   │   ├── schema.prisma           # Modelos de datos (PostgreSQL)
+│   │   ├── schema.prisma           # Modelos de datos
 │   │   └── seed.js                 # Script de población
 │   ├── src/
 │   │   ├── config/
 │   │   │   └── prisma.js           # Configuración Prisma y adaptador
-│   │   ├── controllers/            # Lógica de negocio (Mock/Real)
+│   │   ├── controllers/            # Lógica de negocio
+│   │   │   ├── escenario.controller.js
+│   │   │   ├── seccion.controller.js
+│   │   │   └── usuarios.controller.js
 │   │   ├── routes/                 # Definición de endpoints
+│   │   │   ├── api.routes.js
+│   │   │   ├── seccion.routes.js
+│   │   │   └── usuarios.routes.js
 │   │   └── app.js                  # Punto de entrada Express
-│   ├── .env                        # Variables de entorno
-│   └── package.json
+│   ├── .env.example                # Representativo de variables de entorno
+│   ├── (.env)                        # Variables de entorno (no en la nube)
+│   └── package.json                # Scripts de pnpm para el Back End
 ├── Front-End/                      # Espacio para desarrollo de interfaz
+|   ├── (node_modules/)             # Dependencias instaladas por pnpm (no en la nube)
+|   └── package.json                # Scripts de pnpm para el Front End
+├── (node_modules/)                 # Dependencias instaladas por pnpm (no en la nube)
+├── .gitignore                      # Archivos ignorados por Git
 ├── package.json                    # Scripts globales de pnpm
+├── README.md                       # Descripción general del proyecto
+├── pnpm-lock.yaml                  # Configuración de dependencias
 └── pnpm-workspace.yaml             # Definición de paquetes del monorepo
 ```
 
@@ -87,10 +103,11 @@ proyecto-matematicas-grupo8/ (Raíz Monorepo)
 ```mermaid
 
 erDiagram
-USUARIO ||--o{ PROGRESO : registra
-USUARIO ||--o{ SECCION : escala_de_dificultad
+USUARIO ||--o{ PROGRESO : "registra"
+USUARIO ||--o{ RECURSO : "obtiene"
 USUARIO }o--o{ INSIGNIA : gana
-SECCION ||--o{ ESCENARIOS : contiene
+SECCION ||--o{ ESCENARIO : "contiene"
+SECCION ||--o| RECURSO : "desbloquea"
 ESCENARIOS ||--o{ INSIGNIA : valída
 ESCENARIO ||--o{ PROGRESO : evaluado_en
 
@@ -102,6 +119,13 @@ ESCENARIO ||--o{ PROGRESO : evaluado_en
 ```mermaid
 
 classDiagram
+    class Seccion {
+        +Int id
+        +String nombre
+        +String descripcion
+        +Int nivel
+        +Int grado
+    }
     class Usuario {
         +String id
         +String email
@@ -109,39 +133,30 @@ classDiagram
         +Int puntos
         +DateTime createdAt
     }
-    class Sección {
+    class Escenario {
         +Int id
         +String titulo
         +String descripcion
-        +Int nivel
-        +String categoria
-    }
-    class Escenario {
-        +Int id
-        +String tipo
         +String pregunta
-        +String respuesta
-        +List opciones
         +String explicacion
+        +String categoria
     }
     class Progreso {
         +Int id
-        +Boolean completada
+        +Boolean resuelto
         +Int intentosFallidos
-        +Int vecesCompletada
         +DateTime updatedAt
     }
     class Insignia {
         +String id
         +String nombre
         +String descripcion
-        +String tipo
     }
 
-    Usuario "1" -- "*" Progreso : registra
+    Usuario "1" -- "*" Progreso : "registra"
     Usuario "*" -- "*" Insignia : gana
-    Sección "1" -- "*" Escenario : contiene
-    Escenario "1" -- "*" Progreso : evaluado_en
+    Seccion "1" -- "*" Escenario : "contiene"
+    Escenario "1" -- "*" Progreso : "evaluado_en"
 
 ```
 
