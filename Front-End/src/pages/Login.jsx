@@ -9,11 +9,14 @@ import {
     Toast,
     ToastContainer
 } from 'react-bootstrap';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
+import { useAuth } from '../context/AuthContext';
 
 // Hook personalizado para manejar el estado del formulario de inicio de sesión
 const useLoginForm = () => {
     const navigate = useNavigate();
+    const location = useLocation();
+    const { login } = useAuth();
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [showToast, setShowToast] = useState(false);
@@ -53,6 +56,9 @@ const useLoginForm = () => {
         // Simulamos una autenticación exitosa
         console.log('Intentando iniciar sesión con:', { email, password });
 
+        const redirectPath = location.state?.from || '/dashboard';
+        login({ email });
+
         // Simulación de respuesta del servidor (éxito)
         setToastMessage('✅ ¡Inicio de sesión exitoso! Redirigiendo...');
         setToastVariant('success');
@@ -63,9 +69,17 @@ const useLoginForm = () => {
             setEmail('');
             setPassword('');
             // Aquí podrías redirigir al usuario a otra página
-            navigate('/dashboard');
+            navigate(redirectPath, { replace: true });
         }, 2000);
     };
+
+    const handleSocialLogin = (provider) => {
+        // Aquí podrías agregar lógica para manejar el inicio de sesión con redes sociales
+        setToastMessage(`🔗 Iniciando sesión con ${provider}...`);
+        setToastVariant('info');
+        login({ email: `${provider}@example.com` });
+        setShowToast(true);
+    }
 
     return {
         email,
@@ -74,7 +88,8 @@ const useLoginForm = () => {
         toastMessage,
         toastVariant,
         handleChangeValue,
-        handleSubmit
+        handleSubmit,
+        handleSocialLogin
     };
 }
 
@@ -86,7 +101,8 @@ const LoginPage = () => {
         toastMessage,
         toastVariant,
         handleChangeValue,
-        handleSubmit
+        handleSubmit,
+        handleSocialLogin
     } = useLoginForm();
 
     useEffect(() => {
@@ -171,11 +187,11 @@ const LoginPage = () => {
                                             O continúa con
                                         </p>
                                         <div className="d-flex gap-2 justify-content-center mt-3">
-                                            <Button variant="outline-secondary" className="flex-grow-1">
-                                                Google
+                                            <Button onClick={() => handleSocialLogin('facebook')} variant="outline-secondary" className="flex-grow-1">
+                                                Facebook
                                             </Button>
-                                            <Button variant="outline-secondary" className="flex-grow-1">
-                                                GitHub
+                                            <Button onClick={() => handleSocialLogin('google')} variant="outline-secondary" className="flex-grow-1">
+                                                Google
                                             </Button>
                                         </div>
                                     </div>

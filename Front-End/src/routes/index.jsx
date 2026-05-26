@@ -1,6 +1,5 @@
-import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, Navigate, useLocation } from 'react-router-dom';
 
-import Login from '../pages/Login';
 import Register from '../pages/Register';
 
 import Home from '../pages/Home';
@@ -8,16 +7,22 @@ import Dashboard from '../pages/Dashboard.jsx';
 import Profile from '../pages/Profile';
 import NotFound from '../pages/NotFound';
 import LoginPage from '../pages/Login';
+import { useAuth } from '../context/AuthContext';
 
 // Componente para proteger rutas autenticadas
 const ProtectedRoute = ({ children }) => {
-    const isAuthenticated = false;
-    return isAuthenticated ? children : <Navigate to="/login" />;
+    const { isAuthenticated } = useAuth();
+    const location = useLocation();
+
+    return isAuthenticated
+        ? children
+        : <Navigate to="/login" replace state={{ from: location.pathname }} />;
 };
 
 // Componente para redireccionar si ya está autenticado
 const PublicRoute = ({ children }) => {
-    const isAuthenticated = false;
+    const { isAuthenticated } = useAuth();
+
     return !isAuthenticated ? children : <Navigate to="/dashboard" />;
 };
 
