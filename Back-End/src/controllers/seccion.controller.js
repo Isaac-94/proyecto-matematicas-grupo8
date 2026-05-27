@@ -1,19 +1,24 @@
 import prisma from '../config/prisma.js';
 
-const seccionesMockData = [
-    { id: 1, nombre: 'Economía Doméstica', descripcion: 'Gestión de gastos, descuentos y presupuestos familiares.', nivel: 1 },
-    { id: 2, nombre: 'Taller y Construcción', descripcion: 'Cálculos de áreas, perímetros y materiales para reformas.', nivel: 2 }
-];
-
 export const getSecciones = async (req, res) => {
+    const { usuarioId } = req.query;
     try {
-        if (process.env.DB_MODE === 'MOCK') {
-            return res.json(seccionesMockData);
+        let tokensUsuario = 0;
+        if (usuarioId) {
+            const usuario = await prisma.usuario.findUnique({
+                where: { id: usuarioId },
+                select: { tokens: true }
+            });
+            tokensUsuario = usuario?.tokens || 0;
         }
         const secciones = await prisma.seccion.findMany({
             include: { escenarios: true }
         });
-        return res.json(secciones);
+        const seccionesConEstado = secciones.map(s => ({
+            ...s,
+            estaDesbloqueada: tokensUsuario >= s.puntosRequeridos
+        }));
+        return res.json(seccionesConEstado);
     } catch (error) {
         return res.status(500).json({ error: 'Error al obtener las secciones' });
     }
@@ -22,27 +27,52 @@ export const getSecciones = async (req, res) => {
 export const getSeccionById = async (req, res) => {
     const { id } = req.params;
     try {
-        if (process.env.DB_MODE === 'MOCK') {
-            const seccion = {
-                id: parseInt(id),
-                nombre: 'Economía Doméstica',
-                descripcion: 'Gestión de gastos, descuentos y presupuestos familiares.',
-                nivel: 1,
-                escenarios: [
-                    { id: 1, titulo: 'La Compra Mensual', descripcion: 'Optimizando el carrito del súper con ofertas y cuotas.', categoria: 'Aritmética' }
-                ]
-            };
-            return res.json(seccion);
-        }
         const seccion = await prisma.seccion.findUnique({
             where: { id: parseInt(id) },
             include: { escenarios: true }
         });
-        if (!seccion) {
-            return res.status(404).json({ error: 'Sección no encontrada' });
-        }
+        if (!seccion) return res.status(404).json({ error: 'Sección no encontrada' });
         return res.json(seccion);
     } catch (error) {
         return res.status(500).json({ error: 'Error al obtener la sección' });
+    }
+};
+
+export const crearSeccion = async (req, res) => {
+    const { nombre, descripcion, grado, puntosRequeridos, puntosRecompensa, umbralAprobacion } = req.body;
+    try {
+        const nuevaSeccion = await prisma.seccion.create({
+            data: { nombre, descripcion, grado, puntosRequeridos, puntosRecompensa, umbralAprobacion }
+        });
+
+        return res.status(201).json(nuevaSeccion);
+    } catch (error) {
+        return res.status(500).json({ error: 'Error al crear la sección' });
+    }
+};
+
+export const eliminarSeccion = async (req, res) => {
+    const { id } = req.params;
+    try {
+        await prisma.seccion.delete({ where: { id: parseInt(id) } });
+
+        return res.status(204).send();
+    } catch (error) {
+        return res.status(500).json({ error: 'Error al eliminar la sección' });
+    }
+};
+
+export const actualizarSeccion = async (req, res) => {
+    const { id } = req.params;
+    const { nombre, descripcion, grado, umbralAprobacion, puntosRecompensa, puntosRequeridos } = req.body;
+    try {
+        const seccion = await prisma.seccion.update({
+            where: { id: parseInt(id) },
+            data: { nombre, descripcion, grado, umbralAprobacion, puntosRecompensa, puntosRequeridos }
+        });
+
+        return res.json(seccion);
+    } catch (error) {
+        return res.status(500).json({ error: 'Error al actualizar la sección' });
     }
 };

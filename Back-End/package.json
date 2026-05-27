@@ -5,6 +5,8 @@
   "main": "src/app.js",
   "scripts": {
     "dev": "nodemon",
+    "dev:local": "cross-env DATA_SOURCE=MOCK nodemon",
+    "dev:db": "cross-env DATA_SOURCE=DB nodemon",
     "start": "node src/app.js",
     "build": "prisma generate",
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -14,23 +16,18 @@
   "license": "ISC",
   "type": "module",
   "dependencies": {
-    "@prisma/adapter-pg": "7.8.0",
-    "@prisma/client": "7.8.0",
+    "@google/generative-ai": "0.24.1",
+    "@prisma/client": "6.4.1",
+    "@supabase/supabase-js": "2.48.1",
     "dotenv": "17.4.2",
-    "express": "5.2.1",
-    "pg": "8.13.3"
+    "express": "5.2.1"
   },
   "devDependencies": {
+    "cross-env": "7.0.3",
     "nodemon": "3.1.14",
-    "prisma": "7.8.0"
+    "prisma": "6.4.1"
   },
   "prisma": {
     "seed": "node prisma/seed.js"
-  },
-  "pnpm": {
-    "onlyBuiltDependencies": [
-      "@prisma/engines",
-      "prisma"
-    ]
   }
 }

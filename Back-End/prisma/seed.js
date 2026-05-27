@@ -1,43 +1,89 @@
-import { PrismaClient } from '@prisma/client';
+import prisma from '../src/config/prisma.js';
+import fs from 'fs';
+import path from 'path';
+import { fileURLToPath } from 'url';
 
-const prisma = new PrismaClient();
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+const readCSV = (fileName) => {
+    const filePath = path.join(__dirname, '../data', fileName);
+    const content = fs.readFileSync(filePath, 'utf-8');
+    const lines = content.split('\n').filter(line => line.trim() !== '');
+    const headers = lines[0].split(',').map(h => h.trim());
+    return lines.slice(1).map(line => {
+        const values = line.split(',');
+        if (values.length < headers.length) return null;
+        return headers.reduce((obj, header, index) => {
+            obj[header.trim()] = values[index]?.trim();
+            return obj;
+        }, {});
+    }).filter(row => row !== null && row.id && !row.id.startsWith('`'));
+};
 
 async function main() {
-    await prisma.seccion.create({
-        data: {
-            nombre: 'Economía Doméstica',
-            descripcion: 'Repaso de sumas y restas básicas.',
-            nivel: 1,
-            grado: 1,
-            puntosRequeridos: 0,
-            escenarios: {
-                create: [
-                    {
-                        titulo: 'La Compra Mensual',
-                        descripcion: 'Optimizando el presupuesto del hogar.',
-                        pregunta: '¿Cuánto es 15 + 27?',
-                        explicacion: 'Al sumar 15 y 27: 5+7 es 12 (me llevo 1), y 1+2+(1 que me llevaba) es 4. Resultado: 42.',
-                        categoria: 'Aritmética',
-                        opciones: {
-                            create: [
-                                { texto: '32', puntos: 0 },
-                                { texto: '42', puntos: 10 },
-                                { texto: '45', puntos: 0 },
-                                { texto: '52', puntos: 0 }
-                            ]
-                        }
-                    }
-                ]
+    const secciones = readCSV('secciones.csv');
+    for (const s of secciones) {
+        await prisma.seccion.upsert({
+            where: { id: parseInt(s.id) },
+            update: {
+                grado: parseInt(s.grado),
+                puntosRequeridos: parseInt(s.puntosRequeridos),
+                puntosRecompensa: parseInt(s.puntosRecompensa),
+                umbralAprobacion: parseFloat(s.umbralAprobacion) || 0.66
+            },
+            create: {
+                id: parseInt(s.id),
+                nombre: s.nombre,
+                descripcion: s.descripcion,
+                grado: parseInt(s.grado),
+                puntosRequeridos: parseInt(s.puntosRequeridos),
+                puntosRecompensa: parseInt(s.puntosRecompensa),
+                umbralAprobacion: parseFloat(s.umbralAprobacion) || 0.66
             }
-        }
-    });
+        });
+    }
+
+    const escenarios = readCSV('escenarios.csv');
+    for (const e of escenarios) {
+        await prisma.escenario.upsert({
+            where: { id: parseInt(e.id) },
+            update: {},
+            create: {
+                id: parseInt(e.id),
+                titulo: e.titulo,
+                descripcion: e.descripcion,
+                pregunta: e.pregunta,
+                explicacion: e.explicacion,
+                categoria: e.categoria,
+                seccionId: parseInt(e.seccionId)
+            }
+        });
+    }
+
+    const usuarios = readCSV('usuarios.csv');
+    for (const u of usuarios) {
+        await prisma.usuario.upsert({
+            where: { email: u.email },
+            update: {},
+            create: {
+                id: u.id,
+                email: u.email,
+                nombre: u.nombre,
+                rol: u.rol,
+                puntos: parseInt(u.puntos) || 0,
+                tokens: 0,
+                racha: parseInt(u.racha) || 0
+            }
+        });
+    }
 
     console.log('Base de datos poblada con éxito');
 }
 
 main()
     .catch((e) => {
-        console.error(e);
+        console.error('Error en el seeding:', e);
         process.exit(1);
     })
     .finally(async () => {

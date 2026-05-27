@@ -1,27 +1,32 @@
 import prisma from '../config/prisma.js';
 
 export const registrarUsuario = async (req, res) => {
-    const { uid, email, nombre } = req.body;
+    const uid = req.user.id;
+    const { email, nombre } = req.body;
+
+    if (!email) {
+        return res.status(400).json({ error: 'El email es requerido para el registro' });
+    }
+
+    const normalizedEmail = email.trim().toLowerCase();
+    const adminEmails = process.env.ADMIN_EMAILS
+        ? process.env.ADMIN_EMAILS.split(',').map(e => e.trim().toLowerCase())
+        : [];
+
+    const rolAsignado = adminEmails.includes(normalizedEmail) ? 'admin' : 'usuario';
+
     try {
-        if (process.env.DB_MODE === 'MOCK') {
-            const mockUsuario = {
-                id: uid || 'mock-id-123',
-                email: email || 'usuario@mock.com',
-                nombre: nombre || 'Usuario Mock',
-                puntos: 0,
-                rol: 'usuario',
-                createdAt: new Date().toISOString()
-            };
-            return res.status(201).json(mockUsuario);
-        }
         const usuario = await prisma.usuario.upsert({
             where: { id: uid },
-            update: { nombre },
+            update: {
+                nombre,
+                rol: rolAsignado
+            },
             create: {
                 id: uid,
-                email,
+                email: normalizedEmail,
                 nombre,
-                rol: 'usuario'
+                rol: rolAsignado
             }
         });
         res.status(201).json(usuario);
@@ -31,18 +36,10 @@ export const registrarUsuario = async (req, res) => {
 };
 
 export const actualizarPerfil = async (req, res) => {
-    const { uid, nombre } = req.body;
+    const uid = req.user.id;
+    const { nombre } = req.body;
 
     try {
-        if (process.env.DB_MODE === 'MOCK') {
-            return res.status(200).json({
-                id: uid,
-                email: 'mock@user.com',
-                nombre,
-                puntos: 100,
-                rol: 'usuario'
-            });
-        }
         const usuario = await prisma.usuario.update({
             where: {
                 id: uid

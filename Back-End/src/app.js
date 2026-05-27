@@ -6,6 +6,12 @@ import prisma from './config/prisma.js';
 const app = express();
 const PORT = process.env.PORT || 3001;
 
+const isGeminiMissing = !process.env.GOOGLE_API_KEY || process.env.GOOGLE_API_KEY === 'api_key';
+
+if (isGeminiMissing) {
+    console.log('\x1b[33m%s\x1b[0m', 'Atención: están faltando las Keys de permiso y GeminiCli no va a dar las respuestas automatizadas, solo hay que agregar la API Key GRATUITA que encontrás en tu cuenta de Google en Google Studio.');
+}
+
 app.use(express.json());
 
 app.use('/api', apiRoutes);
