@@ -1,12 +1,15 @@
+import { Container } from 'react-bootstrap';
+import { useNavigate } from 'react-router-dom';
+import FirstSection from '../components/layouts/Onboarding/FirstSection';
 
 
 
 function Onboarding() {
+  const navigate = useNavigate();
   return (
     <div className="onboarding">
-      <h1>Bienvenido a Mate+</h1>
-      <p>Por favor sigue los pasos para completar tu proceso de registro.</p>
-      {/* Add your onboarding steps and content here */}
+      <FirstSection />
+     
     </div>
   );
 }
