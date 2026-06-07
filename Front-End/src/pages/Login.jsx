@@ -7,11 +7,16 @@ import {
     Button,
     Card,
     Toast,
-    ToastContainer
+    ToastContainer,
+    InputGroup
 } from 'react-bootstrap';
+import { FaEye, FaEyeSlash } from 'react-icons/fa';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { axiosInstance } from '../services/index';
+
+import Background from "../Images/fondo2.png";
+import Login from "../Images/started/login.png"
 
 // Hook personalizado para manejar el estado del formulario de inicio de sesión
 const useLoginForm = () => {
@@ -106,6 +111,8 @@ const useLoginForm = () => {
 }
 
 const LoginPage = () => {
+    const navigate = useNavigate();
+    const [showPassword, setShowPassword] = useState(false);
     const {
         email,
         password,
@@ -128,85 +135,86 @@ const LoginPage = () => {
             <Container fluid className="vh-100 vw-100 p-0 m-0">
                 <Row className="h-100 g-0">
                     {/* Columna lateral izquierda */}
-                    <Col md={6} className="bg-primary d-none d-md-flex align-items-center justify-content-center text-white">
-                        <div className="text-center p-5">
-                            <h1 className="display-4 mb-4 font-weight-bold">Bienvenido</h1>
-                            <p className="lead">Accede a tu cuenta y gestiona todo desde un solo lugar</p>
-                        </div>
+                    <Col
+                        md={6}
+                        className="d-none d-md-flex align-items-center justify-content-center text-white"
+                        style={{
+                            backgroundImage: `url(${Background})`,
+                            backgroundSize: 'cover',
+                            backgroundPosition: 'center',
+                            height: '100vh'
+                        }}
+                    >
+                        <img src={Login} alt="Login" style={{ width: 400, height: 400 }} />
                     </Col>
 
                     {/* Columna derecha - Formulario */}
                     <Col md={6} className="d-flex align-items-center justify-content-center bg-light">
                         <Card className="border-0 bg-transparent" style={{ width: '100%', maxWidth: '400px' }}>
-                            <Card.Body className="p-4">
+                            <Card.Body className="p-0">
                                 <div className="text-center mb-4">
-                                    <h2 className="mb-3">Iniciar Sesión</h2>
-                                    <p className="text-muted">
+                                    <h1 className="mb-3 fw-bold" style={{ color: "#2D3E4E" }}>Bienvenido a MATE+</h1>
+                                    <p style={{ color: "#2D3E4E", fontSize: "1.25rem" }}>
                                         ¿No tienes una cuenta?{' '}
-                                        <Link to="/register" className="text-primary text-decoration-none">
+                                        <Link to="/register" style={{ color: "#31C976" }} className="text-decoration-none">
                                             Regístrate
                                         </Link>
                                     </p>
                                 </div>
 
                                 <Form onSubmit={handleSubmit}>
-                                    <Form.Group className="mb-2">
-                                        <Form.Label>Correo electrónico</Form.Label>
+                                    <Form.Group className="mb-4">
                                         <Form.Control
                                             type="email"
-                                            placeholder="nombre@empresa.com"
+                                            placeholder="Correo electrónico"
                                             size="lg"
                                             onChange={handleChangeValue}
                                             name="email"
                                             value={email}
+                                            className="border-0 border-bottom rounded-0 ps-0 pl-2"
+                                            style={{ boxShadow: 'none', backgroundColor: "transparent" }}
+                                            onFocus={(e) => e.target.style.borderColor = '#0d6efd'}
+                                            onBlur={(e) => e.target.style.borderColor = '#dee2e6'}
                                         />
                                     </Form.Group>
 
                                     <Form.Group className="mb-4">
-                                        <Form.Label>Contraseña</Form.Label>
-                                        <Form.Control
-                                            type="password"
-                                            placeholder="••••••••"
-                                            size="lg"
-                                            onChange={handleChangeValue}
-                                            name="password"
-                                            value={password}
-                                        />
+                                        <InputGroup>
+                                            <Form.Control
+                                                type={showPassword ? "text" : "password"}
+                                                placeholder="Ingresa tu contraseña"
+                                                size="lg"
+                                                onChange={handleChangeValue}
+                                                name="password"
+                                                value={password}
+                                                className="border-0 border-bottom rounded-0 ps-0"
+                                                style={{ boxShadow: 'none', backgroundColor: "transparent" }}
+                                            />
+                                            <InputGroup.Text
+                                                onClick={() => setShowPassword(!showPassword)}
+                                                style={{
+                                                    cursor: 'pointer',
+                                                    background: 'transparent',
+                                                    border: 'none',
+                                                    borderBottom: '2px solid #dee2e6',
+                                                    borderRadius: 0
+                                                }}
+                                            >
+                                                {showPassword ? <FaEyeSlash size={20} /> : <FaEye size={20} />}
+                                            </InputGroup.Text>
+                                        </InputGroup>
                                     </Form.Group>
 
-                                    <div className="d-flex flex-column flex-md-row justify-content-between align-items-md-center mb-4 gap-2">
-                                        <Form.Check
-                                            type="checkbox"
-                                            label="Recordarme"
-                                            className="order-md-1"
-                                        />
-                                        <Link to="/forgot-password" className="text-decoration-none order-md-2">
-                                            ¿Olvidaste tu contraseña?
-                                        </Link>
-                                    </div>
-
-                                    <Button
-                                        variant="primary"
-                                        type="submit"
-                                        size="lg"
-                                        className="w-100 mb-3"
-                                    >
-                                        Ingresar
-                                    </Button>
-
-                                    <div className="text-center">
-                                        <hr className="my-2" />
-                                        <p className="text-muted mb-0">
-                                            O continúa con
-                                        </p>
-                                        <div className="d-flex gap-2 justify-content-center mt-3">
-                                            <Button onClick={() => handleSocialLogin('facebook')} variant="outline-secondary" className="flex-grow-1">
-                                                Facebook
-                                            </Button>
-                                            <Button onClick={() => handleSocialLogin('google')} variant="outline-secondary" className="flex-grow-1">
-                                                Google
-                                            </Button>
-                                        </div>
+                                    <div className="d-flex flex-column gap-3">
+                                        <Button
+                                            variant="primary"
+                                            size="lg"
+                                            className="w-100 py-2 rounded-pill fw-semibold"
+                                            style={{ backgroundColor: "#31C976", borderColor: "#31C976", borderRadius: "35px" }}
+                                            onClick={handleSubmit}
+                                        >
+                                            Iniciar Sesión
+                                        </Button>
                                     </div>
                                 </Form>
                             </Card.Body>
