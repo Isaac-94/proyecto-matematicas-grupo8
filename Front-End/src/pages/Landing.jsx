@@ -40,7 +40,7 @@ const Landing = () => {
     };
 
     return (
-        <Container ref={containerRef} fluid className="p-0 m-0 overflow-auto overflow-x-hidden">
+        <Container ref={containerRef} fluid className="p-0 m-0 overflow-auto overflow-x-hidden" style={{ backgroundColor: "#F0F1EB"}}>
             <Header />
             <FirstSection navigate={navigate} />
             <SecondSection />

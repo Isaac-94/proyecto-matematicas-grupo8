@@ -1,28 +1,141 @@
+/* Smooth scroll con offset para el navbar fijo */
 html {
     scroll-behavior: smooth;
-     scroll-padding-top: 70px;
 }
 
-
+/* Navbar principal - FIXED */
 .navbar-custom {
-    background-color: #ECF0F1;
+    position: fixed !important;
+    top: 1rem;
+    left: 0%;
+    right: 0%;
+    width: 75% !important;
+    margin: 0 auto;
+    background-color: white;
+    border-radius: 30px;
+    padding: 10px 20px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+    transition: all 0.3s ease;
+    z-index: 1000;
 }
 
+/* Para pantallas grandes, más angosto */
+@media (min-width: 992px) {
+    .navbar-custom {
+        top: 2rem;
+        width: 50%;
+    }
+}
+
+/* Para tablets */
+@media (min-width: 768px) and (max-width: 991px) {
+    .navbar-custom {
+        width: 70%;
+    }
+}
+
+/* Para móviles */
+@media (max-width: 767px) {
+    .navbar-custom {
+        width: 90%;
+        top: 0.5rem;
+        padding: 8px 15px;
+    }
+}
+
+/* Estilos del brand (Mate+) */
+.navbar-custom .brand {
+    color: #2C3E50 !important;
+    font-weight: 700;
+    font-size: 2rem;
+    transition: color 0.3s ease;
+}
+
+.navbar-custom .brand:hover {
+    color: #2ECC71 !important;
+}
+
+/* Estilos de los enlaces de navegación */
 .navbar-custom .nav-link {
-    color: "#2C3E50" !important;
+    color: #2C3E50 !important;
+    font-weight: 500;
+    margin: 0 0.25rem;
+    transition: all 0.3s ease;
+    position: relative;
+    cursor: pointer;
 }
 
-.navbar-custom .navbar-brand {
-    color: "#2C3E50"!important;
-    
+/* Efecto hover en enlaces */
+.navbar-custom .nav-link:hover {
+    color: #2ECC71 !important;
+    transform: translateY(-1px);
 }
 
+/* Línea decorativa debajo del enlace activo/hover */
+.navbar-custom .nav-link::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    width: 0;
+    height: 2px;
+    background: #2ECC71;
+    transition: all 0.3s ease;
+    transform: translateX(-50%);
+}
 
+.navbar-custom .nav-link:hover::after {
+    width: 80%;
+}
+
+/* Estilos del botón toggler (menú hamburguesa) */
 .navbar-custom .navbar-toggler {
     border-color: #2C3E50;
+    outline: none;
+    box-shadow: none;
+    transition: all 0.3s ease;
+}
+
+.navbar-custom .navbar-toggler:focus,
+.navbar-custom .navbar-toggler:active {
+    outline: none;
+    box-shadow: none;
+    border-color: #2ECC71;
+}
+
+/* Estilos para el menú colapsado en móviles */
+@media (max-width: 991px) {
+    .navbar-custom {
+        background-color: white;
+    }
+    
+    .navbar-custom .navbar-collapse {
+        background-color: white;
+        padding: 1rem;
+        border-radius: 20px;
+        margin-top: 0.5rem;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    }
+    
+    .navbar-custom .nav-link {
+        padding: 0.75rem 1rem;
+        text-align: center;
+    }
+    
+    .navbar-custom .nav-link::after {
+        bottom: 0.5rem;
+    }
+}
+
+/* Desktop */
+@media (min-width: 992px) {
+    .navbar-custom .nav-link {
+        margin: 0 0.5rem;
+    }
 }
 
 /*
+Paleta de colores:
 Primario: Gris grafito #2C3E50
 Acento: Verde menta #2ECC71
 Fondo: Crema claro #ECF0F1

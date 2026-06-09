@@ -41,25 +41,25 @@ const StartedPage = () => {
                     </h1>
                 </Col>
                 <Row className="d-flex align-items-center justify-content-start h-50">
-                    <Col md={6} className="text-center text-white d-flex flex-column align-items-center justify-content-start" style={{ gap: '3rem' }}>
+                    <Col sm={6} className="text-center text-white d-flex flex-column align-items-center justify-content-start" style={{ gap: '3rem' }}>
                         <img src={Login} alt="Login" style={{ width: "250px", height: "250px" }} />
                         <Button
                             variant="primary"
                             size="lg"
-                            className="w-50 py-3 rounded-pill fw-semibold"
-                            style={{ backgroundColor: "#31C976", color: "#2D3E4E", borderColor: "#31C976", borderRadius: "35px", fontSize: "1.75rem" }}
+                            className="w-50 py-2 rounded-pill fw-semibold"
+                            style={{ backgroundColor: "#31C976", color: "white", borderColor: "#31C976", borderRadius: "35px", fontSize: "1.75rem" }}
                             onClick={() => navigate('/login')}
                         >
                             Tengo Cuenta
                         </Button>
                     </Col>
-                    <Col md={6} className="text-center text-white d-flex flex-column align-items-center" style={{ gap: '3rem' }}>
+                    <Col sm={6} className="text-center text-white d-flex flex-column align-items-center" style={{ gap: '3rem' }}>
                         <img src={Register} alt="Register" style={{ width: "250px", height: "250px" }} />
                         <Button
                             variant="primary"
                             size="lg"
-                            className="w-50 py-3 rounded-pill fw-semibold"
-                            style={{ backgroundColor: "#31C976", color: "#2D3E4E", borderColor: "#31C976", borderRadius: "35px", fontSize: "1.75rem" }}
+                            className="w-50 py-2 rounded-pill fw-semibold"
+                            style={{ backgroundColor: "#31C976", color: "white", borderColor: "#31C976", borderRadius: "35px", fontSize: "1.75rem" }}
                             onClick={() => navigate('/register')}
                         >
                             Crear cuenta
