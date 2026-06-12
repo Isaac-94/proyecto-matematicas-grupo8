@@ -1,6 +1,6 @@
 import prisma from '../config/prisma.js';
 
-export const getEscenariosBySeccion = async (req, res) => {
+export const getEscenariosBySeccion = async (req, res, next) => {
     const { seccionId } = req.params;
     try {
         const escenarios = await prisma.escenario.findMany({
@@ -8,11 +8,11 @@ export const getEscenariosBySeccion = async (req, res) => {
         });
         return res.json(escenarios);
     } catch (error) {
-        return res.status(500).json({ error: 'Error al obtener escenarios de la sección' });
+        next(error);
     }
 };
 
-export const getEscenarioBySeccionAndId = async (req, res) => {
+export const getEscenarioBySeccionAndId = async (req, res, next) => {
     const { seccionId, escenarioId } = req.params;
     try {
         const escenario = await prisma.escenario.findFirst({
@@ -25,11 +25,11 @@ export const getEscenarioBySeccionAndId = async (req, res) => {
         if (!escenario) return res.status(404).json({ error: 'No existe el escenario en esta sección' });
         return res.json(escenario);
     } catch (error) {
-        return res.status(500).json({ error: 'Error al obtener el escenario' });
+        next(error);
     }
 };
 
-export const crearEscenario = async (req, res) => {
+export const crearEscenario = async (req, res, next) => {
     const { seccionId } = req.params;
     const { titulo, descripcion, pregunta, explicacion, categoria } = req.body;
     try {
@@ -39,22 +39,22 @@ export const crearEscenario = async (req, res) => {
 
         return res.status(201).json(nuevoEscenario);
     } catch (error) {
-        return res.status(500).json({ error: 'Error al crear el escenario' });
+        next(error);
     }
 };
 
-export const eliminarEscenario = async (req, res) => {
+export const eliminarEscenario = async (req, res, next) => {
     const { escenarioId } = req.params;
     try {
         await prisma.escenario.delete({ where: { id: parseInt(escenarioId) } });
 
         return res.status(204).send();
     } catch (error) {
-        return res.status(500).json({ error: 'Error al eliminar el escenario' });
+        next(error);
     }
 };
 
-export const actualizarEscenario = async (req, res) => {
+export const actualizarEscenario = async (req, res, next) => {
     const { escenarioId } = req.params;
     const { titulo, descripcion, pregunta, explicacion, categoria } = req.body;
     try {
@@ -65,6 +65,6 @@ export const actualizarEscenario = async (req, res) => {
 
         return res.json(escenario);
     } catch (error) {
-        return res.status(500).json({ error: 'Error al actualizar el escenario' });
+        next(error);
     }
 };

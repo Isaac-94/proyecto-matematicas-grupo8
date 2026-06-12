@@ -1,59 +1,176 @@
-import { createContext, useContext, useEffect, useMemo, useState } from 'react';
-
-const AUTH_STORAGE_KEY = 'frontend_auth_user';
+import { createContext, useContext, useEffect, useMemo, useState, useCallback, useRef } from 'react';
+import { supabase } from '../config/supabaseClient';
+import api from '../config/api';
 
 const AuthContext = createContext(undefined);
 
-const getStoredUser = () => {
-    const rawUser = localStorage.getItem(AUTH_STORAGE_KEY);
-    if (!rawUser) return null;
-
-    try {
-        return JSON.parse(rawUser);
-    } catch {
-        localStorage.removeItem(AUTH_STORAGE_KEY);
-        return null;
-    }
-};
-
 export const AuthProvider = ({ children }) => {
-    const [user, setUser] = useState(() => getStoredUser());
-    const isAuthenticated = Boolean(user);
+    const [session, setSession] = useState(null);
+    const [profile, setProfile] = useState(null);
+    const [loading, setLoading] = useState(true);
+    const lastFetchedId = useRef(null);
+    const isFetching = useRef(false);
 
-    const login = (payload = {}) => {
-        const fallbackName = payload.email ? payload.email.split('@')[0] : 'Usuario';
+    const fetchProfile = useCallback(async (user) => {
+        console.log(`🔄 fetchProfile called for user: ${user.id}, isFetching: ${isFetching.current}, currentProfile: ${profile?.id}`);
+        if (isFetching.current) return;
+        isFetching.current = true;
+        try {
+            const { data } = await api.post('/usuarios/registro', {
+                uid: user.id,
+                email: user.email,
+                nombre: user.user_metadata?.full_name || user.email.split('@')[0]
+            });
+            setProfile(data || null);
+        } catch (error) {
+            console.error('🔴 Error de sincronización con Back-End:', error.message);
 
-        setUser({
-            id: payload.id || 'demo-user',
-            name: payload.name || fallbackName,
-            email: payload.email || 'demo@correo.com',
-        });
-    };
+            // Si el Back-End nos tira 401, la sesión de Supabase que tenemos es basura.
+            // Forzamos el cierre de sesión para que el usuario pueda volver al login.
+            if (error.response?.status === 401) {
+                console.warn("⚠️ Sesión inválida detectada. Limpiando...");
+                logout();
+            }
 
-    const logout = () => {
-        setUser(null);
-    };
+            // Si es un error de red, permitimos re-intento en el próximo evento
+            if (error.code === 'ERR_NETWORK' || error.code === 'ECONNABORTED' || !error.response) {
+                lastFetchedId.current = null;
+            }
+            setProfile(null);
+        } finally {
+            isFetching.current = false;
+        }
+    }, []);
 
     useEffect(() => {
-        if (user) {
-            localStorage.setItem(AUTH_STORAGE_KEY, JSON.stringify(user));
-            return;
-        }
+        // Failsafe: Si en 5 segundos Supabase no respondió, soltamos el loading
+        const timer = setTimeout(() => setLoading(false), 5000);
 
-        localStorage.removeItem(AUTH_STORAGE_KEY);
-    }, [user]);
+        const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+            console.log(`🔐 AuthEvent: ${_event}`);
+            setSession(session || null);
+
+            if (session?.user) {
+                if (lastFetchedId.current !== session.user.id || (!profile && _event !== 'USER_UPDATED')) {
+                    lastFetchedId.current = session.user.id;
+                    fetchProfile(session.user);
+                }
+            } else {
+                setProfile(null);
+            }
+            setLoading(false);
+            clearTimeout(timer);
+        });
+
+        return () => {
+            subscription.unsubscribe();
+            clearTimeout(timer);
+        };
+    }, [fetchProfile]);
+
+    const login = async (email, password) => {
+        try {
+            const { data, error } = await supabase.auth.signInWithPassword({ email, password });
+            if (error) {
+                if (error.status === 400) throw error;
+                throw new Error("SUPABASE_UNAVAILABLE");
+            }
+            // No bloqueamos el login esperando al perfil, lo tiramos en paralelo
+            if (data.user) fetchProfile(data.user);
+
+            return data;
+        } catch (err) {
+                // Solo caemos en el mock si Supabase realmente no está o da error de conexión
+                const isMockMode = !import.meta.env.VITE_SUPABASE_URL || import.meta.env.VITE_SUPABASE_URL.includes('[TU_PROYECTO]');
+
+                if (isMockMode || err.message === "SUPABASE_UNAVAILABLE" || err.message === "SUPABASE_UNAVAILABLE_MOCK") {
+                    console.warn("⚠️ Usando autenticación de respaldo (Back-End Mock)");
+                const response = await api.post('/usuarios/login', {
+                    email,
+                    password
+                });
+                if (response.data) {
+                    const mockSession = {
+                        user: { email, id: response.data.user?.id || 'local-auth' },
+                        access_token: response.data.user?.token || 'local-mock-token'
+                    };
+                    if (supabase.auth._updateMockSession) supabase.auth._updateMockSession(mockSession);
+                    setSession(mockSession);
+                }
+                return response.data;
+            }
+            throw err;
+        }
+    };
+
+    const register = async (email, password, nombre, extraData = {}) => {
+        try {
+            const { data, error } = await supabase.auth.signUp({
+                email,
+                password,
+                options: { data: { full_name: nombre, ...extraData } }
+            });
+            if (error) throw error;
+            return data;
+        } catch (err) {
+            if (err.message === "SUPABASE_UNAVAILABLE_MOCK" || err.status === 400) {
+                console.warn("⚠️ Supabase no disponible. Entrando en modo de autenticación local (Mock)");
+                const response = await api.post('/usuarios/registro', {
+                    uid: 'mock-' + Date.now(),
+                    email,
+                    password,
+                    nombre,
+                    ...extraData
+                });
+                if (response.data) {
+                    const mockSession = { user: { email, id: 'local-auth' }, access_token: 'local-mock-token' };
+                    setSession(mockSession);
+                }
+                return response.data;
+            }
+            throw err;
+        }
+    };
+
+    const logout = async () => {
+        try {
+            await supabase.auth.signOut();
+        } catch (err) {
+            console.warn("⚠️ Error al cerrar sesión en Supabase, limpiando estado local.");
+        } finally {
+            setSession(null);
+            setProfile(null);
+            lastFetchedId.current = null;
+        }
+    };
 
     const value = useMemo(
         () => ({
-            user,
-            isAuthenticated,
+            user: session?.user ?? null,
+            profile,
+            token: session?.access_token ?? null,
+            isAuthenticated: !!session,
             login,
+            register,
             logout,
+            loading,
+            refreshProfile: () => session?.user && fetchProfile(session.user)
         }),
-        [user, isAuthenticated]
+        [session, profile, loading, fetchProfile]
     );
 
-    return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
+    return (
+        <AuthContext.Provider value={value}>
+            {loading ? (
+                <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh', backgroundColor: '#1a1a1a', color: '#00ff00' }}>
+                    <div style={{ textAlign: 'center' }}>
+                        <h3>InnovaLab</h3>
+                        <p>Cargando módulos de seguridad...</p>
+                    </div>
+                </div>
+            ) : children}
+        </AuthContext.Provider>
+    );
 };
 
 // eslint-disable-next-line react-refresh/only-export-components

@@ -6,6 +6,7 @@ generator client {
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
 }
 
 enum Rol {
@@ -21,6 +22,12 @@ model Usuario {
   puntos             Int                 @default(0)
   tokens             Int                 @default(0)
   rol                Rol                 @default(usuario)
+  password           String?
+  edad               String?
+  genero             String?
+  lugar              String?
+  desafio            String?
+  sentimiento        String?
   racha              Int                 @default(0)
   ultimaConexion     DateTime            @default(now())
   progreso           Progreso[]

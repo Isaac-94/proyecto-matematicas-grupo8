@@ -17,58 +17,51 @@ import { FaEye, FaEyeSlash } from "react-icons/fa";
 import Background from "../Images/fondo2.png";
 import Register from "../Images/started/register.png";
 
-//aca tengo los hooks para el formulario de registro, similar a los del login pero con campos adicionales como nombre
-// y confirmación de contraseña
 const useRegisterForm = () => {
   const navigate = useNavigate();
-  const { login } = useAuth(); //traemos el contexto de autenticación para simular el login después del registro exitoso
+  const { register } = useAuth();
   const [nombre, setNombre] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-  const [toastMessage, setToastMessage] = useState("");
-  const [toastVariant, setToastVariant] = useState("success"); // 'success' o 'danger'
-  const [showToast, setShowToast] = useState(false);
   const [genero, setGenero] = useState("");
   const [lugar, setLugar] = useState("");
-  // aca para memanejar el cambio de los campos del formulario, similar al login pero con más campos
+  const [toastMessage, setToastMessage] = useState("");
+  const [toastVariant, setToastVariant] = useState("success");
+  const [showToast, setShowToast] = useState(false);
+
   const handleChangeValue = (e) => {
     const { name, value } = e.target;
     if (name === "nombre") setNombre(value);
-    if (name === "email") setEmail(value);
-    if (name === "password") setPassword(value);
-    if (name === "confirmPassword") setConfirmPassword(value);
-    if (name === "genero") setGenero(value);
-    if (name === "lugar") setLugar(value);
+    else if (name === "email") setEmail(value);
+    else if (name === "password") setPassword(value);
+    else if (name === "confirmPassword") setConfirmPassword(value);
+    else if (name === "genero") setGenero(value);
+    else if (name === "lugar") setLugar(value);
   };
 
-  //manejar el envío del formulario, con validaciones básicas para campos vacíos, formato de email y
-  // coincidencia de contraseñas
-  const handleSubmit = (e) => {
-    e.preventDefault(); // Evita que la página se recargue al enviar el formulario
+  const handleSubmit = async (e) => {
+    e.preventDefault();
     if (!nombre || !email || !password || !confirmPassword) {
       setToastMessage("❌ Por favor, completa todos los campos");
       setToastVariant("danger");
       setShowToast(true);
       return;
     }
-    // Validación de formato de email
     if (!email.includes("@")) {
       setToastMessage("❌ Ingresa un correo electrónico válido");
       setToastVariant("danger");
       setShowToast(true);
       return;
     }
-    // Validación de longitud de contraseña
     if (password.length < 8) {
       setToastMessage("❌ La contraseña debe tener al menos 8 caracteres");
       setToastVariant("danger");
       setShowToast(true);
       return;
     }
-    // Validación de coincidencia de contraseñas
     if (password !== confirmPassword) {
       setToastMessage("❌ Las contraseñas no coinciden");
       setToastVariant("danger");
@@ -76,19 +69,19 @@ const useRegisterForm = () => {
       return;
     }
 
-    //   console.log('Intentando registrar con:', { nombre, email, password, confirmPassword });
-    login({ name: nombre, email }); // Simulamos el login después del registro exitoso
-    setToastMessage("✅ Registro exitoso");
-    setToastVariant("success");
-    setShowToast(true);
-    // aca simulamos respuesta, limpiamos campos y redirigimos al login después de un tiempo
-    setTimeout(() => {
-      setNombre("");
-      setEmail("");
-      setPassword("");
-      setConfirmPassword("");
-      navigate("/login", { replace: true });
-    }, 2000);
+    try {
+      await register(email, password, nombre, { genero, lugar });
+      setToastMessage("✅ Registro exitoso");
+      setToastVariant("success");
+      setShowToast(true);
+      setTimeout(() => {
+        navigate("/login", { replace: true });
+      }, 2000);
+    } catch (error) {
+      setToastMessage(`❌ Error: ${error.message}`);
+      setToastVariant("danger");
+      setShowToast(true);
+    }
   };
 
   return {
@@ -111,8 +104,6 @@ const useRegisterForm = () => {
   };
 };
 
-// aca esta la vista, y en la const, desestructuro los valores y métodos del hook personalizado
-//  para usarlos en el formulario de registro
 const RegisterPage = () => {
   const {
     nombre,
@@ -178,9 +169,11 @@ const RegisterPage = () => {
                 </div>
                 <Form onSubmit={handleSubmit}>
                   <Form.Group className="mb-2">
-                    <Form.Label>Nombre</Form.Label>
+                    <Form.Label htmlFor="reg-nombre">Nombre</Form.Label>
                     <Form.Control
+                      id="reg-nombre"
                       type="text"
+                      autoComplete="name"
                       placeholder="Ingresa tu nombre"
                       size="lg"
                       onChange={handleChangeValue}
@@ -189,9 +182,11 @@ const RegisterPage = () => {
                     />
                   </Form.Group>
                   <Form.Group className="mb-2">
-                    <Form.Label>Correo electrónico</Form.Label>
+                    <Form.Label htmlFor="reg-email">Correo electrónico</Form.Label>
                     <Form.Control
+                      id="reg-email"
                       type="email"
+                      autoComplete="email"
                       placeholder="nombre@empresa.com"
                       size="lg"
                       onChange={handleChangeValue}
@@ -201,10 +196,12 @@ const RegisterPage = () => {
                   </Form.Group>
 
                   <Form.Group className="mb-4">
-                    <Form.Label>Contraseña</Form.Label>
+                    <Form.Label htmlFor="reg-password">Contraseña</Form.Label>
                     <InputGroup>
                       <Form.Control
+                        id="reg-password"
                         type={showPassword ? "text" : "password"}
+                        autoComplete="new-password"
                         placeholder="••••••••"
                         size="lg"
                         onChange={handleChangeValue}
@@ -222,10 +219,12 @@ const RegisterPage = () => {
                     </InputGroup>
                   </Form.Group>
                   <Form.Group className="mb-4">
-                    <Form.Label>Confirmar contraseña</Form.Label>
+                    <Form.Label htmlFor="reg-confirm">Confirmar contraseña</Form.Label>
                     <InputGroup>
                       <Form.Control
+                        id="reg-confirm"
                         type={showConfirmPassword ? "text" : "password"}
+                        autoComplete="new-password"
                         placeholder="••••••••"
                         size="lg"
                         onChange={handleChangeValue}
@@ -247,10 +246,12 @@ const RegisterPage = () => {
                   <Row className="mb-3 g-2">
                     <Col xs={6}>
                       <Form.Group>
-                        <Form.Label>Género</Form.Label>
+                        <Form.Label htmlFor="reg-genero">Género</Form.Label>
                         <Form.Select
+                          id="reg-genero"
                           name="genero"
                           value={genero}
+                          autoComplete="sex"
                           onChange={handleChangeValue}
                         >
                           <option value="">Seleccionar</option>
@@ -265,9 +266,11 @@ const RegisterPage = () => {
                     </Col>
                     <Col xs={6}>
                       <Form.Group>
-                        <Form.Label>Lugar</Form.Label>
+                        <Form.Label htmlFor="reg-lugar">Lugar</Form.Label>
                         <Form.Control
+                          id="reg-lugar"
                           type="text"
+                          autoComplete="address-level2"
                           placeholder="Ciudad o país"
                           onChange={handleChangeValue}
                           name="lugar"

@@ -13,7 +13,7 @@ const readCSV = (fileName) => {
         const lines = content.split('\n').filter(line => line.trim() !== '');
         const headers = lines[0].split(',').map(h => h.trim());
         return lines.slice(1).map(line => {
-            const values = line.match(/(".*?"|[^,]+)/g) || [];
+            const values = line.split(','); // Corregido para manejar campos vacíos correctamente
             return headers.reduce((obj, header, index) => {
                 let val = values[index]?.trim().replace(/^"|"$/g, '').replace(/""/g, '"');
                 if (val?.startsWith('{') || val?.startsWith('[')) {
@@ -31,6 +31,31 @@ const readCSV = (fileName) => {
     }
 };
 
+const saveUsersToCSV = () => {
+    try {
+        const filePath = path.join(DATA_PATH, 'usuarios.csv');
+        const headers = 'id,email,nombre,rol,puntos,racha,password,edad,genero,lugar,desafio,sentimiento,createdAt';
+        const rows = db.usuario.map(u => [
+            u.id,
+            u.email,
+            u.nombre,
+            u.rol,
+            u.puntos || 0,
+            u.racha || 0,
+            u.password,
+            u.edad || '',
+            u.genero || '',
+            u.lugar || '',
+            u.desafio || '',
+            u.sentimiento || '',
+            u.createdAt || new Date().toISOString()
+        ].join(','));
+        fs.writeFileSync(filePath, headers + '\n' + rows.join('\n'), 'utf-8');
+    } catch (e) {
+        console.error('❌ Error guardando usuarios.csv:', e);
+    }
+};
+
 let db = {
     usuario: readCSV('usuarios.csv').map(u => ({ ...u, tokens: 0, ultimaConexion: new Date() })),
     seccion: readCSV('secciones.csv'),
@@ -45,16 +70,38 @@ let db = {
 };
 
 const mockPrisma = {
+    $queryRaw: async () => [{ 1: 1 }],
     usuario: {
-        findUnique: async ({ where }) => db.usuario.find(u => u.id === where.id || u.email === where.email),
+        findUnique: async ({ where }) => {
+            const emailSearch = where.email?.toLowerCase();
+            return db.usuario.find(u =>
+                u.id === where.id || u.email?.toLowerCase() === emailSearch
+            );
+        },
         upsert: async ({ where, create, update }) => {
-            let idx = db.usuario.findIndex(u => u.id === where.id || u.email === where.email);
+            const emailSearch = where.email?.toLowerCase() || create.email?.toLowerCase();
+            let idx = db.usuario.findIndex(u => u.id === where.id || u.email?.toLowerCase() === emailSearch);
             if (idx !== -1) {
-                db.usuario[idx] = { ...db.usuario[idx], ...update };
+                // Actualización selectiva: no pisar con valores nulos o indefinidos
+                Object.keys(update).forEach(key => {
+                    if (update[key] !== undefined && update[key] !== null && update[key] !== '') {
+                        db.usuario[idx][key] = update[key];
+                    }
+                });
+                saveUsersToCSV();
                 return db.usuario[idx];
             }
-            const newUser = { ...create, puntos: 0, tokens: 0, racha: 0 };
+            const newUser = {
+                ...create,
+                puntos: 0,
+                tokens: 0,
+                racha: 0,
+                genero: create.genero || 'pendiente',
+                lugar: create.lugar || 'pendiente',
+                createdAt: new Date().toISOString()
+            };
             db.usuario.push(newUser);
+            saveUsersToCSV();
             return newUser;
         },
         update: async ({ where, data }) => {
@@ -63,11 +110,32 @@ const mockPrisma = {
             if (data.puntos?.increment) db.usuario[idx].puntos += data.puntos.increment;
             if (data.tokens?.increment) db.usuario[idx].tokens += data.tokens.increment;
             Object.keys(data).forEach(k => {
-                if (typeof data[k] !== 'object' || data[k] instanceof Date) db.usuario[idx][k] = data[k];
+                // Solo actualizar si el valor no es nulo/indefinido (especialmente para password)
+                if ((typeof data[k] !== 'object' || data[k] instanceof Date) && data[k] != null) {
+                    db.usuario[idx][k] = data[k];
+                }
             });
+            saveUsersToCSV();
             return db.usuario[idx];
         },
-        findMany: async () => db.usuario
+        findMany: async () => db.usuario,
+        count: async ({ where } = {}) => {
+            let list = db.usuario;
+            if (where?.rol) list = list.filter(u => u.rol === where.rol);
+            if (where?.racha?.gt !== undefined) list = list.filter(u => u.racha > where.racha.gt);
+            return list.length;
+        },
+        groupBy: async ({ by }) => {
+            const field = by[0];
+            const counts = {};
+            db.usuario.filter(u => u.rol === 'usuario' && u[field] != null).forEach(u => {
+                counts[u[field]] = (counts[u[field]] || 0) + 1;
+            });
+            return Object.entries(counts).map(([name, count]) => ({
+                [field]: name,
+                _count: { [field]: count }
+            }));
+        }
     },
     seccion: {
         findMany: async ({ where, include } = {}) => {
@@ -147,7 +215,10 @@ const mockPrisma = {
             });
             return db.progreso[idx];
         },
-        findMany: async ({ where }) => db.progreso.filter(p => p.usuarioId === where.usuarioId)
+        findMany: async ({ where } = {}) => {
+            if (!where || !where.usuarioId) return db.progreso;
+            return db.progreso.filter(p => p.usuarioId === where.usuarioId);
+        }
     },
     seccionAprobada: {
         findUnique: async ({ where }) => db.seccionAprobada.find(sa => sa.usuarioId === where.usuarioId_seccionId.usuarioId && sa.seccionId === where.usuarioId_seccionId.seccionId),

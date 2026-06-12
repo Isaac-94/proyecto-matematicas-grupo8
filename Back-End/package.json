@@ -2,14 +2,16 @@
   "name": "backend",
   "version": "1.0.0",
   "description": "",
-  "main": "src/app.js",
+  "main": "api/index.js",
   "scripts": {
     "dev": "nodemon",
-    "dev:local": "cross-env DATA_SOURCE=MOCK nodemon",
-    "dev:db": "cross-env DATA_SOURCE=DB nodemon",
     "start": "node src/app.js",
-    "build": "prisma generate",
+    "postinstall": "prisma generate --schema=./prisma/schema.prisma",
+    "build": "prisma generate --schema=./prisma/schema.prisma",
     "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "engines": {
+    "node": ">=20.x"
   },
   "keywords": [],
   "author": "",
@@ -21,7 +23,8 @@
     "@supabase/supabase-js": "2.48.1",
     "cors": "^2.8.6",
     "dotenv": "17.4.2",
-    "express": "5.2.1"
+    "express": "5.2.1",
+    "zod": "^3.25.76"
   },
   "devDependencies": {
     "cross-env": "7.0.3",

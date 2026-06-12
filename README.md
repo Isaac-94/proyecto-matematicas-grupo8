@@ -1,80 +1,65 @@
 # proyecto-matematicas-grupo8
 
+## MATE+ : Plataforma de Aprendizaje Matemático
 
+Plataforma educativa diseñada para adultos, enfocada en la gamificación y micro-lecciones. Este proyecto utiliza una arquitectura de Monorepo para integrar de forma eficiente el Front-End (React) y el Back-End (Node.js/Express).
 
+### 🚀 Arquitectura Dual-Source (Exclusivo)
+El sistema cuenta con una lógica de **Resiliencia Total**. Puede operar en dos modos:
 
-## Front End Core
+---
 
-# Comandos útiles
+### ⚠️ Checkpoint antes del Push
+Antes de realizar un `git push` a las ramas de producción o test, es **obligatorio** ejecutar:
+`pnpm build`
+Esto asegura que no existan errores de compilación ni conflictos con el cliente de Prisma.
 
-Instalar dependencias
+---
 
-Desde la carpeta raíz
+### 🛠️ Comandos Globales
 
-# Proyecto
+Desde la raíz del proyecto, utilizá `pnpm` para gestionar ambos mundos:
 
-Web app realizada con React y Bootstrap
+| Comando             | Descripción                                                                                                                                       |
+| :------------------ | :------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `pnpm install`      | Instala dependencias en todo el monorepo.                                                                                                         |
+| `pnpm dev:all`      | Inicia Front y Back conectados a la **Base de Datos real**.                                                                                       |
+| `pnpm dev:all-mock` | Inicia Front y Back en **Modo Offline (CSV + Auth Simulado)**. *Nota: Este comando fuerza `DATA_SOURCE=MOCK` ignorando lo definido en el `.env`.* |
+| `pnpm build:back`   | Regenera el cliente de Prisma (necesario si cambia el schema).                                                                                    |
+| `pnpm build`        | Genera la versión de producción para despliegue.                                                                                                  |
 
-## Tecnologías
+---
 
-    UI: React + React Router DOM
-    Estilos: Bootstrap
-    Formularios: React Hook Form + Zod
-    Estado cliente: Zustand (Context)
-    Peticiones: Axios
+### 📦 Estructura del Monorepo
 
-## Estructura de carpetas
-
-```
-src/
-├── components/           # Componentes reutilizables
-│   ├── ui/               # Componentes UI básicos
-│   │   ├── Button.jsx
-│   │   ├── Icon.jsx
-│   │   ├── Image.jsx
-│   │   └── Input.jsx
-│   ├── layout/           # Componentes de estructura de página
-│   │   ├── Header.jsx
-│   │   ├── Footer.jsx
-│   │   └── Sidebar.jsx
-│   └── widgets/          # Componentes complejos o secciones
-│       ├── ProductCard.jsx
-│       ├── UserProfile.jsx
-│       └── SearchBar.jsx
-├── pages/                # Páginas principales
-│   ├── Home.jsx
-│   ├── Login.jsx
-│   ├── Registro.jsx
-│   ├── About.jsx
-│   └── Contact.jsx
-└── assets/               # Archivos estáticos (imágenes, iconos, etc.)
+```text
+proyecto-matematicas-grupo8/
+├── Back-End/               # API Express + Prisma ORM
+│   ├── data/               # Archivos CSV para el modo Mock
+│   ├── prisma/             # Esquemas de base de datos
+│   └── src/                # Controladores, Rutas y Lógica de IA (Gemini)
+├── Front-End/              # React + Bootstrap (Vite)
+│   ├── src/context/        # Auth Bridge y estados globales
+│   └── src/pages/          # Vistas y flujos de usuario
+└── package.json            # Scripts de orquestación pnpm
 ```
 
+---
 
+### 🔐 Autenticación y Seguridad
 
-## Backend Core
+El proyecto utiliza **Supabase Auth** para la gestión de usuarios. Si las llaves de Supabase no están configuradas en el `.env`, el sistema activa un modo de bypass que permite:
+- Login con cualquier contraseña para cuentas como `admin@test.com` o `invitado@test.com`.
+- Persistencia simulada en `Back-End/data/usuarios.csv`.
 
-Propuesta inicial de estructura para el Back End del proyecto "Aplicación de aprendizaje de Matemática" en **InnovaLab**. La arquitectura está diseñada para ser escalable, profesional y compatible con entornos de despliegue serverless en **Vercel** y **PostgreSQL** en **Supabase**.
+### 🤖 Integración con IA
+Se utiliza la API de **Gemini 1.5 Flash** para proporcionar feedback pedagógico en tiempo real ante errores en los ejercicios. Si la API Key no está presente, el sistema utiliza un fallback con explicaciones estáticas predefinidas.
 
-### Arquitectura Monorepo
-El proyecto se gestiona bajo una estructura de **Monorepo** utilizando `pnpm workspaces`. Esta configuración permite mantener el código del Back-End y del Front-End en un único repositorio, facilitando la gestión de dependencias compartidas y scripts de automatización desde la raíz del proyecto.
+---
 
-### Integración de Datos
-El sistema cuenta con una arquitectura de datos dual. Puede operar conectado a una base de datos **PostgreSQL** (**Supabase**) o mediante un **Mock Server** que consume archivos `.csv` locales, permitiendo el desarrollo sin dependencias de red o configuraciones de base de datos e integración con CLI externos.
-
-### Roles y Permisos
-- **usuario:** Perfil estándar para participantes. Acceso a escenarios interactivos y seguimiento de progreso.
-- **admin:** Perfil con permisos de edición sobre contenidos (Secciones y Escenarios).
-- **superadmin:** Perfil de gestión total, incluyendo edición de contenidos y manejo de credenciales/permisos.
-
-## Stack Tecnológico
-
-- **Runtime:** **Node.js** v24+
-- **Framework:** **Express.js** v5 (Beta/LTS compatible)
-- **ORM:** **Prisma** v6.4.1 (Stable - Native Engines)
-- **Gestor de Paquetes:** `pnpm`
-- **Base de Datos:** **PostgreSQL** (vía **Supabase**)
-- **Despliegue:** **Vercel**
+### 👥 Equipo
+Desarrollado para la Simulación **Innova Lab 2026**.
+*Identidad Git: motero / cesar*
 
 ## Instalación y Ejecución
 
@@ -116,8 +101,15 @@ En tu archivo `.env` de la carpeta `/Back-End`, cambiá lo que está **dentro** 
 **Mecanismo de Resiliencia (Fallback):**
 En caso de que no haya una Key configurada o se excedan los límites de cuota, el sistema activará automáticamente un modo de respaldo. En lugar de fallar, el servidor responderá utilizando la explicación técnica predefinida en el campo `explicacion` del módulo CSV de **Escenarios**.
 
+### 📂 Requisitos para Modo Mock (Plug & Play)
+Para que el sistema de respaldo funcione correctamente en desarrollo local, es **imprescindible** que la carpeta `Back-End/data/` cuente con los archivos de tablas base:
+- `usuarios.csv`: Tabla maestra de usuarios (mínimo requerido para login/registro simulado).
+- `auditoria.csv`: Registro de acciones del sistema.
+
+Si estos archivos no están presentes en el directorio designado, el servidor Mock no podrá inicializar la persistencia local.
+
 ### Auditoría en Modo Mock
-Cuando el servidor corre en modo **Local** (`DATA_SOURCE=MOCK`), las acciones de escritura (POST, PUT, DELETE) se registran automáticamente en el archivo `Back-End/data/auditoria.csv`. Esto permite simular la persistencia de logs de auditoría sin depender de una base de datos externa.
+Las acciones de escritura (POST, PUT, DELETE) se registran automáticamente en el archivo `Back-End/data/auditoria.csv`. Esto permite simular la persistencia de logs de auditoría sin depender de una base de datos externa.
 
 Para limpiar el historial de auditoría local y empezar una sesión de pruebas limpia, ejecutá desde la raíz:
 `pnpm clean:audit`
@@ -135,19 +127,28 @@ El servidor estará disponible en http://localhost:3001.
 ### Salud de API
 - `GET /api/health`: Estado de salud de la API y timestamp.
 
-### Usuarios (Auth & Perfil)
-- `POST /api/usuarios/registro`: Registra un nuevo usuario o sincroniza el perfil (vía uid de **Supabase**).
-- `PUT /api/usuarios/perfil`: Actualiza nombre o preferencias del usuario.
+### Endpoints de la API
 
-### Secciones y Escenarios
-- `GET /api/secciones`: Lista todas las secciones (Economía Doméstica, Construcción, etc).
-- `GET /api/secciones/:id`: Detalle de una sección específica incluyendo sus escenarios.
-- `GET /api/secciones/:seccionId/escenarios`: Lista de escenarios para una sección.
-- `GET /api/secciones/:seccionId/escenarios/:escenarioId`: Detalle de un escenario con sus opciones de respuesta.
-
-### Progreso y Gamificación
-- `POST /api/progreso`: Registra la respuesta del usuario, calcula puntos (Tk) y actualiza el progreso.
-- `GET /api/progreso/usuario/:uid`: Obtiene el historial de ejercicios resueltos por el usuario.
+| Módulo         | Método | Endpoint                              | Descripción                            |
+| :------------- | :----- | :------------------------------------ | :------------------------------------- |
+| **Salud**      | GET    | `/api/health`                         | Estado del servidor                    |
+| **Usuarios**   | POST   | `/api/usuarios/registro`              | Sincronización con Auth                |
+| **Usuarios**   | POST   | `/api/usuarios/login`                 | Login local (Modo Mock)                |
+| **Usuarios**   | PUT    | `/api/usuarios/perfil`                | Actualiza datos personales             |
+| **Usuarios**   | GET    | `/api/usuarios`                       | Lista los Usuarios                     |
+| **Secciones**  | GET    | `/api/secciones`                      | Lista las Secciones                    |
+| **Secciones**  | GET    | `/api/secciones/:id`                  | Trae una Sección completa              |
+| **Secciones**  | POST   | `/api/secciones`                      | Crea una Sección nueva (Admin)         |
+| **Secciones**  | PUT    | `/api/secciones/:id`                  | Edita una Sección (Admin)              |
+| **Secciones**  | DELETE | `/api/secciones/:id`                  | Eliminar una Sección (Admin)           |
+| **Escenarios** | GET    | `/api/secciones/:sId/escenarios`      | Lista los Escenarios de esa Sección    |
+| **Escenarios** | GET    | `/api/secciones/:sId/escenarios/:eId` | Detalles del Escenario                 |
+| **Escenarios** | POST   | `/api/secciones/:sId/escenarios`      | Crea un Escenario nuevo (Admin)        |
+| **Escenarios** | PUT    | `/api/secciones/:sId/escenarios/:eId` | Edita el Escenario (Admin)             |
+| **Escenarios** | DELETE | `/api/secciones/:sId/escenarios/:eId` | Elimina el Escenario (Admin)           |
+| **Progreso**   | POST   | `/api/progreso`                       | Registra solución y gana Tk            |
+| **Progreso**   | GET    | `/api/progreso/usuario/:uid`          | Historial del usuario                  |
+| **Auditoría**  | GET    | `/api/logs`                           | Trazabilidad de actividades (SupAdmin) |
 
 ## Estructura del Proyecto
 

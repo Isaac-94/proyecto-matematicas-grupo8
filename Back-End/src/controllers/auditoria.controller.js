@@ -1,8 +1,10 @@
 import prisma from '../config/prisma.js';
 
-export const getLogs = async (req, res) => {
+export const getLogs = async (req, res, next) => {
+    const { limit } = req.query;
     try {
         const logs = await prisma.auditoria.findMany({
+            take: limit ? parseInt(limit) : undefined,
             include: {
                 usuario: {
                     select: {
@@ -17,6 +19,6 @@ export const getLogs = async (req, res) => {
         });
         return res.json(logs);
     } catch (error) {
-        return res.status(500).json({ error: 'Error al obtener los logs de auditoría' });
+        next(error);
     }
 };
