@@ -1,45 +1,123 @@
 import prisma from '../config/prisma.js';
+import ApiError from '../exceptions/api.error.js';
+import { registroSchema, perfilSchema, loginSchema } from '../validators/usuarios.validator.js';
 
-export const registrarUsuario = async (req, res) => {
-    const uid = req.user.id;
-    const { email, nombre } = req.body;
-
-    if (!email) {
-        return res.status(400).json({ error: 'El email es requerido para el registro' });
-    }
-
-    const normalizedEmail = email.trim().toLowerCase();
-    const adminEmails = process.env.ADMIN_EMAILS
-        ? process.env.ADMIN_EMAILS.split(',').map(e => e.trim().toLowerCase())
-        : [];
-
-    const rolAsignado = adminEmails.includes(normalizedEmail) ? 'admin' : 'usuario';
-
+export const registrarUsuario = async (req, res, next) => {
     try {
+        const validacion = registroSchema.safeParse(req.body);
+
+        if (!validacion.success) {
+            throw validacion.error;
+        }
+
+        const { email, nombre, password, edad, genero, lugar, desafio, sentimiento } = validacion.data;
+        const uid = req.body.uid;
+
+        if (!uid) {
+            return res.status(400).json({ error: "Falta UID de autenticación" });
+        }
+
+        const ADMIN_EMAILS = (process.env.ADMIN_EMAILS || "").split(",").map(e => e.trim().toLowerCase());
+        const SUPERADMIN_EMAILS = (process.env.SUPERADMIN_EMAILS || "").split(",").map(e => e.trim().toLowerCase());
+
+        let rolAsignado = 'usuario';
+        if (SUPERADMIN_EMAILS.includes(email.toLowerCase())) {
+            rolAsignado = 'superadmin';
+        } else if (ADMIN_EMAILS.includes(email.toLowerCase())) {
+            rolAsignado = 'admin';
+        }
+
         const usuario = await prisma.usuario.upsert({
             where: { id: uid },
-            update: {
-                nombre,
-                rol: rolAsignado
-            },
-            create: {
-                id: uid,
-                email: normalizedEmail,
-                nombre,
-                rol: rolAsignado
-            }
+            update: { nombre, rol: rolAsignado, password, edad, genero, lugar, desafio, sentimiento },
+            create: { id: uid, email, nombre, rol: rolAsignado, password, edad, genero, lugar, desafio, sentimiento }
         });
+        console.log(`✅ Usuario sincronizado: ${usuario.email} [${usuario.rol}]`);
         res.status(201).json(usuario);
     } catch (error) {
-        res.status(500).json({ error: 'Error al registrar el usuario' });
+        next(error);
     }
 };
 
-export const actualizarPerfil = async (req, res) => {
-    const uid = req.user.id;
-    const { nombre } = req.body;
-
+export const loginUsuario = async (req, res, next) => {
     try {
+        const validacion = loginSchema.safeParse(req.body);
+        if (!validacion.success) {
+            throw validacion.error;
+        }
+
+        const { email, password } = validacion.data;
+
+        const usuario = await prisma.usuario.findUnique({
+            where: { email: email.toLowerCase() } // Convertimos a minúsculas para la búsqueda
+        });
+
+        if (!usuario || usuario.password !== password) {
+            throw ApiError.unauthorized("Credenciales inválidas (email o contraseña incorrectos)");
+        }
+
+        res.status(200).json({
+            message: "Login exitoso",
+            user: {
+                id: usuario.id,
+                email: usuario.email,
+                nombre: usuario.nombre,
+                rol: usuario.rol,
+                token: "dev-bypass-token"
+            }
+        });
+    } catch (error) {
+        next(error);
+    }
+};
+
+export const eliminarUsuario = async (req, res, next) => {
+    try {
+        const uid = req.user.id;
+        const { password } = req.body;
+
+        if (!password) {
+            throw ApiError.badRequest("Ingresar contraseña para borrar la cuenta");
+        }
+
+        const usuario = await prisma.usuario.findUnique({
+            where: { id: uid }
+        });
+
+        if (!usuario || usuario.password !== password) {
+            throw ApiError.unauthorized("Contraseña incorrecta. No se puede borrar la cuenta");
+        }
+
+        await prisma.usuario.delete({
+            where: { id: uid }
+        });
+
+        res.status(200).json({ message: "Cuenta borrada correctamente" });
+    } catch (error) {
+        next(error);
+    }
+};
+
+export const getUsuarios = async (req, res, next) => {
+    try {
+        const usuarios = await prisma.usuario.findMany();
+        res.status(200).json(usuarios);
+    } catch (error) {
+        next(error);
+    }
+};
+
+export const actualizarPerfil = async (req, res, next) => {
+    try {
+        const uid = req.user.id;
+        const validacion = perfilSchema.safeParse(req.body);
+
+        if (!validacion.success) {
+            throw validacion.error;
+        }
+
+        const { nombre } = validacion.data;
+
         const usuario = await prisma.usuario.update({
             where: {
                 id: uid
@@ -50,6 +128,6 @@ export const actualizarPerfil = async (req, res) => {
         });
         return res.status(200).json(usuario);
     } catch (error) {
-        return res.status(500).json({ error: 'Error al actualizar el perfil' });
+        next(error);
     }
 };

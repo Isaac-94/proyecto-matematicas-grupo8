@@ -1,23 +1,38 @@
-import { useState } from 'react';
-import './onboarding.css'; // CSS unificado
+import { useState, useEffect } from 'react';
+import { useAuth } from '../../../context/AuthContext';
+import api from '../../../config/api';
 import { useNavigate } from 'react-router-dom';
+import './onboarding.css';
 
 const initialFormState = {
   nombre: '',
   apellidos: '',
-  idUser: 'USER_ID_TEMPORAL',
+  uid: '',
   desafio: '',
   edad: '',
+  genero: '',
   sentimiento: '',
+  email: ''
 };
 
-function SecondSection() { // Cambiado de Onboarding a SecondSection
+function SecondSection() {
+  const { user } = useAuth();
   const navigate = useNavigate()
   const [currentStep, setCurrentStep] = useState(0);
   const [formData, setFormData] = useState(initialFormState);
   const [status, setStatus] = useState({ loading: false, error: '', success: '' });
 
-  const stepLabels = ['Paso 1', 'Paso 2', 'Paso 3'];
+  const stepLabels = ['Paso 1', 'Paso 2', 'Paso 3', 'Paso 4'];
+
+  useEffect(() => {
+    if (user) {
+      setFormData(prev => ({
+        ...prev,
+        uid: user.id,
+        email: user.email
+      }));
+    }
+  }, [user]);
 
   const handleSelectOption = (name, value) => {
     setFormData((prev) => ({ ...prev, [name]: value }));
@@ -47,11 +62,17 @@ function SecondSection() { // Cambiado de Onboarding a SecondSection
       nombre: `${formData.nombre} ${formData.apellidos}`.trim()
     };
 
-    setTimeout(() => {
+    try {
+      await api.post('/usuarios/registro', dataToSubmit);
       setStatus({ loading: false, error: '', success: 'Formulario enviado correctamente.' });
 
-      navigate("/dashboard")
-    }, 1000);
+      setTimeout(() => {
+        navigate("/dashboard")
+      }, 1500);
+    } catch (error) {
+      const errorMsg = error.response?.data?.error || error.message;
+      setStatus({ loading: false, error: errorMsg, success: '' });
+    }
   };
 
   const opcionesDesafios = [
@@ -65,6 +86,8 @@ function SecondSection() { // Cambiado de Onboarding a SecondSection
   const opcionesSentimientos = ['Relajado', 'Ansioso', 'Confundido', 'Estresado'];
 
   const opcionesEdades = ['20 a 30 años', '30 a 50 años', '+ 50 años'];
+
+  const opcionesGeneros = ['masculino', 'femenino', 'otro'];
 
   return (
     <div className="onboarding-container">
@@ -146,7 +169,28 @@ function SecondSection() { // Cambiado de Onboarding a SecondSection
             </div>
           </div>
 
-          {/* PASO 3: EDAD */}
+          {/* PASO 3: GÉNERO (Para alimentar el gráfico PIE) */}
+          <div className="page">
+            <div className="title">¿Con qué género te identificás?</div>
+            <div className="options-grid">
+              {opcionesGeneros.map((opcion) => (
+                <button
+                  key={opcion}
+                  type="button"
+                  className={`option-btn ${formData.genero === opcion ? 'selected' : ''}`}
+                  onClick={() => handleSelectOption('genero', opcion)}
+                >
+                  {opcion.charAt(0).toUpperCase() + opcion.slice(1)}
+                </button>
+              ))}
+            </div>
+            <div className="field btns">
+              <button type="button" className="prev" onClick={prevStep}>Atrás</button>
+              <button type="button" className="next" onClick={nextStep} disabled={!formData.genero}>Siguiente</button>
+            </div>
+          </div>
+
+          {/* PASO 4: EDAD */}
           <div className="page">
             <div className="title">¿En qué rango de edad te encontrás?</div>
             <div className="options-grid full-width-options">

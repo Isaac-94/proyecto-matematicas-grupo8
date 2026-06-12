@@ -65,15 +65,31 @@ async function main() {
     for (const u of usuarios) {
         await prisma.usuario.upsert({
             where: { email: u.email },
-            update: {},
+            update: {
+                nombre: u.nombre,
+                rol: u.rol,
+                edad: u.edad || null,
+                genero: u.genero || null,
+                lugar: u.lugar || null,
+                desafio: u.desafio || null,
+                sentimiento: u.sentimiento || null,
+                createdAt: u.createdAt ? new Date(u.createdAt) : new Date()
+            },
             create: {
                 id: u.id,
                 email: u.email,
                 nombre: u.nombre,
                 rol: u.rol,
+                password: u.password,
                 puntos: parseInt(u.puntos) || 0,
                 tokens: 0,
-                racha: parseInt(u.racha) || 0
+                racha: parseInt(u.racha) || 0,
+                edad: u.edad || null,
+                genero: u.genero || null,
+                lugar: u.lugar || null,
+                desafio: u.desafio || null,
+                sentimiento: u.sentimiento || null,
+                createdAt: u.createdAt ? new Date(u.createdAt) : new Date()
             }
         });
     }

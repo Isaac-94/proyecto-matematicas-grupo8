@@ -2,30 +2,23 @@ import supabase from '../config/supabase.js';
 import prisma from '../config/prisma.js';
 
 export const checkAuth = async (req, res, next) => {
-    const isMockMode = process.env.DATA_SOURCE === 'MOCK';
+    const ADMIN_EMAILS = (process.env.ADMIN_EMAILS || "").split(",").map(e => e.trim().toLowerCase());
+    const SUPERADMIN_EMAILS = (process.env.SUPERADMIN_EMAILS || "").split(",").map(e => e.trim().toLowerCase());
+
     const authHeader = req.headers.authorization;
-    const token = authHeader?.split(' ')[1];
 
-    if (isMockMode || token === 'dev-bypass-token') {
-        const mockId = req.body?.uid || req.body?.usuarioId || req.body?.adminId || req.query?.usuarioId || 'user-001';
-        let mockRole = 'usuario';
-
-        if (mockId.startsWith('admin-')) {
-            mockRole = 'admin';
-        } else if (mockId.startsWith('super-')) {
-            mockRole = 'superadmin';
-        }
-
-        req.user = {
-            id: mockId,
-            email: 'dev@innovalab.com',
-            user_metadata: { nombre: 'Developer Session' },
-            rol: mockRole
-        };
+    // Acceso directo por Llave Maestra (para el "pirata informático" del Ministerio)
+    const masterKey = process.env.ADMIN_MASTER_KEY;
+    if (masterKey && req.query.key === masterKey) {
+        req.user = { id: 'master-key-access', email: 'admin@local', rol: 'superadmin' };
         return next();
     }
 
-    if (!authHeader || !authHeader.startsWith('Bearer ')) {
+    // Buscamos el token en: Header, Parámetro URL o Cookie (para el navegador)
+    const cookieToken = req.headers.cookie?.match(/access_token=([^;]+)/)?.[1];
+    const token = authHeader?.split(' ')[1] || req.query.token || cookieToken;
+
+    if (!token) {
         return res.status(401).json({ error: 'No se proporcionó un token de acceso' });
     }
 
@@ -36,14 +29,30 @@ export const checkAuth = async (req, res, next) => {
             return res.status(401).json({ error: 'Token inválido o expirado' });
         }
 
-        const dbUser = await prisma.usuario.findUnique({
-            where: { id: user.id },
-            select: { rol: true }
-        });
+        let rolFinal = 'usuario';
+        const userEmail = user.email?.toLowerCase();
 
-        req.user = { ...user, rol: dbUser?.rol || 'usuario' };
+        if (SUPERADMIN_EMAILS.includes(userEmail)) {
+            rolFinal = 'superadmin';
+        } else if (ADMIN_EMAILS.includes(userEmail)) {
+            rolFinal = 'admin';
+        } else {
+            const dbUser = await prisma.usuario.findUnique({ where: { id: user.id }, select: { rol: true } });
+            rolFinal = dbUser?.rol || 'usuario';
+        }
+
+        req.user = { ...user, rol: rolFinal };
         next();
     } catch (err) {
-        return res.status(500).json({ error: 'Error al validar la identidad del usuario' });
+        next(err);
     }
+};
+
+export const checkRole = (rolesPermitidos) => {
+    return (req, res, next) => {
+        if (!req.user || !rolesPermitidos.includes(req.user.rol)) {
+            return res.status(403).json({ error: 'Acceso denegado: privilegios insuficientes' });
+        }
+        next();
+    };
 };

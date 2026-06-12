@@ -13,7 +13,6 @@ import {
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
-import { axiosInstance } from "../services/index";
 
 import Background from "../Images/fondo2.png";
 import Login from "../Images/started/login.png";
@@ -39,76 +38,40 @@ const useLoginForm = () => {
   };
 
   // Método para manejar el envío del formulario
-  const handleSubmit = (e) => {
-    e.preventDefault(); // Evita que la página se recargue al enviar el formulario
-
-    // Validaciones básicas
+  const handleSubmit = async (e) => {
+    e.preventDefault();
     if (!email || !password) {
       setToastMessage("❌ Por favor, completa todos los campos");
       setToastVariant("danger");
       setShowToast(true);
       return;
     }
-
     if (!email.includes("@")) {
       setToastMessage("❌ Ingresa un correo electrónico válido");
       setToastVariant("danger");
       setShowToast(true);
       return;
     }
-
-    // Aquí podrías agregar lógica para autenticar al usuario con el backend
-    // Simulamos una autenticación exitosa
-    console.log("Intentando iniciar sesión con:", { email, password });
-
-    login({ email });
-    console.log("Respuesta del servidor:", response.data);
-    // Aquí podrías manejar la respuesta del servidor, como guardar el token de autenticación
-    // Simulación de respuesta del servidor (éxito)
-    setToastMessage("✅ ¡Inicio de sesión exitoso! Redirigiendo...");
-    setToastVariant("success");
-    setShowToast(true);
-
-    {
-      /* 
-            axiosInstance.post('/login', { email, password })
-                .then(response => {
-                    // status 200 
-                    login({ email });
-                    console.log('Respuesta del servidor:', response.data);
-                    // Aquí podrías manejar la respuesta del servidor, como guardar el token de autenticación
-                    // Simulación de respuesta del servidor (éxito)
-                    setToastMessage('✅ ¡Inicio de sesión exitoso! Redirigiendo...');
-                    setToastVariant('success');
-                    setShowToast(true);
-    
-                    // Limpiar el formulario después de 2 segundos
-                    setTimeout(() => {
-                        setEmail('');
-                        setPassword('');
-                        // Aquí podrías redirigir al usuario a otra página
-                        navigate('/dashboard', { replace: true });
-                    }, 2000);
-                })
-                .catch(error => {
-                    console.error('Error al iniciar sesión:', error);
-                    setToastMessage('❌ Error al iniciar sesión. Por favor, intenta nuevamente.');
-                    setToastVariant('danger');
-                    setShowToast(true);
-                });
-        */
+    try {
+      await login(email, password);
+      setToastMessage("✅ ¡Inicio de sesión exitoso! Redirigiendo...");
+      setToastVariant("success");
+      setShowToast(true);
+      setTimeout(() => {
+        navigate("/dashboard", { replace: true });
+      }, 1500);
+    } catch (error) {
+      console.error("Error al iniciar sesión:", error);
+      setToastMessage("❌ Error al iniciar sesión. Verificá tus credenciales.");
+      setToastVariant("danger");
+      setShowToast(true);
     }
-    //
   };
-
   const handleSocialLogin = (provider) => {
-    // Aquí podrías agregar lógica para manejar el inicio de sesión con redes sociales
     setToastMessage(`🔗 Iniciando sesión con ${provider}...`);
     setToastVariant("info");
-    login({ email: `${provider}@example.com` });
     setShowToast(true);
   };
-
   return {
     email,
     password,
@@ -189,8 +152,11 @@ const LoginPage = () => {
 
                 <Form onSubmit={handleSubmit}>
                   <Form.Group className="mb-4">
+                    <Form.Label htmlFor="login-email" className="visually-hidden">Correo electrónico</Form.Label>
                     <Form.Control
+                      id="login-email"
                       type="email"
+                      autoComplete="username"
                       placeholder="Correo electrónico"
                       size="lg"
                       onChange={handleChangeValue}
@@ -207,9 +173,12 @@ const LoginPage = () => {
                   </Form.Group>
 
                   <Form.Group className="mb-4">
+                    <Form.Label htmlFor="login-password" className="visually-hidden">Contraseña</Form.Label>
                     <InputGroup>
                       <Form.Control
+                        id="login-password"
                         type={showPassword ? "text" : "password"}
+                        autoComplete="current-password"
                         placeholder="Ingresa tu contraseña"
                         size="lg"
                         onChange={handleChangeValue}
@@ -301,5 +270,4 @@ const LoginPage = () => {
     </>
   );
 };
-
 export default LoginPage;

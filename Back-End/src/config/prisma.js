@@ -13,7 +13,12 @@ if (dataSource === 'MOCK' || !isDbConfigured) {
     prisma = mockPrisma;
 } else {
     try {
-        prisma = new PrismaClient();
+        prisma = new PrismaClient({
+            log: [
+                { emit: 'stdout', level: 'query' },
+                { emit: 'stdout', level: 'error' }
+            ],
+        });
         console.log('\x1b[32m%s\x1b[0m', '--- DATA_SOURCE: DB (Conectando a Supabase via Prisma) ---');
     } catch (error) {
         console.error('Error al inicializar Prisma Client, usando Mock de respaldo.');

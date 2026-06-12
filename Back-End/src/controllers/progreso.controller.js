@@ -1,7 +1,7 @@
 import prisma from '../config/prisma.js';
 import { generarFeedbackPedagogico } from '../services/gemini.service.js';
 
-export const registrarProgreso = async (req, res) => {
+export const registrarProgreso = async (req, res, next) => {
     const usuarioId = req.user.id;
     const { escenarioId, opcionId } = req.body;
 
@@ -43,6 +43,10 @@ export const registrarProgreso = async (req, res) => {
             );
         }
 
+        let nuevaRacha = usuario.racha;
+        if (diferenciaDias === 1) nuevaRacha += 1;
+        else if (diferenciaDias > 1) nuevaRacha = 1;
+
         if (progresoExistente) {
             await prisma.progreso.update({
                 where: { id: progresoExistente.id },
@@ -64,11 +68,7 @@ export const registrarProgreso = async (req, res) => {
             });
         }
 
-        let nuevaRacha = usuario.racha;
-        if (diferenciaDias === 1) nuevaRacha += 1;
-        else if (diferenciaDias > 1) nuevaRacha = 1;
-
-        const usuarioActualizado = await prisma.usuario.update({
+        await prisma.usuario.update({
             where: { id: usuarioId },
             data: {
                 puntos: { increment: puntosEscenario },
@@ -85,7 +85,6 @@ export const registrarProgreso = async (req, res) => {
         });
 
         const puntosActualesSeccion = progresosSeccion.reduce((acc, curr) => acc + curr.puntosObtenidos, 0);
-
         const escenariosSeccion = await prisma.escenario.findMany({
             where: { seccionId: opcion.escenario.seccionId },
             include: { opciones: true }
@@ -123,11 +122,11 @@ export const registrarProgreso = async (req, res) => {
 
         const usuarioFinal = await prisma.usuario.findUnique({ where: { id: usuarioId } });
         const todasDesbloqueadas = await prisma.seccion.findMany({
-            where: { puntosRequeridos: { lte: usuarioFinal.tokens } }
+            where: { puntosRequeridos: { lte: usuarioFinal.puntos } }
         });
 
         const nuevosDesbloqueos = todasDesbloqueadas.filter(
-            s => s.puntosRequeridos > tokensAnteriores && s.puntosRequeridos <= usuarioFinal.tokens
+            s => s.puntosRequeridos > (usuario.puntos || 0) && s.puntosRequeridos <= usuarioFinal.puntos
         );
 
         return res.status(201).json({
@@ -141,11 +140,11 @@ export const registrarProgreso = async (req, res) => {
             nuevosDesbloqueos: nuevosDesbloqueos.map(s => s.nombre)
         });
     } catch (error) {
-        return res.status(500).json({ error: 'Error en el proceso' });
+        next(error);
     }
 };
 
-export const getHistorialUsuario = async (req, res) => {
+export const getHistorialUsuario = async (req, res, next) => {
     const { uid } = req.params;
     try {
         const historial = await prisma.progreso.findMany({
@@ -155,6 +154,6 @@ export const getHistorialUsuario = async (req, res) => {
         });
         return res.json(historial);
     } catch (error) {
-        return res.status(500).json({ error: 'Error al obtener el historial' });
+        next(error);
     }
 };
