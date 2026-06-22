@@ -1,0 +1,76 @@
+.header-desafio {
+    padding: 1rem 2rem;
+}
+
+.header-desafio .brand {
+    color: #2C3E50 !important;
+    font-weight: 700;
+    font-size: 2rem;
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+.header-desafio .brand:hover {
+    color: #2ECC71 !important;
+}
+.header-desafio .progress-bar-container {
+    width: 100%;
+    height: 8px;
+    background-color: #7f8c8d;
+    border-radius: 10px;
+    overflow: hidden;
+    margin: 1rem 0;
+}
+.header-desafio-back {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin: 1rem 0;
+    cursor: pointer;
+    color: #555;
+}
+
+.header-desafio-progress {
+    height: 8px;
+    border-radius: 10px;
+}
+.header-desafio .progress-bar-fill {
+    height: 100%;
+    background-color: #2ecc71;
+    border-radius: 10px;
+    transition: width 0.3s ease;
+}
+
+.header-desafio-icons{
+     display: flex;
+    gap: 1rem;
+    font-size: 1.4rem;
+    color: #555;
+    cursor: pointer;
+}
+.header-desafio-top{
+     display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.icon-btn {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background-color: #FFFEC9;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    border: none;
+    outline: none;
+}
+
+.icon-btn img {
+    width: 20px;
+    height: 20px;
+    object-fit: contain;
+}
+.icon-btn:not(:first-child) img {
+    width: 28px;
+    height: 28px;
+}

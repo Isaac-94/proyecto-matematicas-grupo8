@@ -2,7 +2,7 @@ import { useNavigate } from 'react-router-dom';
 import { Button, Container } from "react-bootstrap";
 import { useAuth } from '../context/AuthContext';
 import Background from "../Images/fondo2.png";
-
+import HeaderDash from '../components/layouts/Desafios/headerDash/HeaderDash';
 const DashboardPage = () => {
     const navigate = useNavigate();
     const { user, logout } = useAuth();
@@ -13,6 +13,8 @@ const DashboardPage = () => {
     };
 
     return (
+        <>
+        <HeaderDash />
         <Container
             fluid
             className="d-flex align-items-center justify-content-center flex-column text-white"
@@ -35,7 +37,7 @@ const DashboardPage = () => {
                 Cerrar Sesión
             </Button>
         </Container>
-    );
+     </>);
 }
 
 export default DashboardPage;
