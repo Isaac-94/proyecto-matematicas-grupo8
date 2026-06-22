@@ -1,28 +1,6 @@
-import React from 'react';
 import '../FirstSection/FirstSection.css';
-
+import { steps } from '../../../data/steps';
 import { Container, Stack, Row, Col } from 'react-bootstrap';
-
-const steps = [
-    {
-        id: 1,
-        title: "Aprende",
-        subtitle: "Micro-lecciones diseñadas para adultos, directas al grano.",
-        src: "https://placehold.co/300x300?text=Aprende"
-    },
-    {
-        id: 2,
-        title: "Practica",
-        subtitle: "Ejercicios basados en situaciones reales de la vida cotidiana.",
-        src: "https://placehold.co/300x300?text=Practica"
-    },
-    {
-        id: 3,
-        title: "Gana",
-        subtitle: "Sumá puntos y desbloqueá insignias mientras progresas.",
-        src: "https://placehold.co/300x300?text=Gana"
-    }
-];
 
 const SecondSection = () => {
     return (
