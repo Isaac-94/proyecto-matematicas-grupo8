@@ -8,6 +8,8 @@ import ThirdSection from '../components/landing/ThirdSection/ThirdSection';
 import Footer from '../components/layouts/Footer/Footer';
 import Header from '../components/layouts/header/Header';
 
+import { FaArrowUp } from "react-icons/fa";
+
 const Landing = () => {
     const navigate = useNavigate();
     const containerRef = useRef(null);
@@ -77,8 +79,8 @@ const Landing = () => {
                     onMouseLeave={(e) => {
                         e.currentTarget.style.transform = 'translateY(0)';
                     }}
-                >
-                    <i className="fa fa-arrow-up" aria-hidden="true"></i>
+                >   
+                    <FaArrowUp />
                 </button>
             )}
         </Container>

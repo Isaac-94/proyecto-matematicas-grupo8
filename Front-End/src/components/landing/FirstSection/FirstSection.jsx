@@ -4,8 +4,6 @@ import {
     Button,
     Card,
 } from 'react-bootstrap';
-import { FiArrowUpRight } from "react-icons/fi";
-import { BiMath } from "react-icons/bi";
 import './FirstSection.css';
 
 const FirstSection = ({ navigate }) => {
