@@ -1,102 +1,74 @@
 import {
     Row,
     Col,
-    Button,
     Card,
+    Button,
 } from 'react-bootstrap';
 import './FirstSection.css';
+import { FaArrowRightLong } from "react-icons/fa6";
+import { motion } from 'framer-motion';
+
+import BackgroundImage from '../../../assets/background.png';
+
+import ShapeSvg from '../Components/Shape';
+import ShapeSvg1 from '../Components/Shape1';
+import ShapeSvg2 from '../Components/Shape2';
+import ShapeImage from '../Components/Image';
+import { useState } from 'react';
 
 const FirstSection = ({ navigate }) => {
+    const [isHovered, setIsHovered] = useState(false);
     return (
-        <Row className="vh-100 g-0" id="inicio" style={{ backgroundColor: "#F0F1EB" }}>
+        <Row className="vh-100 g-0" id="inicio" style={{ backgroundColor: "#F0F1EB", backgroundImage: `url(${BackgroundImage})`, backgroundSize: 'cover', backgroundPosition: 'center' }}>
             {/* Columna lateral izquierda - Decorativa */}
-            <Col lg={6} className="d-none d-lg-flex align-items-center justify-content-center text-white position-relative overflow-hidden">
-                <svg
-                    className="decorative-icon"
-                    width="50"
-                    height="48"
-                    viewBox="0 0 50 48"
-                    fill="none"
-                    xmlns="http://www.w3.org/2000/svg"
-                >
-                    <path d="M32.7378 0H0V15.7632H21.21L0 36.2711L11.5278 47.4173L32.7378 26.9094V47.4173H49.0407V15.7632V0H32.7378Z" fill="#2D3E4E" />
-                </svg>
-
-                <Card className="border-0 bg-transparent shadow-none left-card-container">
-                    <Card.Body className="icon-card-body">
-                        {/* Primer SVG (verde) */}
-                        <svg
-                            className="icon-green"
-                            viewBox="0 0 284 267"
-                            fill="none"
-                            xmlns="http://www.w3.org/2000/svg"
-                        >
-                            <path
-                                d="M284 117.785H181.976L254.118 50.0467L230.7 28.0582L158.559 95.7974V0H125.441V95.7974L53.2998 28.0582L29.882 50.0467L102.024 117.785H0V148.881H102.024L29.882 216.62L53.2998 238.608L125.441 170.87V266.666H158.559V170.87L230.7 238.608L254.118 216.62L181.976 148.881H284V117.785Z"
-                                fill="#31C976"
-                            />
-                        </svg>
-
-                        {/* Segundo SVG (azul/oscuro) */}
-                        <svg
-                            className="icon-dark"
-                            viewBox="0 0 284 267"
-                            fill="none"
-                            xmlns="http://www.w3.org/2000/svg"
-                        >
-                            <path
-                                d="M284 117.785H181.976L254.118 50.0467L230.7 28.0582L158.559 95.7974V0H125.441V95.7974L53.2998 28.0582L29.882 50.0467L102.024 117.785H0V148.881H102.024L29.882 216.62L53.2998 238.608L125.441 170.87V266.666H158.559V170.87L230.7 238.608L254.118 216.62L181.976 148.881H284V117.785Z"
-                                fill="#2D3E4E"
-                            />
-                        </svg>
-                    </Card.Body>
-                </Card>
+            <Col lg={6} className="d-flex align-items-center justify-content-center position-relative">
+                <ShapeSvg />
+                <ShapeSvg1 />
+                <ShapeSvg2 />
+                <ShapeImage />
             </Col>
 
             {/* Columna derecha - Formulario */}
-            <Col lg={6} className="d-flex align-items-center justify-content-center">
-                <Card className="border-0 bg-transparent shadow-none" style={{ width: '100%', maxWidth: '450px' }}>
-                    <Card.Body className="p-4 d-flex flex-column" style={{ gap: '2.5rem' }}>
-                        <div className="text-center">
-                            <h1 className="mb-3 fw-bold display-1 d-flex justify-content-center align-items-center" style={{ color: '#2D3E4E' }}>
-                                <svg
-                                    width="50"
-                                    height="55"
-                                    viewBox="0 0 50 55"
-                                    fill="none"
-                                    xmlns="http://www.w3.org/2000/svg"
-                                    color='#31C976'
-                                    style={{
-                                        fontSize: 60,
-                                        marginTop: "auto",
-                                    }}
-                                >
-                                    <path d="M32.7378 0H0V18.1696H21.21L0 41.8082L11.5278 54.6559L32.7378 31.0174V54.6559H49.0407V18.1696V0H32.7378Z" fill="#31C976" />
-                                </svg>
+            <Col lg={6} className="d-flex align-items-center justify-content-center" style={{ zIndex: 100 }}>
+                <Card className="border-0 bg-transparent shadow-none" style={{ width: '100%' }}>
+                    <Card.Body className="p-5 d-flex align-items-center text-center text-lg-start align-items-lg-start flex-column gap-4">
+                        <h1 className="d-flex justify-content-center align-items-center" style={{ color: '#000000', fontWeight: 800, fontSize: 64, }}>
+                            APRENDÉ MATE DE FORMA DIVERTIDA
+                        </h1>
 
-                                <span style={{ fontSize: 80 }}>MATE</span>
-                                <span className="fw-black" style={{ fontSize: 70, fontWeight: '900' }}>+</span>
-                            </h1>
-                        </div>
+                        <p style={{ fontWeight: 400, fontSize: 24 }}>
+                            Dominá las herramientas matemáticas que realmente necesitás para tu día a día. Sin estrés, vos elegís cuándo y cómo avanzar.
+                        </p>
 
-                        <div className="text-center">
-                            <h3 className="fw-semibold" style={{ fontSize: 30 }}>Aprendé matemáticas para la vida cotidiana, sin presión y a tu propio ritmo.</h3>
-                        </div>
-
-                        <div className="d-flex flex-column gap-3">
-                            <Button
-                                variant="primary"
-                                size="lg"
-                                className="w-100 rounded-pill fw-semibold"
-                                style={{ backgroundColor: "#31C976", borderColor: "#31C976", borderRadius: "35px", fontSize: 25 }}
-                                onClick={() => navigate('/started')}
+                        <Button
+                            variant="primary"
+                            size="lg"
+                            className="rounded-pill d-flex align-items-center justify-content-center gap-4"
+                            style={{
+                                backgroundColor: "#FFDB54",
+                                borderColor: "#FFDB54",
+                                borderRadius: "35px",
+                                fontSize: 24,
+                                color: "black",
+                                padding: "10px 40px",
+                                fontWeight: 500
+                            }}
+                            onMouseEnter={() => setIsHovered(true)}
+                            onMouseLeave={() => setIsHovered(false)}
+                            onClick={() => navigate('/started')}
+                        >
+                            <motion.div
+                                animate={{ rotate: isHovered ? 360 : 0 }}
+                                transition={{ duration: 0.2, ease: "easeInOut" }}
                             >
-                                Comenzar
-                            </Button>
-                        </div>
+                                <FaArrowRightLong style={{ color: "black" }} />
+                            </motion.div>
+                            Comenzar
+                        </Button>
                     </Card.Body>
                 </Card>
             </Col>
+
         </Row>
     );
 };
