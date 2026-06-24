@@ -1,6 +1,6 @@
-import step1Image from '../Images/landing/steps/step-1.jpg';
-import step2Image from '../Images/landing/steps/step-2.png';
-import step3Image from '../Images/landing/steps/step-3.jpg';
+import step1Image from '../../../Images/landing/steps/step-1.jpg';
+import step2Image from '../../../Images/landing/steps/step-2.png';
+import step3Image from '../../../Images/landing/steps/step-3.jpg';
 import '../FirstSection/FirstSection.css';
 
 import { Container, Stack, Row, Col } from 'react-bootstrap';
