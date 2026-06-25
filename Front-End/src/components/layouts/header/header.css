@@ -3,6 +3,10 @@ html {
     scroll-behavior: smooth;
 }
 
+#navbar-nav {
+    box-shadow: none !important;
+}
+
 /* Navbar principal - FIXED */
 .navbar-custom {
     position: fixed !important;
@@ -19,29 +23,46 @@ html {
 
 /* Estilos del brand (Mate+) */
 .navbar-custom .brand {
-    color: #2C3E50 !important;
+    color: black !important;
     font-weight: 700;
-    font-size: 2rem;
+    font-size: 2.5rem;
     transition: color 0.3s ease;
 }
 
 /* Hover logo */
-.navbar-custom .brand:hover {
-
-}
+/* .navbar-custom .brand:hover {} */
 
 /* Estilos de los enlaces de navegación */
 .navbar-custom .nav-link {
     font-weight: 400;
     margin: 0 0.25rem;
+    font-size: 1rem;
     transition: all 0.3s ease;
     position: relative;
     cursor: pointer;
+    color: #000000B2;
+    white-space: nowrap;
+}
+
+.navbar-custom .nav-link.button {
+    background-color: #FFDB54;
+    border-color: #FFDB54;
+    border-radius: 35px;
+    padding: 10px 24px;
+    color: black !important;
+    transition: all 0.3s ease;
 }
 
 /* Efecto hover en enlaces */
-.navbar-custom .nav-link:hover {
+.navbar-custom .nav-link:hover:not(.button) {
     color: #FFDB54 !important;
+    transform: translateY(-1px);
+}
+
+/* Efecto hover en enlaces */
+.navbar-custom .nav-link.button:hover {
+    color: #FFDB54 !important;
+    background-color: #000000B2 !important;
     transform: translateY(-1px);
 }
 
@@ -58,13 +79,13 @@ html {
     transform: translateX(-50%);
 }
 
-.navbar-custom .nav-link:hover::after {
+.navbar-custom .nav-link:not(.button):not(.special):hover::after {
     width: 80%;
 }
 
 /* Estilos del botón toggler (menú hamburguesa) */
 .navbar-custom .navbar-toggler {
-    border-color: #2C3E50;
+    border-color: black;
     outline: none;
     box-shadow: none;
     transition: all 0.3s ease;
@@ -74,7 +95,7 @@ html {
 .navbar-custom .navbar-toggler:active {
     outline: none;
     box-shadow: none;
-    border-color: #2ECC71;
+    border-color: #FFDB54;
 }
 
 /* Estilos para el menú colapsado en móviles */
@@ -104,7 +125,7 @@ html {
 
 /*
 Paleta de colores:
-Primario: Gris grafito #2C3E50
+Primario: Negro semitransparente #000000B2
 Acento: Verde menta #2ECC71
 Fondo: Crema claro #ECF0F1
 */

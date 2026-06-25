@@ -38,34 +38,26 @@ export default function Header() {
       expanded={expanded}
       onToggle={() => setExpanded(!expanded)}
     >
-      <Container style={{ padding: "0 30px" }} className="d-flex justify-content-between align-items-center">
+      <Container className="d-flex justify-content-between align-items-center px-4">
         <Navbar.Brand as={Link} to="/" className="brand" onClick={() => setExpanded(false)}>
           Mate+
         </Navbar.Brand>
         <Navbar.Toggle aria-controls="navbar-nav" />
         <Navbar.Collapse id="navbar-nav" className="align-items-center justify-content-center">
-          <Nav className="d-flex align-items-center" style={{ gap: "30px" }}>
-            <Nav.Link style={{ fontWeight: 400, fontSize: 20, color: "#000000B2" }} onClick={handleScrollToTop}>
+          <Nav className="d-flex align-items-center gap-1 gap-lg-5 py-2 py-lg-0">
+            <Nav.Link onClick={handleScrollToTop}>
               Inicio
             </Nav.Link>
-            <Nav.Link style={{ fontWeight: 400, fontSize: 20, color: "#000000B2" }} onClick={() => handleScrollToSection('como-funciona')}>
+            <Nav.Link onClick={() => handleScrollToSection('como-funciona')}>
               Cómo Funciona
             </Nav.Link>
-            <Nav.Link style={{ fontWeight: 400, fontSize: 20, color: "#000000B2" }} onClick={() => handleScrollToSection('nosotros')}>
+            <Nav.Link onClick={() => handleScrollToSection('nosotros')}>
               Nosotros
             </Nav.Link>
 
             <Nav.Link
               to="/login"
-              className="d-flex d-lg-none gap-2 align-items-center"
-              style={{
-                backgroundColor: "#FFDB54",
-                borderColor: "#FFDB54",
-                borderRadius: "35px",
-                fontSize: 18,
-                color: "black",
-                padding: "10px 24px"
-              }}
+              className="d-flex d-lg-none gap-2 align-items-center button"
               onClick={() => setExpanded(false)}
             >
               <FaRegUser />
@@ -77,15 +69,7 @@ export default function Header() {
         <Nav.Link
           as={Link}
           to="/login"
-          className="d-none d-lg-flex gap-2 align-items-center"
-          style={{
-            backgroundColor: "#FFDB54",
-            borderColor: "#FFDB54",
-            borderRadius: "35px",
-            fontSize: 18,
-            color: "black",
-            padding: "10px 24px"
-          }}
+          className="d-none d-lg-flex gap-2 align-items-center button"
           onClick={() => setExpanded(false)}
         >
           <FaRegUser />
