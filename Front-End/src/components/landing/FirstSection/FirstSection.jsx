@@ -18,7 +18,7 @@ const FirstSection = ({ navigate }) => {
 
     return (
         <Row
-            className="vh-100 g-0"
+            className="vh-100 g-0 flex-column-reverse flex-lg-row justify-content-start"
             id="inicio"
             style={{
                 backgroundImage: `url(${BackgroundImage})`,
@@ -30,10 +30,10 @@ const FirstSection = ({ navigate }) => {
             {/* Columna izquierda - Decorativa */}
             <Col
                 lg={6}
-                className={`d-flex align-items-center justify-content-center position-relative ${isMobile ? 'order-2' : 'order-1'}`}
+                className={`d-flex flex-1 align-items-center justify-content-center position-relative ${isMobile ? 'order-2' : 'order-1'}`}
                 style={{ 
                     zIndex: 1,
-                    minHeight: isMobile ? '40vh' : 'auto'
+                    minHeight: isMobile ? '50%' : 'auto'
                 }}
             >
                 <Suspense fallback={null}>
@@ -47,10 +47,12 @@ const FirstSection = ({ navigate }) => {
             {/* Columna derecha - Contenido principal */}
             <Col
                 lg={6}
-                className={`d-flex align-items-center justify-content-center ${isMobile ? 'order-1' : 'order-2'}`}
+                className={`d-flex flex-1 align-items-center justify-content-center ${isMobile ? 'order-1' : 'order-2'}`}
                 style={{ 
                     zIndex: 2,
-                    padding: isMobile ? '1rem 0' : '0'
+                    padding: isMobile ? '1rem 0' : '0',
+                    flex: 1,
+                    minHeight: isMobile ? '50%' : 'auto'
                 }}
             >
                 <Card

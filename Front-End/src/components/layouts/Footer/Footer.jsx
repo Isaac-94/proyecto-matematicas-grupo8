@@ -59,8 +59,8 @@ const Footer = () => {
                     <Col xs={4} sm={4} md={4} lg={2}>
                         <Nav className="footer-section d-flex align-items-center flex-column gap-2">
                             <p className="footer-social-title m-0">Acerca</p>
-                            <Nav.Link onClick={() => handleScrollToSection("about")} href="#" className="footer-link">¿Qué es MATE+?</Nav.Link>
-                            <Nav.Link onClick={() => handleScrollToSection("about")} href="#" className="footer-link">Sobre nosotros</Nav.Link>
+                            <Nav.Link onClick={() => handleScrollToSection("about")} href="#" className="footer-link" style={{ textWrap: "no-wrap" }}>¿Qué es MATE+?</Nav.Link>
+                            <Nav.Link onClick={() => handleScrollToSection("about")} href="#" className="footer-link" style={{ textWrap: "no-wrap" }}>Sobre nosotros</Nav.Link>
                         </Nav>
                     </Col>
 
