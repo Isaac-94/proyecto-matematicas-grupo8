@@ -81,7 +81,7 @@ const Landing = () => {
                         e.currentTarget.style.transform = 'translateY(0)';
                     }}
                 >
-                    <FaArrowUp />
+                    <FaArrowUp color="white" />
                 </button>
             )}
         </Container>
