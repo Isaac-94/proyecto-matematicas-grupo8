@@ -7,6 +7,11 @@ html {
     scroll-behavior: smooth;
 }
 
+#navbar-nav {
+    box-shadow: none;
+    background-color: transparent;
+}
+
 /* ============================================
    NAVBAR PRINCIPAL
    ============================================ */
