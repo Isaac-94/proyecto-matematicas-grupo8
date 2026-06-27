@@ -14,7 +14,7 @@ import BackgroundImage from '../../../assets/background.png?url';
 
 const FirstSection = ({ navigate }) => {
     const [isHovered, setIsHovered] = useState(false);
-    const isMobile = useMediaQuery('(max-width: 768px)');
+    const isMobile = useMediaQuery('(max-width: 1200px)');
 
     return (
         <Row
