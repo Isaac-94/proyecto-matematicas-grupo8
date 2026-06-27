@@ -1,72 +1,79 @@
+/* ============================================
+   HEADER - NAVBAR
+   ============================================ */
+
 /* Smooth scroll con offset para el navbar fijo */
 html {
     scroll-behavior: smooth;
 }
 
-#navbar-nav {
-    box-shadow: none !important;
-}
-
-/* Navbar principal - FIXED */
+/* ============================================
+   NAVBAR PRINCIPAL
+   ============================================ */
 .navbar-custom {
     position: fixed !important;
-    left: 0%;
-    right: 0%;
+    top: 0;
+    left: 0;
+    right: 0;
     width: 100% !important;
     margin: 0 auto;
-    background-color: white;
+    background-color: #ffffff;
     padding: 10px 20px;
-    box-shadow: 0px 4px 4px 0px #00000040;
+    box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
     transition: all 0.3s ease;
     z-index: 1000;
 }
 
-/* Estilos del brand (Mate+) */
+/* ============================================
+   BRAND (Mate+)
+   ============================================ */
 .navbar-custom .brand {
-    color: black !important;
+    color: #000000 !important;
     font-weight: 700;
     font-size: 2.5rem;
+    text-decoration: none;
     transition: color 0.3s ease;
 }
 
-/* Hover logo */
-/* .navbar-custom .brand:hover {} */
-
-/* Estilos de los enlaces de navegación */
+/* ============================================
+   ENLACES DE NAVEGACIÓN
+   ============================================ */
 .navbar-custom .nav-link {
     font-weight: 400;
-    margin: 0 0.25rem;
     font-size: 1rem;
-    transition: all 0.3s ease;
+    margin: 0 0.25rem;
+    padding: 0.5rem 0;
+    color: rgba(0, 0, 0, 0.7);
     position: relative;
     cursor: pointer;
-    color: #000000B2;
     white-space: nowrap;
+    transition: all 0.3s ease;
+    background: transparent;
+    border: none;
 }
 
+/* Enlace de "Iniciar Sesión" (botón) */
 .navbar-custom .nav-link.button {
     background-color: #FFDB54;
-    border-color: #FFDB54;
     border-radius: 35px;
     padding: 10px 24px;
-    color: black !important;
+    color: #000000 !important;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
     transition: all 0.3s ease;
 }
 
-/* Efecto hover en enlaces */
+.navbar-custom .nav-link.button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0px 6px 12px rgba(0, 0, 0, 0.15);
+}
+
+/* Hover en enlaces normales */
 .navbar-custom .nav-link:hover:not(.button) {
     color: #FFDB54 !important;
     transform: translateY(-1px);
 }
 
-/* Efecto hover en enlaces */
-.navbar-custom .nav-link.button:hover {
-    color: #FFDB54 !important;
-    background-color: #000000B2 !important;
-    transform: translateY(-1px);
-}
-
-/* Línea decorativa debajo del enlace activo/hover */
+/* Línea decorativa debajo del enlace */
 .navbar-custom .nav-link::after {
     content: '';
     position: absolute;
@@ -79,13 +86,15 @@ html {
     transform: translateX(-50%);
 }
 
-.navbar-custom .nav-link:not(.button):not(.special):hover::after {
+.navbar-custom .nav-link:not(.button):hover::after {
     width: 80%;
 }
 
-/* Estilos del botón toggler (menú hamburguesa) */
+/* ============================================
+   TOGGLER (Menú Hamburguesa)
+   ============================================ */
 .navbar-custom .navbar-toggler {
-    border-color: black;
+    border: 1px solid #000000;
     outline: none;
     box-shadow: none;
     transition: all 0.3s ease;
@@ -98,34 +107,43 @@ html {
     border-color: #FFDB54;
 }
 
-/* Estilos para el menú colapsado en móviles */
+/* ============================================
+   RESPONSIVE - MÓVIL (max-width: 991px)
+   ============================================ */
 @media (max-width: 991px) {
     .navbar-custom {
-        background-color: white;
+        padding: 10px 16px;
     }
-    
+
+    /* Fondo del menú colapsado */
     .navbar-custom .navbar-collapse {
-        background-color: white;
+        background-color: #ffffff;
         border-radius: 20px;
+        margin-top: 10px;
+        padding: 10px 0;
         box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
     }
-    
+
+    /* Enlaces en móvil */
     .navbar-custom .nav-link {
         padding: 0.75rem 1rem;
         text-align: center;
+        margin: 0;
+    }
+
+    /* Botón de inicio de sesión en móvil */
+    .navbar-custom .nav-link.button {
+        margin: 8px 16px;
+        text-align: center;
+        justify-content: center;
     }
 }
 
-/* Desktop */
+/* ============================================
+   RESPONSIVE - ESCRITORIO (min-width: 992px)
+   ============================================ */
 @media (min-width: 992px) {
     .navbar-custom .nav-link {
         margin: 0 0.5rem;
     }
 }
-
-/*
-Paleta de colores:
-Primario: Negro semitransparente #000000B2
-Acento: Verde menta #2ECC71
-Fondo: Crema claro #ECF0F1
-*/
