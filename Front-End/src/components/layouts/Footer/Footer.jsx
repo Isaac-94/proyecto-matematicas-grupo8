@@ -1,72 +1,110 @@
-import React from 'react';
-import { Container, Row, Col } from 'react-bootstrap'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faFacebook, faTwitter, faInstagram } from '@fortawesome/free-brands-svg-icons';
-import '../Footer/Footer.css';
+import { Row, Col, Nav } from 'react-bootstrap';
+import './Footer.css';
+import { FaFacebook, FaGithub, FaLinkedin } from 'react-icons/fa';
+import { useNavigate } from 'react-router-dom';
 
 const Footer = () => {
-  return (
-    <div className="footer-wrapper">
-      <div className="footer">
-        <div className="ms-4">
-          <Row>
-            <Col className='text-center'>
-              <h5>MATE+</h5>
-            </Col>
-          </Row>
+    const navigate = useNavigate();
+    const currentYear = new Date().getFullYear();
 
-          <Row>
-            <Col className='text-center'>
-              <h5>Buenos Aires, Argentina</h5>
-            </Col>
-          </Row>
-        </div>
-        <div>
-          <Row>
-            <Col className='text-center pt-3'>
-              <a href="/Landing">HOME</a>
-            </Col>
-          </Row>
-          <Row>
-            <Col className='text-center pt-3'>
-              <a href="/Landing">SOBRE NOSOTROS</a>
-            </Col>
-          </Row>
-          <Row>
-            <Col className='text-center pt-3'>
-              <a href="/Landing">PREGUNTAS FRECUENTES</a>
-            </Col>
-          </Row>
-          <Row>
-            <Col className='text-center pt-3'>
-              <a href="/Landing">CONTÁCTANOS</a>
-            </Col>
-          </Row>
+    const handleScrollToSection = (sectionId) => {
+        if (window.location.pathname !== '/') {
+            navigate('/');
+            setTimeout(() => {
+                const element = document.getElementById(sectionId);
+                if (element) {
+                    element.scrollIntoView({ behavior: 'smooth' });
+                }
+            }, 100);
+        } else {
+            const element = document.getElementById(sectionId);
+            if (element) {
+                element.scrollIntoView({ behavior: 'smooth' });
+            }
+        }
+    };
 
-        </div>
-        <div className="me-4">
-          <Row>
-            <Col className='text-center'>
-              <a href="/Landing">NUESTRAS REDES</a>
-            </Col>
-          </Row>
-          <Row>
-            <Col className='text-center'>
-              <a href="#" className="text-white me-3">
-                <FontAwesomeIcon icon={faFacebook} size="2x" />
-              </a>
-              <a href="#" className="text-white me-3">
-                <FontAwesomeIcon icon={faTwitter} size="2x" />
-              </a>
-              <a href="#" className="text-white">
-                <FontAwesomeIcon icon={faInstagram} size="2x" />
-              </a>
-            </Col>
-          </Row>
-        </div>
-      </div>
-    </div>
-  );
+    return (
+        <footer className="footer-wrapper" role="contentinfo">
+            <div className="footer">
+                <Row className="justify-content-between w-100">
+                    {/* Columna 1 - Logo y descripción */}
+                    <Col xs={12} sm={12} md={12} lg={4} className="mb-4 mb-lg-0">
+                        <div className="footer-section d-flex align-items-center align-items-lg-start flex-column gap-3">
+                            <p className="footer-brand m-0">Logo</p>
+                            <p className="footer-location w-75 text-center text-lg-start">
+                                Nuestra visión es hacerte el aprendizaje más fácil y ayudarte a dominar las matemáticas que necesitás para potenciar tu día a día.
+                            </p>
+                            <div className="footer-social-icons justify-content-start">
+                                <FaFacebook
+                                    size={24}
+                                    className="footer-social-link"
+                                    aria-label="Facebook"
+                                />
+                                <FaLinkedin
+                                    size={24}
+                                    className="footer-social-link"
+                                    aria-label="LinkedIn"
+                                />
+                                <FaGithub
+                                    size={24}
+                                    className="footer-social-link"
+                                    aria-label="GitHub"
+                                />
+                            </div>
+                        </div>
+                    </Col>
+
+                    {/* Columna 2 - Acerca */}
+                    <Col xs={4} sm={4} md={4} lg={2}>
+                        <Nav className="footer-section d-flex align-items-center flex-column gap-2">
+                            <p className="footer-social-title m-0">Acerca</p>
+                            <Nav.Link onClick={() => handleScrollToSection("about")} href="#" className="footer-link">¿Qué es MATE+?</Nav.Link>
+                            <Nav.Link onClick={() => handleScrollToSection("about")} href="#" className="footer-link">Sobre nosotros</Nav.Link>
+                        </Nav>
+                    </Col>
+
+                    {/* Columna 3 - Comunidad */}
+                    <Col xs={4} sm={4} md={4} lg={2}>
+                        <div className="footer-section d-flex align-items-center flex-column gap-2">
+                            <p className="footer-social-title m-0">Comunidad</p>
+                            <a href="#" className="footer-link">Foro</a>
+                            <a href="#" className="footer-link">Blog</a>
+                        </div>
+                    </Col>
+
+                    {/* Columna 4 - Redes */}
+                    <Col xs={4} sm={4} md={4} lg={2}>
+                        <div className="footer-section d-flex flex-column align-items-center align-items-lg-end gap-2">
+                            <p className="footer-social-title m-0">Redes</p>
+                            <a href="#" className="footer-link">LinkedIn</a>
+                            <a href="#" className="footer-link">Equipo 8</a>
+                        </div>
+                    </Col>
+                </Row>
+
+                {/* Línea divisoria */}
+                <div className="w-100 my-4" style={{ borderBottom: '1px solid rgba(0,0,0,0.15)' }} />
+
+                {/* Footer inferior */}
+                <Row className="w-100 align-items-center">
+                    <Col xs={12} md={6} className="text-center text-md-start">
+                        <p className="footer-copyright">
+                            © {currentYear} Mate+. Todos los derechos reservados.
+                        </p>
+                    </Col>
+                    <Col xs={12} md={6} className="d-flex justify-content-center justify-content-md-end gap-4 gap-md-5 mt-2 mt-md-0">
+                        <a href="#" className="footer-copyright" style={{ textDecoration: 'none', cursor: 'pointer' }}>
+                            Privacy & Policy
+                        </a>
+                        <a href="#" className="footer-copyright" style={{ textDecoration: 'none', cursor: 'pointer' }}>
+                            Terms & Conditions
+                        </a>
+                    </Col>
+                </Row>
+            </div>
+        </footer>
+    );
 };
 
 export default Footer;

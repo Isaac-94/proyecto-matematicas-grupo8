@@ -1,14 +1,14 @@
-import { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { Container } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
-
-import FirstSection from '../components/landing/FirstSection/FirstSection';
-import SecondSection from '../components/landing/SecondSection/SecondSection';
-import ThirdSection from '../components/landing/ThirdSection/ThirdSection';
-import Footer from '../components/layouts/Footer/Footer';
-import Header from '../components/layouts/header/Header';
-
 import { FaArrowUp } from "react-icons/fa";
+
+const FirstSection = React.lazy(() => import('../components/landing/FirstSection/FirstSection'));
+const SecondSection = React.lazy(() => import('../components/landing/SecondSection/SecondSection'));
+const Introduction = React.lazy(() => import('../components/landing/Introduccion/Introduccion'));
+const Footer = React.lazy(() => import('../components/layouts/Footer/Footer'));
+const Header = React.lazy(() => import('../components/layouts/header/Header'));
+const Banner = React.lazy(() => import('../components/landing/Components/Banner/Banner'));
 
 const Landing = () => {
     const navigate = useNavigate();
@@ -42,11 +42,12 @@ const Landing = () => {
     };
 
     return (
-        <Container ref={containerRef} fluid className="p-0 m-0 overflow-auto overflow-x-hidden" style={{ backgroundColor: "#F0F1EB"}}>
+        <Container ref={containerRef} fluid className="p-0 m-0 overflow-auto overflow-x-hidden" style={{ backgroundColor: "#F0F1EB" }}>
             <Header />
             <FirstSection navigate={navigate} />
+            <Banner />
+            <Introduction />
             <SecondSection />
-            <ThirdSection />
             <Footer />
 
             {showScrollTop && (
@@ -62,8 +63,8 @@ const Landing = () => {
                         height: '60px',
                         borderRadius: '50%',
                         border: 'none',
-                        backgroundColor: '#31C976',
-                        color: '#ffffff',
+                        backgroundColor: '#FFDB54',
+                        color: 'black',
                         fontSize: '30px',
                         cursor: 'pointer',
                         boxShadow: '0 10px 24px rgba(0, 0, 0, 0.22)',
@@ -79,7 +80,7 @@ const Landing = () => {
                     onMouseLeave={(e) => {
                         e.currentTarget.style.transform = 'translateY(0)';
                     }}
-                >   
+                >
                     <FaArrowUp />
                 </button>
             )}
