@@ -4,7 +4,8 @@ import Footer from '../components/layouts/footer/Footer';
 import Header from '../components/layouts/header/Header';
 import SecondSection from '../components/layouts/Nosotros/SecondSection';
 import ThirdSection from '../components/layouts/Nosotros/ThirdSection';
-import ButtonContinue from '../components/ui/ui/ButtonContinue/ButtonContinue';
+import ButtonBack from '../components/ui/ButtonBack/ButtonBack';
+import ButtonContinue from '../components/ui/ButtonContinue/ButtonContinue';
 
 const Nosotros = () => {
   return (
