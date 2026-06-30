@@ -2,7 +2,7 @@
   "version": 2,
   "functions": {
     "api/index.js": {
-      "includeFiles": "node_modules/.prisma/client/libquery_engine-*"
+      "includeFiles": "node_modules/.prisma/client/**"
     }
   },
   "headers": [

@@ -1,5 +1,5 @@
 import 'dotenv/config';
-import { PrismaClient } from '../generated/client/index.js';
+import { PrismaClient } from '@prisma/client';
 import mockPrisma from './mock-database.js';
 
 let prisma;
