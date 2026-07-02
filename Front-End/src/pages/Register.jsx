@@ -72,7 +72,7 @@ const useRegisterForm = () => {
     setShowProfileModal(true);
   };
   const handleCompleteProfile = async () => {
-    if (!nombre || !usuario || !anioNacimiento || !genero || !lugar) {
+    if (!nombre || !usuario || !anioNacimiento || !genero) {
       setToastMessage("❌ Completá todos los campos del perfil");
       setToastVariant("danger");
       setShowToast(true);
@@ -504,23 +504,7 @@ const RegisterPage = () => {
               <option value="otro">Otro</option>
             </Form.Select>
           </Form.Group>
-          <Form.Group className="mb-4">
-            <Form.Select
-              value={lugar}
-              onChange={(e) => setLugar(e.target.value)}
-              style={{
-                border: "none",
-                borderBottom: "1px solid #e0e0e0",
-                borderRadius: 0,
-                boxShadow: "none",
-              }}
-            >
-              <option value="">Ubicación</option>
-              <option value="">Argentina</option>
-              <option value=""> Otro pais</option>
-              {/* TODO: traer provincias desde el backend */}
-            </Form.Select>
-          </Form.Group>
+
           <Button
             className="w-100 rounded-pill fw-semibold"
             style={{ backgroundColor: "#2D2D2D", borderColor: "#2D2D2D" }}
