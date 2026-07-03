@@ -65,6 +65,7 @@ export default function Header() {
             </Nav.Link>
 
             <Nav.Link
+             as={Link}
               to="/login"
               className="d-flex d-lg-none gap-2 align-items-center button"
               onClick={() => setExpanded(false)}
