@@ -126,7 +126,7 @@ const LoginPage = () => {
           backgroundRepeat: "no-repeat",
           backgroundColor: "#8FD8FD",
           backgroundSize: "contain",
-          minHeight: "calc(100vh - 70px)",
+          minHeight: "100vh ",
           paddingTop: "100px",
           paddingBottom: "20px",
         }}
@@ -355,3 +355,4 @@ const LoginPage = () => {
   );
 };
 export default LoginPage;
+
