@@ -29,7 +29,7 @@ const PublicRoute = ({ children, forceRedirect = true }) => {
 
     // Solo redireccionamos si hay sesión Y perfil cargado.
     // Si hay sesión pero no perfil (error de red), dejamos que vea la página pública.
-    return (isAuthenticated && profile && forceRedirect) ? <Navigate to="/onboarding" /> : children;
+    return (isAuthenticated && profile && forceRedirect) ? <Navigate to="/Onboarding" /> : children;
 };
 
 export default function AppRouter() {
@@ -84,6 +84,11 @@ export default function AppRouter() {
                 {/* Rutas autenticadas */}
 
                 <Route
+                    path="/Onboarding"
+                    element={<Navigate to="/onboarding" replace />}
+                />
+
+                <Route
                     path="/onboarding"
                     element={
                         <ProtectedRoute>
@@ -91,6 +96,14 @@ export default function AppRouter() {
                         </ProtectedRoute>
                     }
                 />
+
+                {/* Ruta de desarrollo para previsualizar Onboarding sin autenticación */}
+                {import.meta.env.DEV && (
+                    <Route
+                        path="/dev-onboarding"
+                        element={<Onboarding />}
+                    />
+                )}
 
                 <Route
                     path="/dashboard"

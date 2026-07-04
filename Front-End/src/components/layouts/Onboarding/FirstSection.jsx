@@ -4,7 +4,6 @@ import './onboarding.css'; // Cambiado a un solo archivo CSS compartido
 function FirstSection({ onStart }) {
   return (
     <div className="onboarding-container">
-      <header>MATE+</header>
       <div className="page">
         <div className="title2">
           Para personalizar tu experiencia te vamos a hacer un par de preguntas

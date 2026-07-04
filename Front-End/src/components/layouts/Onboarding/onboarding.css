@@ -7,28 +7,33 @@
 .onboarding {
   height: 100vh;
   width: 100vw;
-  background-image: url('../../../Images/fondo4.png'); 
-  overflow-y: auto; /**/
+  background-image: url('../../../assets/fondo_onboarding_2.png');
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: center;
+  overflow-y: auto;
   display: flex;
   align-items: center;
   justify-content: center;
 }
 
 .onboarding-container {
-  width: 80%;
-  height: 90%;
-  background: #2c3e50;
+  width: 60%;
+  max-width: 1100px;
+  background-image: url('../../../assets/fondo_onboarding_4.png');
+  background-repeat: no-repeat;
+  background-size: 100% 100%;
+  background-position: center;
   text-align: center;
   border-radius: 20px;
   padding: 35px 25px;
   box-shadow: 0px 10px 30px rgba(0, 0, 0, 0.3);
   margin: 20px auto;
-  overflow-y: auto; /**/
-  height: auto; /** */
-  min-height: 90%; /** */
+  overflow: hidden;
+  min-height: 550px;
   display: flex;
   flex-direction: column;
-  justify-content: center; /* Centra verticalmente el contenido */
+  justify-content: flex-start;
 }
 
 .onboarding-container header {
@@ -45,9 +50,11 @@
 
 .onboarding-container .title2 {
   font-size: 24px;
+  font-weight: 800;
   margin-bottom: 40px;
-  color: #bdc3c7;;
-  text-shadow: #2ecc71 1px 1px 1px;
+  margin-top: 160px;
+  color: #000000;
+  text-shadow: #A9A9A9 1px 1px 1px;
   text-align: center;
   line-height: 1.4;
 }
@@ -72,11 +79,11 @@
 }
 
 .onboarding-container .button2.selected {
-  background: rgba(46, 204, 113, 0.15);
-  border-color: #2ecc71;
-  color: #2ecc71;
+  background: rgba(169, 169, 169, 0.15);
+  border-color: #A9A9A9;
+  color: #A9A9A9;
   font-weight: 600;
-  box-shadow: 0 0 10px rgba(46, 204, 113, 0.2);
+  box-shadow: 0 0 10px rgba(169, 169, 169, 0.2);
 }
 
 /* ==========================================================================
@@ -105,7 +112,7 @@
 
 .onboarding-container form .page .field.btns button.next,
 .onboarding-container form .page .field.btns button.submit {
-  background: #2ecc71;
+  background: #A9A9A9;
   color: #fff;
 }
 
@@ -135,6 +142,8 @@
   margin: 0 auto 35px auto;
   width: 100%;
   user-select: none;
+  margin-bottom: 30px;
+  margin-top: 50px;
 }
 
 .onboarding-container .progress-bar .step {
@@ -152,7 +161,7 @@
 }
 
 .onboarding-container .progress-bar .step p.active {
-  color: #2ecc71;
+  color: #A9A9A9;
   font-weight: 600;
 }
 
@@ -172,12 +181,12 @@
 }
 
 .onboarding-container .progress-bar .step .bullet.active {
-  border-color: #2ecc71;
-  color: #2ecc71;
+  border-color: #A9A9A9;
+  color: #A9A9A9;
 }
 
 .onboarding-container .progress-bar .step.completed .bullet {
-  background: #2ecc71;
+  background: #A9A9A9;
   color: #fff;
 }
 
@@ -201,7 +210,7 @@
 }
 
 .onboarding-container .progress-bar .step.completed::before {
-  background: #2ecc71;
+  background: #A9A9A9;
 }
 
 .onboarding-container .progress-bar .step:last-child::before {
@@ -215,30 +224,36 @@
 .onboarding-container .form-outer {
   width: 100%;
   overflow: hidden;
+  min-height: 500px;
 }
 
 .onboarding-container .form-outer form {
   display: flex;
-  width: 300%;
+  width: 400%;
   transition: margin-left 0.3s ease-in-out;
+  min-height: 500px;
 }
 
 .onboarding-container .form-outer form .page {
-  width: 33.333%;
+  width: 25%;
+  min-width: 25%;
   padding: 0 5px;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
+  min-height: 500px;
 }
 
 .onboarding-container .form-outer form .page .title {
   text-align: center;
   font-size: 18px;
-  font-weight: 500;
+  font-weight: 700;
   line-height: 1.4;
   margin-bottom: 30px;
-  color: #ECF0F1;
+  color: #000000;
   min-height: 60px;
+  flex: 0 0 auto;
+  margin-top: 20px;
 }
 
 /* ==========================================================================
@@ -281,11 +296,11 @@
 }
 
 .onboarding-container .option-btn.selected {
-  background: rgba(46, 204, 113, 0.15);
-  border-color: #2ecc71;
-  color: #2ecc71;
+  background: rgba(169, 169, 169, 0.15);
+  border-color: #A9A9A9;
+  color: #A9A9A9;
   font-weight: 600;
-  box-shadow: 0 0 10px rgba(46, 204, 113, 0.2);
+  box-shadow: 0 0 10px rgba(169, 169, 169, 0.2);
 }
 
 /* ==========================================================================
@@ -329,13 +344,13 @@
 
 .onboarding-container form .page .field.btns button.next,
 .onboarding-container form .page .field.btns button.submit {
-  background: #2ecc71;
+  background: #A9A9A9;
   color: #fff;
 }
 
 .onboarding-container form .page .field.btns button.next:hover,
 .onboarding-container form .page .field.btns button.submit:hover {
-  background: #27ae60;
+  background: #8f8f8f;
 }
 
 .onboarding-container form .page .field.btns button:disabled {
@@ -359,7 +374,7 @@
 }
 
 .onboarding-container .status-msg.success { 
-  color: #2ecc71; 
+  color: #A9A9A9; 
 }
 
 /* ==========================================================================
