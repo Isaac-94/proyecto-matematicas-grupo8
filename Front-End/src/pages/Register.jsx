@@ -78,6 +78,19 @@ const useRegisterForm = () => {
       setShowToast(true);
       return;
     }
+
+    const anioActual = new Date().getFullYear();
+    const anio = Number(anioNacimiento);
+
+    if (anio < 1900 || anio > anioActual - 18) {
+        setToastMessage(`❌ Ingresá un año de nacimiento válido`);
+        setToastVariant("danger");
+        setShowToast(true);
+        return;
+    }
+
+
+
     try {
       await register(email, password, nombre, {
         usuario,
@@ -180,7 +193,7 @@ const RegisterPage = () => {
           backgroundRepeat: "no-repeat",
           backgroundColor: "#8FD8FD",
           backgroundSize: "contain",
-          minHeight: "calc(100vh - 70px)",
+          minHeight: "100vh" ,
           paddingTop: "100px",
           paddingBottom: "20px",
         }}
@@ -395,7 +408,7 @@ const RegisterPage = () => {
       <ToastContainer
         position="top-end"
         className="p-3"
-        style={{ zIndex: 9999, position: "fixed" }}
+        style={{ zIndex: 99999, position: "fixed" }}
       >
         <Toast
           onClose={() => setShowToast(false)}
@@ -479,6 +492,8 @@ const RegisterPage = () => {
               placeholder="Año de nacimiento"
               value={anioNacimiento}
               onChange={(e) => setAnioNacimiento(e.target.value)}
+              min="1900"
+              max={new Date().getFullYear() - 18}
               style={{
                 border: "none",
                 borderBottom: "1px solid #e0e0e0",
