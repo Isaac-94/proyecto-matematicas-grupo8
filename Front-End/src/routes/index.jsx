@@ -12,6 +12,7 @@ import { useAuth } from '../context/AuthContext';
 import StartedPage from '../pages/Started.jsx';
 import Onboarding from '../pages/Onboarding';
 import Nosotros from '../pages/Nosotros.jsx';
+import Desafios from '../pages/Desafios.jsx';
 
 // Componente para proteger rutas autenticadas
 const ProtectedRoute = ({ children }) => {
@@ -81,13 +82,13 @@ export default function AppRouter() {
                     }
                 />
 
-                {/* Rutas autenticadas */}
-
+                {/* Rutas públicas para previsualización */}
                 <Route
-                    path="/Onboarding"
-                    element={<Navigate to="/onboarding" replace />}
+                    path="/desafios"
+                    element={<Desafios />}
                 />
 
+                {/* Rutas autenticadas */}
                 <Route
                     path="/onboarding"
                     element={
