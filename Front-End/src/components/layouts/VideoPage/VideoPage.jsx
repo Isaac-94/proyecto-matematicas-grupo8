@@ -28,12 +28,7 @@ function VideoPage({
         <div className="video-page-top-bar">
           <ButtonBack onClick={onBack} />
           <div className="video-page-title-container">
-            {/* Opcional: Muestra la posición actual en el array */}
-            {totalVideos && (
-              <span className="video-page-progress">
-                Video {currentIndex + 1} de {totalVideos}
-              </span>
-            )}
+
             <h1 className="video-page-title">{title}</h1>
           </div>
         </div>
