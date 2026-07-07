@@ -37,7 +37,9 @@ export const registrarUsuario = async (req, res, next) => {
         req.headers["x-forwarded-for"]?.split(",")[0]?.trim() ||
         req.socket.remoteAddress;
       const ubicacion = await obtenerUbicacionPorIP(ip);
-      lugarFinal = ubicacion?.pais ?? null;
+      lugarFinal = ubicacion
+        ? [ubicacion.region, ubicacion.pais].filter(Boolean).join(", ")
+        : null;
     }
 
     const ADMIN_EMAILS = (process.env.ADMIN_EMAILS || "")
