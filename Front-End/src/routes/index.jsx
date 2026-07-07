@@ -104,9 +104,9 @@ export default function AppRouter() {
                 <Route
                     path="/profile"
                     element={
-                        <ProtectedRoute>
+                       <ProtectedRoute>
                             <Profile />
-                        </ProtectedRoute>
+                      </ProtectedRoute>
                     }
                 />
 
