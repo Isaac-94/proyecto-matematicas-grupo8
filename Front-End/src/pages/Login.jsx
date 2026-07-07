@@ -58,7 +58,7 @@ const useLoginForm = () => {
       setToastVariant("success");
       setShowToast(true);
       setTimeout(() => {
-        navigate("/dashboard", { replace: true });
+        navigate("/onboarding", { replace: true });
       }, 1500);
     } catch (error) {
       console.error("Error al iniciar sesión:", error);

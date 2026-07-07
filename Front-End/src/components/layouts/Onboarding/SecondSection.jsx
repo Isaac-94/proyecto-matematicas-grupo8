@@ -72,6 +72,10 @@ function SecondSection() {
     } catch (error) {
       const errorMsg = error.response?.data?.error || error.message;
       setStatus({ loading: false, error: errorMsg, success: '' });
+    } finally {
+      setTimeout(() => {
+        navigate("/dashboard")
+      }, 1500);
     }
   };
 
