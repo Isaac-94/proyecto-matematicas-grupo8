@@ -1,7 +1,7 @@
 // pages/auth/Callback.jsx
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { supabase } from '../../config/supabaseClient';
+import { supabase } from '../config/supabaseClient';
 import { Container, Spinner, Alert } from 'react-bootstrap';
 
 const AuthCallback = () => {
