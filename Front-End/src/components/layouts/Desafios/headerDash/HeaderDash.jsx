@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { Navbar, Container, Nav, Button, Dropdown } from 'react-bootstrap';
 import { Link, useNavigate } from 'react-router-dom';
-import "../../header/Header.css";
+import '../../header/header.css';
 import { IoNotificationsOutline } from "react-icons/io5";
 import { IoIosSearch } from "react-icons/io";
 import { FaUser, FaCog, FaSignOutAlt } from "react-icons/fa";
