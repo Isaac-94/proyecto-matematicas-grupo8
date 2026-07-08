@@ -1,14 +1,12 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import {
   Container,
-  Row,
-  Col,
   Form,
   Button,
-  Card,
   Toast,
   ToastContainer,
   InputGroup,
+  Spinner,
 } from "react-bootstrap";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 import { Link, useNavigate } from "react-router-dom";
@@ -18,14 +16,15 @@ import Header from "../../src/components/layouts/header/Header.jsx";
 // Hook personalizado para manejar el estado del formulario de inicio de sesión
 const useLoginForm = () => {
   const navigate = useNavigate();
-  const { login } = useAuth();
+  const { login, loginWithGoogle, googleLoading } = useAuth();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showToast, setShowToast] = useState(false);
   const [toastMessage, setToastMessage] = useState("");
-  const [toastVariant, setToastVariant] = useState("success"); // 'success' o 'danger'
+  const [toastVariant, setToastVariant] = useState("success");
   const [rememberMe, setRememberMe] = useState(false);
-  // Método para manejar el cambio de los campos del formulario
+  const [loading, setLoading] = useState(false);
+
   const handleChangeValue = (e) => {
     const { name, value } = e.target;
     if (name === "email") {
@@ -35,23 +34,25 @@ const useLoginForm = () => {
     }
   };
 
-  // Método para manejar el envío del formulario
   const handleSubmit = async (e) => {
     e.preventDefault();
+    
     if (!email || !password) {
       setToastMessage("❌ Por favor, completa todos los campos");
       setToastVariant("danger");
       setShowToast(true);
       return;
     }
+    
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email.trim())) {
+      setToastMessage("❌ Ingresa un correo electrónico válido");
+      setToastVariant("danger");
+      setShowToast(true);
+      return;
+    }
 
-  if (!emailRegex.test(email.trim())) {
-    setToastMessage("❌ Ingresa un correo electrónico válido");
-    setToastVariant("danger");
-    setShowToast(true);
-    return;
-  }
+    setLoading(true);
     try {
       await login(email, password);
       setToastMessage("✅ ¡Inicio de sesión exitoso! Redirigiendo...");
@@ -65,13 +66,30 @@ const useLoginForm = () => {
       setToastMessage("❌ Error al iniciar sesión. Verificá tus credenciales.");
       setToastVariant("danger");
       setShowToast(true);
+    } finally {
+      setLoading(false);
     }
   };
-  const handleSocialLogin = (provider) => {
-    setToastMessage(`🔗 Iniciando sesión con ${provider}...`);
-    setToastVariant("info");
-    setShowToast(true);
+
+  // 🆕 Función para manejar login con Google
+  const handleGoogleLogin = async () => {
+    try {
+      const redirectUrl = `${window.location.origin}/auth/callback`;
+      await loginWithGoogle(redirectUrl);
+      
+      setToastMessage("🔗 Redirigiendo a Google...");
+      setToastVariant("info");
+      setShowToast(true);
+      
+      // La redirección la maneja Supabase
+    } catch (error) {
+      console.error("Error en login con Google:", error);
+      setToastMessage("❌ Error al iniciar sesión con Google. Intentá nuevamente.");
+      setToastVariant("danger");
+      setShowToast(true);
+    }
   };
+
   return {
     email,
     setEmail,
@@ -83,14 +101,15 @@ const useLoginForm = () => {
     toastVariant,
     handleChangeValue,
     handleSubmit,
-    handleSocialLogin,
+    handleGoogleLogin,
     rememberMe,
     setRememberMe,
+    loading,
+    googleLoading,
   };
 };
 
 const LoginPage = () => {
-  const navigate = useNavigate();
   const [showPassword, setShowPassword] = useState(false);
   const {
     email,
@@ -102,16 +121,13 @@ const LoginPage = () => {
     toastVariant,
     handleChangeValue,
     handleSubmit,
-    handleSocialLogin,
+    handleGoogleLogin,
     rememberMe,
     setRememberMe,
     setEmail,
+    loading,
+    googleLoading,
   } = useLoginForm();
-
-  useEffect(() => {
-    // Aquí podrías agregar lógica para verificar si el usuario ya está autenticado
-    // y redirigirlo a la página principal si es así.
-  }, []);
 
   return (
     <>
@@ -121,12 +137,11 @@ const LoginPage = () => {
         className="d-flex align-items-center justify-content-center"
         style={{
           backgroundImage: "url('/login/fondo.png')",
-          backgroundSize: "cover",
           backgroundPosition: "center",
           backgroundRepeat: "no-repeat",
           backgroundColor: "#8FD8FD",
           backgroundSize: "contain",
-          minHeight: "100vh ",
+          minHeight: "100vh",
           paddingTop: "100px",
           paddingBottom: "20px",
         }}
@@ -235,7 +250,6 @@ const LoginPage = () => {
                       paddingRight: "80px",
                     }}
                   />
-                  {/* ✕ borrar */}
                   {password && (
                     <img
                       src="/login/icon2.png"
@@ -254,7 +268,6 @@ const LoginPage = () => {
                     />
                   )}
                 </div>
-                {/* 👁 mostrar/ocultar */}
                 <div
                   onClick={() => setShowPassword(!showPassword)}
                   style={{
@@ -270,7 +283,6 @@ const LoginPage = () => {
                   {showPassword ? <FaEyeSlash /> : <FaEye />}
                 </div>
               </Form.Group>
-              {/* Recordarme / Olvidé contraseña */}
               <div className="d-flex justify-content-between align-items-center mb-3">
                 <Form.Check
                   label="Recordarme"
@@ -286,48 +298,66 @@ const LoginPage = () => {
                   Olvidé mi contraseña
                 </Link>
               </div>
-              {/* Botón ingresar */}
               <Button
                 variant="outline-secondary"
                 type="submit"
+                disabled={loading}
                 className="w-100 rounded-pill fw-semibold mb-2 justify-content-center d-flex align-items-center gap-2"
                 style={{ backgroundColor: "#FFFEFD", color: "#151515" }}
               >
-                <img
-                  src="/login/icon.png"
-                  alt="Google"
-                  style={{ width: 18, height: 18, bacgroundColor: "#E7E7E7" }}
-                />
-                Ingresar
+                {loading ? (
+                  <>
+                    <Spinner animation="border" size="sm" />
+                    Cargando...
+                  </>
+                ) : (
+                  <>
+                    <img
+                      src="/login/icon.png"
+                      alt="Ingresar"
+                      style={{ width: 18, height: 18 }}
+                    />
+                    Ingresar
+                  </>
+                )}
               </Button>
-              {/* Separador */}
               <div className="d-flex align-items-center my-2">
                 <hr className="flex-grow-1" />
                 <span className="mx-2 text-muted small">o</span>
                 <hr className="flex-grow-1" />
               </div>
-              {/* Google */}
               <Button
                 variant="outline-secondary"
+                onClick={handleGoogleLogin}
+                disabled={googleLoading}
                 className="w-100 rounded-pill fw-semibold d-flex align-items-center justify-content-center gap-2"
+                style={{ borderColor: '#ddd' }}
               >
-                <img
-                  src="/login/icon.png"
-                  alt="Google"
-                  style={{
-                    width: 18,
-                    height: 18,
-                    color: "#E7E7E7",
-                  }}
-                />
-                Iniciar sesión con Google
+                {googleLoading ? (
+                  <>
+                    <Spinner animation="border" size="sm" />
+                    Conectando con Google...
+                  </>
+                ) : (
+                  <>
+                    <svg width="18" height="18" viewBox="0 0 18 18" xmlns="http://www.w3.org/2000/svg">
+                      <g fill="none" fillRule="evenodd">
+                        <path d="M9 3.48c1.69 0 2.83.73 3.48 1.34l2.54-2.48C13.46.89 11.43 0 9 0 5.48 0 2.44 2.02.96 4.96l2.91 2.26C4.6 5.05 6.62 3.48 9 3.48z" fill="#EA4335"/>
+                        <path d="M17.64 9.2c0-.74-.06-1.28-.19-1.84H9v3.34h4.96c-.1.83-.64 2.08-1.84 2.92l2.84 2.2c1.7-1.57 2.68-3.88 2.68-6.62z" fill="#4285F4"/>
+                        <path d="M3.88 10.78A5.44 5.44 0 0 1 3.6 9c0-.62.1-1.22.28-1.78L.97 4.96A9.06 9.06 0 0 0 0 9c0 1.45.35 2.82.97 4.04l2.91-2.26z" fill="#FBBC05"/>
+                        <path d="M9 18c2.43 0 4.47-.8 5.96-2.18l-2.84-2.2c-.76.53-1.78.9-3.12.9-2.38 0-4.4-1.57-5.12-3.74l-2.91 2.26C2.44 15.98 5.48 18 9 18z" fill="#34A853"/>
+                      </g>
+                    </svg>
+                    Iniciar sesión con Google
+                  </>
+                )}
               </Button>
             </Form>
             <p className="text-center mt-3 small text-muted">
               ¿No tenes cuenta?{" "}
               <Link
                 to="/register"
-                className="text-decoration-none "
+                className="text-decoration-none"
                 style={{ color: "#000000" }}
               >
                 Registrate
@@ -339,7 +369,7 @@ const LoginPage = () => {
       <ToastContainer
         position="top-end"
         className="p-3"
-        style={{ zIndex: 1050, position: "fixed",}}
+        style={{ zIndex: 1050, position: "fixed" }}
       >
         <Toast
           onClose={() => setShowToast(false)}
@@ -348,11 +378,11 @@ const LoginPage = () => {
           autohide
           bg={toastVariant}
         >
-          <Toast.Body className={"text-white"}>{toastMessage}</Toast.Body>
+          <Toast.Body className="text-white">{toastMessage}</Toast.Body>
         </Toast>
       </ToastContainer>
     </>
   );
 };
-export default LoginPage;
 
+export default LoginPage;

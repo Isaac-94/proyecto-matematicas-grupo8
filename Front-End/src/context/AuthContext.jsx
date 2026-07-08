@@ -8,11 +8,12 @@ export const AuthProvider = ({ children }) => {
     const [session, setSession] = useState(null);
     const [profile, setProfile] = useState(null);
     const [loading, setLoading] = useState(true);
-    const [initialized, setInitialized] = useState(false); // Nuevo estado
+    const [initialized, setInitialized] = useState(false);
     const lastFetchedId = useRef(null);
     const isFetching = useRef(false);
+    const [googleLoading, setGoogleLoading] = useState(false);
 
-
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     const logout = async () => {
         try {
             setLoading(true);
@@ -41,14 +42,11 @@ export const AuthProvider = ({ children }) => {
         } catch (error) {
             console.error('🔴 Error de sincronización con Back-End:', error.message);
 
-            // Si el Back-End nos tira 401, la sesión de Supabase que tenemos es basura.
-            // Forzamos el cierre de sesión para que el usuario pueda volver al login.
             if (error.response?.status === 401) {
                 console.warn("⚠️ Sesión inválida detectada. Limpiando...", error);
                 logout();
             }
 
-            // Si es un error de red, permitimos re-intento en el próximo evento
             if (error.code === 'ERR_NETWORK' || error.code === 'ECONNABORTED' || !error.response) {
                 lastFetchedId.current = null;
             }
@@ -58,7 +56,6 @@ export const AuthProvider = ({ children }) => {
         }
     }, [profile?.id]);
 
-    // Función para marcar la inicialización como completa
     const completeInitialization = useCallback(() => {
         if (!initialized) {
             setInitialized(true);
@@ -66,11 +63,69 @@ export const AuthProvider = ({ children }) => {
         }
     }, [initialized]);
 
+    // 🆕 NUEVO: Login con Google
+    const loginWithGoogle = useCallback(async (redirectUrl) => {
+        setGoogleLoading(true);
+        try {
+            // Verificar si Supabase está configurado
+            const isMockMode = !import.meta.env.VITE_SUPABASE_URL || 
+                              import.meta.env.VITE_SUPABASE_URL.includes('[TU_PROYECTO]');
+
+            if (isMockMode) {
+                console.warn("⚠️ Modo mock: Simulando login con Google");
+                // Simular login con Google para desarrollo
+                const mockUser = {
+                    id: 'google-mock-' + Date.now(),
+                    email: 'usuario.mock@gmail.com',
+                    user_metadata: {
+                        full_name: 'Usuario Google Mock',
+                        avatar_url: 'https://ui-avatars.com/api/?name=Usuario+Google'
+                    }
+                };
+                
+                const mockSession = {
+                    user: mockUser,
+                    access_token: 'google-mock-token-' + Date.now()
+                };
+                
+                setSession(mockSession);
+                await fetchProfile(mockUser);
+                
+                // Redirigir después del mock
+                if (redirectUrl) {
+                    window.location.href = redirectUrl;
+                }
+                return mockSession;
+            }
+
+            // Login real con Google
+            const { data, error } = await supabase.auth.signInWithOAuth({
+                provider: 'google',
+                options: {
+                    redirectTo: redirectUrl || `${window.location.origin}/auth/callback`,
+                    queryParams: {
+                        access_type: 'offline',
+                        prompt: 'consent',
+                    },
+                },
+            });
+
+            if (error) throw error;
+            
+            console.log("✅ Redirigiendo a Google para autenticación...");
+            return data;
+            
+        } catch (error) {
+            console.error("🔴 Error en login con Google:", error);
+            setGoogleLoading(false);
+            throw error;
+        }
+    }, [fetchProfile]);
+
     useEffect(() => {
         let isMounted = true;
         let timeoutId = null;
 
-        // Failsafe: Si en 3 segundos no hay respuesta, forzamos la carga
         timeoutId = setTimeout(() => {
             if (isMounted && !initialized) {
                 console.warn("⚠️ Timeout de inicialización - forzando carga de la aplicación");
@@ -78,10 +133,8 @@ export const AuthProvider = ({ children }) => {
             }
         }, 3000);
 
-        // Primero, intentamos obtener la sesión actual de manera síncrona
         const initializeAuth = async () => {
             try {
-                // Verificar si ya hay una sesión activa
                 const { data: { session: currentSession }, error } = await supabase.auth.getSession();
 
                 if (error) {
@@ -92,8 +145,6 @@ export const AuthProvider = ({ children }) => {
                     console.log("✅ Sesión existente encontrada");
                     setSession(currentSession);
                     lastFetchedId.current = currentSession.user.id;
-
-                    // Cargar el perfil en segundo plano
                     await fetchProfile(currentSession.user);
                 } else {
                     console.log("ℹ️ No hay sesión activa");
@@ -103,17 +154,14 @@ export const AuthProvider = ({ children }) => {
             } catch (error) {
                 console.error("🔴 Error en inicialización:", error);
             } finally {
-                // Marcar como inicializado solo si el componente sigue montado
                 if (isMounted) {
                     completeInitialization();
                 }
             }
         };
 
-        // Ejecutar inicialización
         initializeAuth();
 
-        // Suscribirse a cambios de autenticación
         const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, newSession) => {
             console.log(`🔐 AuthEvent: ${_event}`);
 
@@ -131,13 +179,11 @@ export const AuthProvider = ({ children }) => {
                 lastFetchedId.current = null;
             }
 
-            // Si aún no está inicializado, marcarlo
             if (!initialized) {
                 completeInitialization();
             }
         });
 
-        // Cleanup
         return () => {
             isMounted = false;
             if (timeoutId) {
@@ -150,20 +196,19 @@ export const AuthProvider = ({ children }) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
     const login = async (email, password) => {
         try {
-            setLoading(true); // Mostrar loading durante el login
+            setLoading(true);
             const { data, error } = await supabase.auth.signInWithPassword({ email, password });
             if (error) {
                 if (error.status === 400) throw error;
                 throw new Error("SUPABASE_UNAVAILABLE");
             }
-            // No bloqueamos el login esperando al perfil, lo tiramos en paralelo
             if (data.user) fetchProfile(data.user);
             setLoading(false);
             return data;
         } catch (err) {
             setLoading(false);
-            // Solo caemos en el mock si Supabase realmente no está o da error de conexión
-            const isMockMode = !import.meta.env.VITE_SUPABASE_URL || import.meta.env.VITE_SUPABASE_URL.includes('[TU_PROYECTO]');
+            const isMockMode = !import.meta.env.VITE_SUPABASE_URL || 
+                              import.meta.env.VITE_SUPABASE_URL.includes('[TU_PROYECTO]');
 
             if (isMockMode || err.message === "SUPABASE_UNAVAILABLE" || err.message === "SUPABASE_UNAVAILABLE_MOCK") {
                 console.warn("⚠️ Usando autenticación de respaldo (Back-End Mock)");
@@ -185,6 +230,7 @@ export const AuthProvider = ({ children }) => {
         }
     };
 
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     const register = async (email, password, nombre, extraData = {}) => {
         try {
             setLoading(true);
@@ -226,36 +272,14 @@ export const AuthProvider = ({ children }) => {
             login,
             register,
             logout,
+            loginWithGoogle, // 🆕 Exportamos la nueva función
+            googleLoading, // 🆕 Estado de carga para Google
             loading,
             initialized,
             refreshProfile: () => session?.user && fetchProfile(session.user)
         }),
-        [session, profile, login, loading, initialized, fetchProfile]
+        [session, profile, login, register, logout, loginWithGoogle, googleLoading, loading, initialized, fetchProfile]
     );
-
-    // Solo mostrar el spinner si loading es true Y no está inicializado
-    {/*if (loading && !initialized) {
-        return (
-            <div style={{
-                display: 'flex',
-                justifyContent: 'center',
-                alignItems: 'center',
-                height: '100vh',
-                backgroundColor: '#1a1a1a',
-                color: '#00ff00'
-            }}>
-                <div style={{ textAlign: 'center' }}>
-                    <h3>InnovaLab</h3>
-                    <p>Cargando módulos de seguridad...</p>
-                    <div style={{ marginTop: '20px' }}>
-                        <div className="spinner-border text-success" role="status">
-                            <span className="visually-hidden">Cargando...</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        );
-    }*/}
 
     return (
         <AuthContext.Provider value={value}>
@@ -264,13 +288,10 @@ export const AuthProvider = ({ children }) => {
     );
 };
 
-// eslint-disable-next-line react-refresh/only-export-components
 export const useAuth = () => {
     const context = useContext(AuthContext);
-
     if (!context) {
         throw new Error('useAuth debe usarse dentro de AuthProvider');
     }
-
     return context;
 };
