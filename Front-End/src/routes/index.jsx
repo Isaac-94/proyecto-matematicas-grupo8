@@ -12,6 +12,7 @@ import { useAuth } from '../context/AuthContext';
 import StartedPage from '../pages/Started.jsx';
 import Onboarding from '../pages/Onboarding';
 import Nosotros from '../pages/Nosotros.jsx';
+import AuthCallback from '../pages/AuthCallback.jsx';
 
 // Componente para proteger rutas autenticadas
 const ProtectedRoute = ({ children }) => {
@@ -69,6 +70,13 @@ export default function AppRouter() {
                         <PublicRoute>
                             <LoginPage />
                         </PublicRoute>
+                    }
+                />
+
+                <Route
+                    path="/auth/callback"
+                    element={
+                        <AuthCallback />
                     }
                 />
 
