@@ -248,7 +248,7 @@ export const AuthProvider = ({ children }) => {
 
     const register = async (email, password, nombre, extraData = {}) => {
         try {
-            const redirectUrl = window.location.origin + '/auth/callback';
+            const redirectUrl = 'https://matemas.vercel.app/auth/callback';
             setLoading(true);
             const { data, error } = await supabase.auth.signUp({
                 email,
