@@ -4,9 +4,9 @@ import { useNavigate } from 'react-router-dom';
 
 // Tu array de videos (obtenido de una API o un archivo local)
 const cursoVideos = [
-  { id: 1, titulo: "Números Básicos", url: "https://www.youtube.com/embed/dQw4w9WgXcQ" },
-  { id: 2, titulo: "Suma y Resta", url: "https://www.youtube.com/embed/otra_url_1" },
-  { id: 3, titulo: "Multiplicación Inicial", url: "https://www.youtube.com/embed/otra_url_2" }
+  { id: 1, titulo: "Números Básicos", url: "https://www.youtube.com/watch?v=pM2zZlSGTWI" },
+  { id: 2, titulo: "Suma y Resta", url: "https://www.youtube.com/watch?v=2UmRmPVq8-M" },
+  { id: 3, titulo: "Multiplicación Inicial", url: "https://www.youtube.com/watch?v=cMXs1awxMmQ" }
 ];
 
 function Desafios() {
