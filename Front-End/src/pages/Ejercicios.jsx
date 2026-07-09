@@ -1,9 +1,11 @@
 
-import React, { useState } from 'react';
+import { useState } from 'react';
 import EjercicioPage from '../components/layouts/Ejercicios/Ejercicio'; // Tu componente de ejercicios
 import { ejerciciosDePrueba } from '../components/layouts/Ejercicios/datosPrueba'; // Importamos el array de prueba
+import { useNavigate } from 'react-router-dom';
 
 function ModuloEjercicios() {
+  const navigate = useNavigate();
   const [indexActual, setIndexActual] = useState(0);
 
   // Obtenemos de forma dinámica el ejercicio actual del array
@@ -14,6 +16,7 @@ function ModuloEjercicios() {
       setIndexActual(indexActual - 1);
     } else {
       console.log("Inicio de la sección de ejercicios.");
+      navigate(-1);
     }
   };
 

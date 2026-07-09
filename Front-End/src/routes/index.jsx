@@ -14,6 +14,8 @@ import Onboarding from '../pages/Onboarding';
 import Nosotros from '../pages/Nosotros.jsx';
 import Desafios from '../pages/Desafios.jsx';
 import AuthCallback from '../pages/AuthCallback.jsx';
+import ModuloEjercicios from '../pages/Ejercicios.jsx';
+import DragConstraints from '../pages/DropAndDown.jsx';
 
 // Componente para proteger rutas autenticadas
 const ProtectedRoute = ({ children }) => {
@@ -94,6 +96,16 @@ export default function AppRouter() {
                 <Route
                     path="/desafios"
                     element={<Desafios />}
+                />
+
+                <Route
+                    path="/ejercicios"
+                    element={<ModuloEjercicios />}
+                />
+
+                <Route
+                    path="/ejercicios2"
+                    element={<DragConstraints />}
                 />
 
                 {/* Rutas autenticadas */}

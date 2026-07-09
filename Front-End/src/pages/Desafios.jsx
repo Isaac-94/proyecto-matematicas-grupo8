@@ -1,5 +1,6 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import VideoPage from '../components/layouts/VideoPage/VideoPage'; 
+import { useNavigate } from 'react-router-dom';
 
 // Tu array de videos (obtenido de una API o un archivo local)
 const cursoVideos = [
@@ -9,6 +10,7 @@ const cursoVideos = [
 ];
 
 function Desafios() {
+  const navigate = useNavigate(); // Hook para navegación
   // Estado para saber qué índice del array estamos viendo
   const [indexActual, setIndexActual] = useState(0);
 
@@ -20,6 +22,7 @@ function Desafios() {
       setIndexActual(indexActual - 1);
     } else {
       console.log("Ya estás en el primer video, redirigir al menú principal");
+      navigate(-1);
     }
   };
 
@@ -28,6 +31,7 @@ function Desafios() {
       setIndexActual(indexActual + 1);
     } else {
       console.log("¡Curso terminado! Mostrar pantalla de éxito.");
+      navigate("/ejercicios"); // Redirige a la sección de ejercicios
     }
   };
 
