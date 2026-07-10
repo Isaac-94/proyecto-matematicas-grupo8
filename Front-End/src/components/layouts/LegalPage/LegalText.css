@@ -1,0 +1,45 @@
+/* --- ESTILO DE LOS TEXTOS LEGALES INTERNOS --- */
+.legal-text-content {
+  color: #2d3748;
+  line-height: 1.7;
+  font-size: 1.05rem;
+  font-family: 'Segoe UI', Roboto, sans-serif;
+}
+
+.legal-text-content h2 {
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: #1a202c;
+  margin-top: 2rem;
+  margin-bottom: 0.75rem;
+}
+
+.legal-text-content h3 {
+  font-size: 1.15rem;
+  font-weight: 600;
+  color: #4a5568;
+  margin-top: 1.25rem;
+  margin-bottom: 0.5rem;
+}
+
+.legal-text-content p {
+  margin-bottom: 1rem;
+  text-align: justify;
+}
+
+.legal-text-content ul {
+  margin-bottom: 1.5rem;
+  padding-left: 1.5rem;
+}
+
+.legal-text-content li {
+  margin-bottom: 0.5rem;
+  list-style-type: disc;
+}
+
+/* Ajustes en móviles */
+@media (max-width: 768px) {
+  .legal-text-content h2 {
+    font-size: 1.25rem;
+  }
+}

@@ -1,0 +1,112 @@
+.legal-page-container {
+  width: 100vw;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  margin: 0;
+  padding: 0;
+  overflow-x: hidden;
+  font-family: 'Segoe UI', Roboto, sans-serif;
+  background-color: #ffffff;
+}
+
+.legal-page-content {
+  width: 100%;
+  flex: 1;
+  padding: 2rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  
+  /* Imagen de fondo requerida */
+  background-image: url('../../../assets/fondo_primera.png');
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: center;
+}
+
+.legal-top-bar {
+  width: 100%;
+  max-width: 900px;
+  display: flex;
+  margin-bottom: 1.5rem;
+}
+
+/* --- SOLAPAS / TABS --- */
+.tabs-navigation {
+  width: 100%;
+  max-width: 900px;
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: -2px;
+  z-index: 2;
+}
+
+.tab-btn {
+  padding: 1rem 2rem;
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #555555;
+  background-color: #e2e8f0;
+  border: 2px solid #cbd5e1;
+  border-bottom: none;
+  border-radius: 16px 16px 0 0;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.tab-btn:hover {
+  background-color: #f1f5f9;
+  color: #111111;
+}
+
+.tab-btn.active {
+  background-color: #ffffff;
+  color: #111111;
+  border-color: #cbd5e1;
+  border-bottom: 2px solid #ffffff;
+  padding-bottom: 1.1rem;
+}
+
+/* --- TARJETA BLANCA CONTENEDORA --- */
+.legal-card-body {
+  width: 100%;
+  max-width: 900px;
+  height: 60vh;
+  background-color: #ffffff;
+  border: 2px solid #cbd5e1;
+  border-radius: 0 24px 24px 24px;
+  padding: 2.5rem;
+  overflow-y: auto;
+  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.06);
+  z-index: 1;
+}
+
+/* Personalización del scrollbar */
+.legal-card-body::-webkit-scrollbar {
+  width: 8px;
+}
+.legal-card-body::-webkit-scrollbar-track {
+  background: #f1f5f9;
+  border-radius: 10px;
+}
+.legal-card-body::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 10px;
+}
+
+@media (max-width: 768px) {
+  .legal-page-content {
+    padding: 1.25rem;
+  }
+  .tab-btn {
+    padding: 0.75rem 1rem;
+    font-size: 0.95rem;
+    flex: 1;
+  }
+  .legal-card-body {
+    padding: 1.5rem;
+    border-radius: 0 0 16px 16px;
+    height: 65vh;
+  }
+}
