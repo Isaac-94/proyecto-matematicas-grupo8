@@ -13,6 +13,7 @@ export const AuthProvider = ({ children }) => {
     const isFetching = useRef(false);
 
 
+
     const logout = async () => {
         try {
             setLoading(true);
@@ -65,6 +66,65 @@ export const AuthProvider = ({ children }) => {
             setLoading(false);
         }
     }, [initialized]);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
     useEffect(() => {
         let isMounted = true;
@@ -185,13 +245,19 @@ export const AuthProvider = ({ children }) => {
         }
     };
 
+
     const register = async (email, password, nombre, extraData = {}) => {
         try {
+            const redirectUrl = 'https://matemas.vercel.app/auth/callback';
             setLoading(true);
             const { data, error } = await supabase.auth.signUp({
                 email,
                 password,
-                options: { data: { full_name: nombre, ...extraData } }
+                options: {
+                    data: { full_name: nombre, ...extraData },
+                    emailRedirectTo: redirectUrl
+                },
+
             });
             if (error) throw error;
             setLoading(false);
@@ -226,6 +292,8 @@ export const AuthProvider = ({ children }) => {
             login,
             register,
             logout,
+
+
             loading,
             initialized,
             refreshProfile: () => session?.user && fetchProfile(session.user)

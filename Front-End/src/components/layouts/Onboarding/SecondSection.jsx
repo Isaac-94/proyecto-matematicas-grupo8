@@ -72,6 +72,10 @@ function SecondSection() {
     } catch (error) {
       const errorMsg = error.response?.data?.error || error.message;
       setStatus({ loading: false, error: errorMsg, success: '' });
+    } finally {
+      setTimeout(() => {
+        navigate("/dashboard")
+      }, 1500);
     }
   };
 
@@ -85,14 +89,15 @@ function SecondSection() {
 
   const opcionesSentimientos = ['Relajado', 'Ansioso', 'Confundido', 'Estresado'];
 
-  const opcionesEdades = ['20 a 30 años', '30 a 50 años', '+ 50 años'];
+  const opcionesTiempo = ['5 minutos', '10 minutos', '15 minutos', '+15 minutos'];
 
   const opcionesGeneros = ['masculino', 'femenino', 'otro'];
 
+  const opcionesEdades = ['20 a 30 años', '30 a 50 años', '+ 50 años'];
+
   return (
     <div className="onboarding-container">
-      <header>MATE+</header>
-
+      
       <div className="progress-bar">
         {stepLabels.map((label, index) => (
           <div
@@ -169,16 +174,16 @@ function SecondSection() {
             </div>
           </div>
 
-          {/* PASO 3: GÉNERO (Para alimentar el gráfico PIE) */}
+          {/* PASO 3: TIEMPO (Para alimentar el gráfico PIE) */}
           <div className="page">
-            <div className="title">¿Con qué género te identificás?</div>
+            <div className="title">¿Cuánto tiempo podés dedicarle a tu agilidad mental por día?</div>
             <div className="options-grid">
-              {opcionesGeneros.map((opcion) => (
+              {opcionesTiempo.map((opcion) => (
                 <button
                   key={opcion}
                   type="button"
-                  className={`option-btn ${formData.genero === opcion ? 'selected' : ''}`}
-                  onClick={() => handleSelectOption('genero', opcion)}
+                  className={`option-btn ${formData.tiempo === opcion ? 'selected' : ''}`}
+                  onClick={() => handleSelectOption('tiempo', opcion)}
                 >
                   {opcion.charAt(0).toUpperCase() + opcion.slice(1)}
                 </button>
@@ -186,7 +191,7 @@ function SecondSection() {
             </div>
             <div className="field btns">
               <button type="button" className="prev" onClick={prevStep}>Atrás</button>
-              <button type="button" className="next" onClick={nextStep} disabled={!formData.genero}>Siguiente</button>
+              <button type="button" className="next" onClick={nextStep} disabled={!formData.tiempo}>Siguiente</button>
             </div>
           </div>
 

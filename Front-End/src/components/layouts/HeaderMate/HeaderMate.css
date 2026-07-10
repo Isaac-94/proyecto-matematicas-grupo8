@@ -1,0 +1,19 @@
+.header_mate {
+  width: 100vw; /* Asegura todo el ancho de la pantalla */
+  height: 90px;
+  background-color: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.08);
+  margin: 0;
+  padding: 0;
+  position: relative;
+  z-index: 10;
+}
+
+.header_logo {
+  height: 45px; /* Controla el tamaño para que no se vea gigante */
+  width: auto;
+  object-fit: contain;
+}

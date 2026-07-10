@@ -12,6 +12,10 @@ import { useAuth } from '../context/AuthContext';
 import StartedPage from '../pages/Started.jsx';
 import Onboarding from '../pages/Onboarding';
 import Nosotros from '../pages/Nosotros.jsx';
+import Desafios from '../pages/Desafios.jsx';
+import AuthCallback from '../pages/AuthCallback.jsx';
+import ModuloEjercicios from '../pages/Ejercicios.jsx';
+import DragConstraints from '../pages/DropAndDown.jsx';
 
 // Componente para proteger rutas autenticadas
 const ProtectedRoute = ({ children }) => {
@@ -29,7 +33,7 @@ const PublicRoute = ({ children, forceRedirect = true }) => {
 
     // Solo redireccionamos si hay sesión Y perfil cargado.
     // Si hay sesión pero no perfil (error de red), dejamos que vea la página pública.
-    return (isAuthenticated && profile && forceRedirect) ? <Navigate to="/onboarding" /> : children;
+    return (isAuthenticated && profile && forceRedirect) ? <Navigate to="/Onboarding" /> : children;
 };
 
 export default function AppRouter() {
@@ -73,6 +77,13 @@ export default function AppRouter() {
                 />
 
                 <Route
+                    path="/auth/callback"
+                    element={
+                        <AuthCallback />
+                    }
+                />
+
+                <Route
                     path="/register"
                     element={
                         <PublicRoute>
@@ -81,8 +92,23 @@ export default function AppRouter() {
                     }
                 />
 
-                {/* Rutas autenticadas */}
+                {/* Rutas públicas para previsualización */}
+                <Route
+                    path="/desafios"
+                    element={<Desafios />}
+                />
 
+                <Route
+                    path="/ejercicios"
+                    element={<ModuloEjercicios />}
+                />
+
+                <Route
+                    path="/ejercicios2"
+                    element={<DragConstraints />}
+                />
+
+                {/* Rutas autenticadas */}
                 <Route
                     path="/onboarding"
                     element={
@@ -91,6 +117,14 @@ export default function AppRouter() {
                         </ProtectedRoute>
                     }
                 />
+
+                {/* Ruta de desarrollo para previsualizar Onboarding sin autenticación */}
+                {import.meta.env.DEV && (
+                    <Route
+                        path="/dev-onboarding"
+                        element={<Onboarding />}
+                    />
+                )}
 
                 <Route
                     path="/dashboard"
@@ -104,9 +138,9 @@ export default function AppRouter() {
                 <Route
                     path="/profile"
                     element={
-                        <ProtectedRoute>
+                       <ProtectedRoute>
                             <Profile />
-                        </ProtectedRoute>
+                      </ProtectedRoute>
                     }
                 />
 
