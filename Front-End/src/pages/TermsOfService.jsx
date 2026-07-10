@@ -18,31 +18,31 @@ function TermsOfService() {
        <Header />
 
       <main className="legal-page-content">
-        <div className="legal-top-bar">
-          <ButtonBack onClick={manejarRegresar} />
-        </div>
-
+        
+       
         <div className="tabs-navigation">
-          <button 
-            className={`tab-btn ${activeTab === 'privacidad' ? 'active' : ''}`}
-            onClick={() => setActiveTab('privacidad')}
-          >
-            Política de Privacidad
-          </button>
-          <button 
-            className={`tab-btn ${activeTab === 'terminos' ? 'active' : ''}`}
-            onClick={() => setActiveTab('terminos')}
-          >
-            Términos y Condiciones
-          </button>
+          <ButtonBack onClick={manejarRegresar} />
+          
+          <div className="tabs-buttons-group">
+            <button 
+              className={`tab-btn ${activeTab === 'privacidad' ? 'active' : ''}`}
+              onClick={() => setActiveTab('privacidad')}
+            >
+              Política de Privacidad
+            </button>
+            <button 
+              className={`tab-btn ${activeTab === 'terminos' ? 'active' : ''}`}
+              onClick={() => setActiveTab('terminos')}
+            >
+              Términos y Condiciones
+            </button>
+          </div>
         </div>
 
         <div className="legal-card-body">
           {activeTab === 'privacidad' ? <Privacity /> : <Terms />}
         </div>
       </main>
-
-      <Footer />
     </div>
   );
 }
