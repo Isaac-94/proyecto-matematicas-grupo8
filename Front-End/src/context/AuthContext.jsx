@@ -57,7 +57,7 @@ export const AuthProvider = ({ children }) => {
         } finally {
             isFetching.current = false;
         }
-    }, [profile?.id]);
+    }, []);
 
     // Función para marcar la inicialización como completa
     const completeInitialization = useCallback(() => {
@@ -127,85 +127,95 @@ export const AuthProvider = ({ children }) => {
 
 
     useEffect(() => {
-        let isMounted = true;
-        let timeoutId = null;
+      let isMounted = true;
+      let timeoutId = null;
 
-        // Failsafe: Si en 3 segundos no hay respuesta, forzamos la carga
-        timeoutId = setTimeout(() => {
-            if (isMounted && !initialized) {
-                console.warn("⚠️ Timeout de inicialización - forzando carga de la aplicación");
-                completeInitialization();
-            }
-        }, 3000);
+      // Failsafe: Si en 3 segundos no hay respuesta, forzamos la carga
+      timeoutId = setTimeout(() => {
+        if (isMounted && !initialized) {
+          console.warn(
+            "⚠️ Timeout de inicialización - forzando carga de la aplicación",
+          );
+          completeInitialization();
+        }
+      }, 3000);
 
-        // Primero, intentamos obtener la sesión actual de manera síncrona
-        const initializeAuth = async () => {
-            try {
-                // Verificar si ya hay una sesión activa
-                const { data: { session: currentSession }, error } = await supabase.auth.getSession();
+      // Primero, intentamos obtener la sesión actual de manera síncrona
+      const initializeAuth = async () => {
+        try {
+          // Verificar si ya hay una sesión activa
+          const {
+            data: { session: currentSession },
+            error,
+          } = await supabase.auth.getSession();
 
-                if (error) {
-                    console.warn("⚠️ Error al obtener sesión:", error);
-                }
+          if (error) {
+            console.warn("⚠️ Error al obtener sesión:", error);
+          }
 
-                if (currentSession?.user) {
-                    console.log("✅ Sesión existente encontrada");
-                    setSession(currentSession);
-                    lastFetchedId.current = currentSession.user.id;
+          if (currentSession?.user) {
+            console.log("✅ Sesión existente encontrada");
+            setSession(currentSession);
+            lastFetchedId.current = currentSession.user.id;
 
-                    // Cargar el perfil en segundo plano
-                    await fetchProfile(currentSession.user);
-                } else {
-                    console.log("ℹ️ No hay sesión activa");
-                    setSession(null);
-                    setProfile(null);
-                }
-            } catch (error) {
-                console.error("🔴 Error en inicialización:", error);
-            } finally {
-                // Marcar como inicializado solo si el componente sigue montado
-                if (isMounted) {
-                    completeInitialization();
-                }
-            }
-        };
+            // Cargar el perfil en segundo plano
+            await fetchProfile(currentSession.user);
+          } else {
+            console.log("ℹ️ No hay sesión activa");
+            setSession(null);
+            setProfile(null);
+          }
+        } catch (error) {
+          console.error("🔴 Error en inicialización:", error);
+        } finally {
+          // Marcar como inicializado solo si el componente sigue montado
+          if (isMounted) {
+            completeInitialization();
+          }
+        }
+      };
 
-        // Ejecutar inicialización
-        initializeAuth();
+      // Ejecutar inicialización
+      initializeAuth();
 
-        // Suscribirse a cambios de autenticación
-        const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, newSession) => {
-            console.log(`🔐 AuthEvent: ${_event}`);
+      // Suscribirse a cambios de autenticación
+      const {
+        data: { subscription },
+      } = supabase.auth.onAuthStateChange((_event, newSession) => {
+        console.log(`🔐 AuthEvent: ${_event}`);
 
-            if (!isMounted) return;
+        if (!isMounted) return;
 
-            setSession(newSession || null);
+        setSession(newSession || null);
 
-            if (newSession?.user) {
-                if (lastFetchedId.current !== newSession.user.id || (_event === 'SIGNED_IN' && !profile)) {
-                    lastFetchedId.current = newSession.user.id;
-                    fetchProfile(newSession.user);
-                }
-            } else {
-                setProfile(null);
-                lastFetchedId.current = null;
-            }
+        if (newSession?.user) {
+          if (
+            lastFetchedId.current !== newSession.user.id ||
+            (_event === "SIGNED_IN" && !profile)
+          ) {
+            lastFetchedId.current = newSession.user.id;
+            fetchProfile(newSession.user);
+          }
+        } else {
+          setProfile(null);
+          lastFetchedId.current = null;
+        }
 
-            // Si aún no está inicializado, marcarlo
-            if (!initialized) {
-                completeInitialization();
-            }
-        });
+        // Si aún no está inicializado, marcarlo
+        if (!initialized) {
+          completeInitialization();
+        }
+      });
 
-        // Cleanup
-        return () => {
-            isMounted = false;
-            if (timeoutId) {
-                clearTimeout(timeoutId);
-            }
-            subscription.unsubscribe();
-        };
-    }, [fetchProfile, completeInitialization, initialized, profile]);
+      // Cleanup
+      return () => {
+        isMounted = false;
+        if (timeoutId) {
+          clearTimeout(timeoutId);
+        }
+        subscription.unsubscribe();
+      };
+    }, [fetchProfile, completeInitialization]);
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
     const login = async (email, password) => {
