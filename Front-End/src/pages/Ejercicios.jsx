@@ -1,8 +1,7 @@
 
 import { useState } from 'react';
-import EjercicioPage from '../components/layouts/Ejercicios/Ejercicio'; // Tu componente de ejercicios
-import { ejerciciosDePrueba } from '../components/layouts/Ejercicios/datosPrueba'; // Importamos el array de prueba
-import { useNavigate } from 'react-router-dom';
+import EjercicioInput from '../components/layouts/Ejercicios/Ejercicio1'; 
+import { ejerciciosDePrueba } from '../components/layouts/Ejercicios/datosPrueba'; 
 
 function ModuloEjercicios() {
   const navigate = useNavigate();

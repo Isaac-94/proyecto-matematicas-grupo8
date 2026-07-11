@@ -4,7 +4,7 @@ import ButtonBack from '../../ui/ButtonBack/ButtonBack';
 import ButtonContinue from '../../ui/ButtonContinue/ButtonContinue';
 import './Ejercicio.css';
 
-function EjercicioPage({ 
+function EjercicioInput({ 
   pregunta, 
   imagenUrl, 
   respuestaCorrecta, 
@@ -103,4 +103,4 @@ function EjercicioPage({
   );
 }
 
-export default EjercicioPage;
+export default EjercicioInput;

@@ -16,6 +16,7 @@ import Desafios from '../pages/Desafios.jsx';
 import AuthCallback from '../pages/AuthCallback.jsx';
 import ModuloEjercicios from '../pages/Ejercicios.jsx';
 import DragConstraints from '../pages/DropAndDown.jsx';
+import TermsOfService from '../pages/TermsOfService.jsx';
 
 // Componente para proteger rutas autenticadas
 const ProtectedRoute = ({ children }) => {
@@ -57,6 +58,15 @@ export default function AppRouter() {
                         </PublicRoute>
                     }
                 />
+                <Route
+                    path="/TermsOfService"
+                    element={
+                        <PublicRoute>
+                            <TermsOfService />
+                        </PublicRoute>
+                    }
+                />
+
 
                 <Route
                     path="/started"
@@ -138,9 +148,9 @@ export default function AppRouter() {
                 <Route
                     path="/profile"
                     element={
-                       <ProtectedRoute>
+                        <ProtectedRoute>
                             <Profile />
-                      </ProtectedRoute>
+                        </ProtectedRoute>
                     }
                 />
 

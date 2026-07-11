@@ -39,6 +39,7 @@ const useRegisterForm = () => {
     const { name, value } = e.target;
     if (name === "email") setEmail(value);
     else if (name === "password") setPassword(value);
+    else if (name === "confirmPassword") setConfirmPassword(value);
   };
 
   const handleSubmit = (e) => {
@@ -63,6 +64,12 @@ const useRegisterForm = () => {
       setShowToast(true);
       return;
     }
+    if (password !== confirmPassword) {
+      setToastMessage("❌ Las contraseñas no coinciden");
+      setToastVariant("danger");
+      setShowToast(true);
+      return;
+    }
     if (!acceptedTerms) {
       setToastMessage("❌ Debés aceptar los términos y condiciones");
       setToastVariant("danger");
@@ -72,24 +79,22 @@ const useRegisterForm = () => {
     setShowProfileModal(true);
   };
   const handleCompleteProfile = async () => {
-    if (!nombre || !usuario || !anioNacimiento || !genero) {
-      setToastMessage("❌ Completá todos los campos del perfil");
-      setToastVariant("danger");
-      setShowToast(true);
-      return;
-    }
+if (!nombre || !usuario || !anioNacimiento || !genero) {
+  setToastMessage("❌ Completá todos los campos del perfil");
+  setToastVariant("danger");
+  setShowToast(true);
+  return;
+}
 
     const anioActual = new Date().getFullYear();
     const anio = Number(anioNacimiento);
 
     if (anio < 1900 || anio > anioActual - 18) {
-        setToastMessage(`❌ Ingresá un año de nacimiento válido`);
-        setToastVariant("danger");
-        setShowToast(true);
-        return;
+      setToastMessage(`❌ Ingresá un año de nacimiento válido`);
+      setToastVariant("danger");
+      setShowToast(true);
+      return;
     }
-
-
 
     try {
       await register(email, password, nombre, {
@@ -120,6 +125,7 @@ const useRegisterForm = () => {
     setEmail,
     setPassword,
     confirmPassword,
+    setConfirmPassword,
     showPassword,
     setShowPassword,
     showConfirmPassword,
@@ -157,6 +163,7 @@ const RegisterPage = () => {
     setEmail,
     setPassword,
     confirmPassword,
+    setConfirmPassword,
     showPassword,
     setShowPassword,
     showConfirmPassword,
@@ -197,7 +204,7 @@ const RegisterPage = () => {
           backgroundRepeat: "no-repeat",
           backgroundColor: "#8FD8FD",
           backgroundSize: "contain",
-          minHeight: "100vh" ,
+          minHeight: "100vh",
           paddingTop: "100px",
           paddingBottom: "20px",
         }}
@@ -251,107 +258,196 @@ const RegisterPage = () => {
               Bienvenido a MATE+
             </h3>
             <Form onSubmit={handleSubmit} className="px-2">
-              <Form.Group className="mb-3">
-                <div style={{ position: "relative" }}>
-                  <InputGroup>
+              <Form.Group className="mb-3" controlId="registerEmail">
+                <Form.Label className="visually-hidden">Email</Form.Label>
+                <div
+                  className="d-flex align-items-center"
+                  style={{ gap: "4px" }}
+                >
+                  <div style={{ position: "relative", flex: 1 }}>
+                    <InputGroup>
+                      <Form.Control
+                        type="email"
+                        name="email"
+                        placeholder="Email"
+                        value={email}
+                        onChange={handleChangeValue}
+                        style={{
+                          width: "100%",
+                          backgroundColor: "#f5f5f5",
+                          border: "none",
+                          borderBottom: "1px solid #e0e0e0",
+                          borderRadius: 0,
+                          boxShadow: "none",
+                          paddingRight: "10px",
+                        }}
+                      />
+                    </InputGroup>
+                    {email && (
+                      <img
+                        src="/login/icon2.png"
+                        alt="Cerrar"
+                        onClick={() => setEmail("")}
+                        style={{
+                          position: "absolute",
+                          right: 10,
+                          top: "50%",
+                          transform: "translateY(-50%)",
+                          width: 16,
+                          height: 16,
+                          cursor: "pointer",
+                          opacity: 0.6,
+                        }}
+                      />
+                    )}
+                  </div>
+                  <div
+                    style={{
+                      visibility: "hidden",
+                      display: "flex",
+                      alignItems: "center",
+                    }}
+                  >
+                    <FaEye size={18} />
+                  </div>
+                </div>
+              </Form.Group>
+              <Form.Group className="mb-3" controlId="registerPassword">
+                <Form.Label className="visually-hidden">Contraseña</Form.Label>
+                <div
+                  className="d-flex align-items-center"
+                  style={{ gap: "4px" }}
+                >
+                  <div style={{ position: "relative", flex: 1 }}>
                     <Form.Control
-                      type="email"
-                      name="email"
-                      placeholder="Email"
-                      value={email}
+                      type={showPassword ? "text" : "password"}
+                      name="password"
+                      placeholder="Contraseña"
+                      value={password}
                       onChange={handleChangeValue}
                       style={{
+                        width: "100%",
                         backgroundColor: "#f5f5f5",
                         border: "none",
                         borderBottom: "1px solid #e0e0e0",
                         borderRadius: 0,
                         boxShadow: "none",
-                        paddingRight: "35px",
+                        paddingRight: "10px",
                       }}
                     />
-                  </InputGroup>
-                  {email && (
-                    <img
-                      src="/login/icon2.png"
-                      alt="Cerrar"
-                      onClick={() => setEmail("")}
-                      style={{
-                        position: "absolute",
-                        right: 10,
-                        top: "50%",
-                        transform: "translateY(-50%)",
-                        width: 16,
-                        height: 16,
-                        cursor: "pointer",
-                        opacity: 0.6,
-                      }}
-                    />
-                  )}
+                    {/* ✕ borrar */}
+                    {password && (
+                      <img
+                        src="/login/icon2.png"
+                        alt="borrar"
+                        onClick={() => setPassword("")}
+                        style={{
+                          position: "absolute",
+                          right: 10,
+                          top: "50%",
+                          transform: "translateY(-50%)",
+                          width: 16,
+                          height: 16,
+                          cursor: "pointer",
+                          opacity: 0.6,
+                        }}
+                      />
+                    )}
+                  </div>
+
+                  {/* 👁 mostrar/ocultar */}
+                  <div
+                    onClick={() => setShowPassword(!showPassword)}
+                    style={{
+                      display: "flex",
+                      alignItems: "center",
+                      cursor: "pointer",
+                    }}
+                  >
+                    {showPassword ? (
+                      <FaEyeSlash size={18} />
+                    ) : (
+                      <FaEye size={18} />
+                    )}
+                  </div>
                 </div>
               </Form.Group>
-              <Form.Group className="mb-3">
-                <div style={{ position: "relative" }}>
-                  <Form.Control
-                    type={showPassword ? "text" : "password"}
-                    name="password"
-                    placeholder="Contraseña"
-                    value={password}
-                    onChange={handleChangeValue}
-                    style={{
-                      backgroundColor: "#f5f5f5",
-                      border: "none",
-                      borderBottom: "1px solid #e0e0e0",
-                      borderRadius: 0,
-                      boxShadow: "none",
-                      paddingRight: "80px",
-                    }}
-                  />
-                  {/* ✕ borrar */}
-                  {password && (
-                    <img
-                      src="/login/icon2.png"
-                      alt="borrar"
-                      onClick={() => setPassword("")}
+              <Form.Group className="mb-3" controlId="registerConfirmPassword">
+                <Form.Label className="visually-hidden">
+                  Repetir contraseña
+                </Form.Label>
+                <div
+                  className="d-flex align-items-center"
+                  style={{ gap: "4px" }}
+                >
+                  <div style={{ position: "relative", flex: 1 }}>
+                    <Form.Control
+                      type={showConfirmPassword ? "text" : "password"}
+                      name="confirmPassword"
+                      placeholder="Repetir contraseña"
+                      value={confirmPassword}
+                      onChange={handleChangeValue}
                       style={{
-                        position: "absolute",
-                        right: 10,
-                        top: "50%",
-                        transform: "translateY(-50%)",
-                        width: 16,
-                        height: 16,
-                        cursor: "pointer",
-                        opacity: 0.6,
+                        width: "100%",
+                        backgroundColor: "#f5f5f5",
+                        border: "none",
+                        borderBottom: "1px solid #e0e0e0",
+                        borderRadius: 0,
+                        boxShadow: "none",
+                        paddingRight: "10px",
                       }}
                     />
-                  )}
-                </div>
-                {/* 👁 mostrar/ocultar */}
-                <div
-                  onClick={() => setShowPassword(!showPassword)}
-                  style={{
-                    marginTop: 0,
-                    height: "38px",
-                    marginRight: "10px",
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "flex-end",
-                    cursor: "pointer",
-                  }}
-                >
-                  {showPassword ? <FaEyeSlash /> : <FaEye />}
+                    {/* ✕ borrar */}
+                    {confirmPassword && (
+                      <img
+                        src="/login/icon2.png"
+                        alt="borrar"
+                        onClick={() => setConfirmPassword("")}
+                        style={{
+                          position: "absolute",
+                          right: 10,
+                          top: "50%",
+                          transform: "translateY(-50%)",
+                          width: 16,
+                          height: 16,
+                          cursor: "pointer",
+                          opacity: 0.6,
+                        }}
+                      />
+                    )}
+                  </div>
+                  {/* 👁 mostrar/ocultar */}
+                  <div
+                    onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                    style={{
+                      display: "flex",
+                      alignItems: "center",
+                      cursor: "pointer",
+                    }}
+                  >
+                    {showConfirmPassword ? (
+                      <FaEyeSlash size={18} />
+                    ) : (
+                      <FaEye size={18} />
+                    )}
+                  </div>
                 </div>
               </Form.Group>
               {/* Recordarme / Olvidé contraseña */}
               <div className=" mb-3">
-                <Form.Check
+                {/*  <Form.Check
+                  type="checkbox"
+                  id="rememberMe"
                   label="Recordarme"
                   checked={rememberMe}
                   onChange={(e) => setRememberMe(e.target.checked)}
                   variant="dark"
                   className="small"
-                />
+                /> */}
                 <Form.Check
-                  label="He leído y acepto los términos y condiciones"
+                  type="checkbox"
+                  id="acceptedTerms"
+                  label="He leído y acepto los términos y condiciones de uso"
                   checked={acceptedTerms}
                   onChange={(e) => setAcceptedTerms(e.target.checked)}
                   variant="dark"
@@ -370,7 +466,7 @@ const RegisterPage = () => {
                   alt="Google"
                   style={{ width: 18, height: 18, bacgroundColor: "#E7E7E7" }}
                 />
-                Ingresar
+                Registrarse
               </Button>
               {/* Separador */}
               <div className="d-flex align-items-center my-2">
@@ -518,9 +614,9 @@ const RegisterPage = () => {
               }}
             >
               <option value="">Género</option>
-              <option value="femenino">Femenino</option>
-              <option value="masculino">Masculino</option>
-              <option value="otro">Otro</option>
+              <option value="Femenino">Femenino</option>
+              <option value="Masculino">Masculino</option>
+              <option value="Prefiero no decirlo">Prefiero no decirlo</option>
             </Form.Select>
           </Form.Group>
 
