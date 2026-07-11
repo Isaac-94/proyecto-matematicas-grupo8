@@ -79,12 +79,12 @@ const useRegisterForm = () => {
     setShowProfileModal(true);
   };
   const handleCompleteProfile = async () => {
-if (!nombre || !usuario || !anioNacimiento || !genero) {
-  setToastMessage("❌ Completá todos los campos del perfil");
-  setToastVariant("danger");
-  setShowToast(true);
-  return;
-}
+    if (!nombre || !usuario || !anioNacimiento || !genero) {
+      setToastMessage("❌ Completá todos los campos del perfil");
+      setToastVariant("danger");
+      setShowToast(true);
+      return;
+    }
 
     const anioActual = new Date().getFullYear();
     const anio = Number(anioNacimiento);
