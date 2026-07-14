@@ -1,5 +1,6 @@
 import { FaGithub, FaLinkedin } from 'react-icons/fa';
 import teamPhoto from '../../../assets/image.png';
+import hernanPhoto from '../../../assets/Fotos/hernan.jpg';
 import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
@@ -19,8 +20,8 @@ const teamMembers = [
     role: 'Backend Developer',
     quote: 'Diseño la arquitectura invisible que sostiene a Mate+, creando una base sólida, segura y lista para escalar.',
     image: teamPhoto,
-    linkedin: '#',
-    github: '#',
+    linkedin: 'https://www.linkedin.com/in/isaac-carran/',
+    github: 'https://github.com/Isaac-94',
   },
   {
     name: 'Lisandro Salvareschi',
@@ -41,9 +42,9 @@ const teamMembers = [
     {
     name: 'Soledad Peloc',
     role: 'Frontend Developer',
-    quote: 'Creo soluciones robustas que hacen que la app funcione con velocidad y confiabilidad.',
+    quote: 'Mi meta es que la interfaz de Mate+ no solo sea atractiva, sino rápida, accesible y responsiva en cualquier pantalla.',
     image: teamPhoto,
-    linkedin: '#',
+    linkedin: 'www.linkedin.com/in/sol-peloc',
     github: 'https://github.com/SolPeloc',
   },
   {
@@ -59,7 +60,7 @@ const teamMembers = [
     role: 'Diseñadora UX/UI',
     quote: 'Estudio cómo interactúan los usuarios para diseñar caminos sencillos, intuitivos y libres de frustraciones.',
     image: teamPhoto,
-    linkedin: '#',
+    linkedin: 'www.linkedin.com/in/sofía-inés-digiano',
     github: 'https://github.com/SofiaDigiano',
   },
   {
@@ -82,7 +83,7 @@ const teamMembers = [
     name: 'Hernan Luciano',
     role: 'Tester QA',
     quote: 'Desafío al código y automatizo pruebas para que cada actualización de Mate+ salga a la luz sin fricciones.',
-    image: teamPhoto,
+    image: hernanPhoto,
     linkedin: 'https://www.linkedin.com/in/hernanluciano/',
     github: 'https://github.com/hernycai',
   },
@@ -100,7 +101,7 @@ const teamMembers = [
     quote: 'Analizo los patrones de aprendizaje para entender dónde se divierten más los usuarios y dónde necesitan más apoyo.',
     image: teamPhoto,
     linkedin: '#',
-    github: '#',
+    github: 'https://github.com/tonycuri',
   },
     {
     name: 'Gustavo Ovejero',
