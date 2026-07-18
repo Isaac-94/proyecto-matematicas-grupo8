@@ -18,7 +18,7 @@
   align-items: center;
   
   /* --- FONDO DE PANTALLA REQUERIDO --- */
-  background-image: url('../../../assets/fondo_primera.png');
+  background-image: url('../../../assets/fondo_onboarding.png');
   background-repeat: no-repeat;
   background-size: cover;
   background-position: center;
@@ -86,8 +86,8 @@
 
 .button-check {
   padding: 0.9rem 1.5rem;
-  background-color: #111111;
-  color: #ffffff;
+  background-color: #FFDB54;
+  color: #000000;
   border: none;
   border-radius: 12px;
   font-weight: 600;

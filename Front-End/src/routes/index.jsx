@@ -17,6 +17,8 @@ import AuthCallback from '../pages/AuthCallback.jsx';
 import ModuloEjercicios from '../pages/Ejercicios.jsx';
 import DragConstraints from '../pages/DropAndDown.jsx';
 import TermsOfService from '../pages/TermsOfService.jsx';
+import MixtoPage from '../pages/Mixto.jsx';
+import RankingPage from '../pages/Ranking.jsx';
 
 // Componente para proteger rutas autenticadas
 const ProtectedRoute = ({ children }) => {
@@ -34,7 +36,16 @@ const PublicRoute = ({ children, forceRedirect = true }) => {
 
     // Solo redireccionamos si hay sesión Y perfil cargado.
     // Si hay sesión pero no perfil (error de red), dejamos que vea la página pública.
-    return (isAuthenticated && profile && forceRedirect) ? <Navigate to="/Onboarding" /> : children;
+    
+    if(isAuthenticated && profile && forceRedirect) {
+        if(profile?.sentimiento || profile?.desafio || profile?.edad) {
+            return <Navigate to="/dashboard" /> 
+        }
+        
+        return <Navigate to="/onboarding" />
+    }
+
+    return children
 };
 
 export default function AppRouter() {
@@ -141,6 +152,24 @@ export default function AppRouter() {
                     element={
                         <ProtectedRoute>
                             <Dashboard />
+                        </ProtectedRoute>
+                    }
+                />
+
+                <Route
+                    path="/mixto"
+                    element={
+                        <ProtectedRoute>
+                            <MixtoPage />
+                        </ProtectedRoute>
+                    }
+                />
+
+                <Route
+                    path="/ranking"
+                    element={
+                        <ProtectedRoute>
+                            <RankingPage />
                         </ProtectedRoute>
                     }
                 />

@@ -1,6 +1,14 @@
 import { FaGithub, FaLinkedin } from 'react-icons/fa';
 import teamPhoto from '../../../assets/image.png';
+import cesarPhoto from '../../../assets/Fotos/Cesar.jpg';
+import isaacPhoto from '../../../assets/Fotos/Isaac.jpg';
+import LisandroPhoto from '../../../assets/Fotos/Lisandro.jpg';
+import RominaPhoto from '../../../assets/Fotos/Romina.jpg';
+import SolPhoto from '../../../assets/Fotos/Sol.jpg';
+import FlorPhoto from '../../../assets/Fotos/Flor.jpg';
+import SofiaPhoto from '../../../assets/Fotos/Sofia.jpg';
 import hernanPhoto from '../../../assets/Fotos/hernan.jpg';
+import GustavoPhoto from '../../../assets/Fotos/Gustavo.jpg';
 import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
@@ -11,7 +19,7 @@ const teamMembers = [
     name: 'César Ramos',
     role: 'Backend Developer',
     quote: 'Creo soluciones robustas que hacen que la app funcione con velocidad y confiabilidad.',
-    image: teamPhoto,
+    image: cesarPhoto,
     linkedin: '#',
     github: 'https://github.com/cesardevuardo',
   },
@@ -19,7 +27,7 @@ const teamMembers = [
     name: 'Isaac Carranza',
     role: 'Backend Developer',
     quote: 'Diseño la arquitectura invisible que sostiene a Mate+, creando una base sólida, segura y lista para escalar.',
-    image: teamPhoto,
+    image: isaacPhoto,
     linkedin: 'https://www.linkedin.com/in/isaac-carran/',
     github: 'https://github.com/Isaac-94',
   },
@@ -27,7 +35,7 @@ const teamMembers = [
     name: 'Lisandro Salvareschi',
     role: 'Frontend Developer',
     quote: 'Transformo diseños estáticos en experiencias interactivas y fluidas, cuidando cada píxel y cada animación.',
-    image: teamPhoto,
+    image: LisandroPhoto,
     linkedin: 'https://www.linkedin.com/in/salvareschilisandro/',
     github: 'https://github.com/Slisandro',
   },
@@ -35,7 +43,7 @@ const teamMembers = [
     name: 'Romina Ruiz',
     role: 'Frontend Developer',
     quote: 'Conecto el diseño visual con la potencia del backend, haciendo que el código del navegador cobre vida.',
-    image: teamPhoto,
+    image: RominaPhoto,
     linkedin: 'https://www.linkedin.com/in/romina-s-ruiz-/',
     github: 'https://github.com/Romina-Ruiz',
   },
@@ -43,15 +51,15 @@ const teamMembers = [
     name: 'Soledad Peloc',
     role: 'Frontend Developer',
     quote: 'Mi meta es que la interfaz de Mate+ no solo sea atractiva, sino rápida, accesible y responsiva en cualquier pantalla.',
-    image: teamPhoto,
-    linkedin: 'www.linkedin.com/in/sol-peloc',
+    image: SolPhoto,
+    linkedin: 'https://www.linkedin.com/in/sol-peloc',
     github: 'https://github.com/SolPeloc',
   },
   {
     name: 'Florencia Luna',
     role: 'Diseñadora UX/UI',
     quote: 'Le doy identidad visual a la plataforma, creando un entorno amigable y estimulante que invita a aprender jugando.',
-    image: teamPhoto,
+    image: FlorPhoto,
     linkedin: 'https://www.linkedin.com/in/luna-florencia/',
     github: 'https://github.com/florencialu',
   },
@@ -59,8 +67,8 @@ const teamMembers = [
     name: 'Sofia Digiano',
     role: 'Diseñadora UX/UI',
     quote: 'Estudio cómo interactúan los usuarios para diseñar caminos sencillos, intuitivos y libres de frustraciones.',
-    image: teamPhoto,
-    linkedin: 'www.linkedin.com/in/sofía-inés-digiano',
+    image: SofiaPhoto,
+    linkedin: 'https://www.linkedin.com/in/sofía-inés-digiano',
     github: 'https://github.com/SofiaDigiano',
   },
   {
@@ -107,7 +115,7 @@ const teamMembers = [
     name: 'Gustavo Ovejero',
     role: 'Coordinador de Proyecto',
     quote: 'Creo soluciones robustas que hacen que la app funcione con velocidad y confiabilidad.',
-    image: teamPhoto,
+    image: GustavoPhoto,
     linkedin: 'https://www.linkedin.com/in/gustavo-ovejero/',
     github: 'https://github.com/ovejero92',
   },
