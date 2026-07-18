@@ -3,6 +3,8 @@ import { Container, Row, Col } from "react-bootstrap";
 import HeaderDash from '../components/layouts/Desafios/headerDash/HeaderDash';
 import { useMediaQuery } from "../hooks/useMediaQuery";
 import FooterDash from "../components/layouts/FooterDash/FooterDash";
+import HeaderSection from "../components/layouts/HeaderDashboardCollapse/HeaderDashboardCollapse";
+import { useState } from "react";
 
 // Assets 
 const RANKING = [
@@ -22,18 +24,19 @@ const RANKING = [
         titulo: "Mente Matemática",
     },
     {
-        id: 4,
+        id: 7,
         name: "Emma",
         titulo: "As de la Suma",
     },
     {
-        id: 7,
+        id: 8,
         name: "Manu",
         titulo: "Ninja Calculador",
     }
 ]
 
 const RankingPage = () => {
+    const [showHeader, setShowHeader] = useState(false);
     const isMobile = useMediaQuery("(max-width: 768px)");
 
     return (
@@ -46,27 +49,20 @@ const RankingPage = () => {
             justifyContent: "space-between",
             overflow: "hidden"
         }}>
-            <HeaderDash />
+            <HeaderDash showHeader={showHeader} setShowHeader={setShowHeader} />
             <Container
                 fluid
                 className="d-flex align-items-start justify-content-between gap-0 flex-column text-white"
                 style={{
-                    position: "relative",
-                    minHeight: "calc(100vh - 90px)",
+                    minHeight: "100vh",
                     width: '100%',
                     paddingLeft: "1rem",
                     paddingRight: "1rem",
-                    paddingBottom: "2rem",
-                    marginTop: "80px",
+                    paddingBottom: "1rem",
+                    marginTop: 85,
+                    position: 'relative',
                     overflowY: "auto",
-                    overflowX: "hidden",
                     backgroundColor: "#FFDB54",
-                    gap: 40,
-                    display: "flex",
-                    flexDirection: "column",
-                    alignItems: "center",
-                    justifyContent: "flex-start",
-                    marginBottom: "1rem",
                 }}
             >
                 <div
@@ -83,6 +79,25 @@ const RankingPage = () => {
                         zIndex: 0,
                     }}
                 />
+
+                <div style={{
+                    display: "grid",
+                    gridTemplateRows: showHeader ? "1fr" : "0fr",
+                    transition: "grid-template-rows 0.4s cubic-bezier(0.4, 0, 0.2, 1)",
+                    marginBottom: showHeader ? "1rem" : "0",
+                    width: "100%",
+                    backgroundColor: "transparent"
+                }}>
+                    <div style={{
+                        backgroundColor: "transparent",
+                        overflow: "hidden",
+                        opacity: showHeader ? 1 : 0,
+                        transform: showHeader ? "translateY(0)" : "translateY(-20px)",
+                        transition: "opacity 0.4s cubic-bezier(0.4, 0, 0.2, 1), transform 0.4s cubic-bezier(0.4, 0, 0.2, 1)",
+                    }}>
+                        <HeaderSection />
+                    </div>
+                </div>
 
                 <PodioUsuarios />
 
@@ -238,15 +253,15 @@ const CardRanking = ({ titulo, index, subtitulo, monedas = "52.425", avatar = "/
             overflow: "hidden",
             minHeight: isMobile ? "70px" : "80px",
         }}
-        // Efecto hover
-        onMouseEnter={(e) => {
-            e.currentTarget.style.transform = "scale(1.02)";
-            e.currentTarget.style.boxShadow = "0 6px 20px rgba(0,0,0,0.1)";
-        }}
-        onMouseLeave={(e) => {
-            e.currentTarget.style.transform = "scale(1)";
-            e.currentTarget.style.boxShadow = colors.shadow;
-        }}
+            // Efecto hover
+            onMouseEnter={(e) => {
+                e.currentTarget.style.transform = "scale(1.02)";
+                e.currentTarget.style.boxShadow = "0 6px 20px rgba(0,0,0,0.1)";
+            }}
+            onMouseLeave={(e) => {
+                e.currentTarget.style.transform = "scale(1)";
+                e.currentTarget.style.boxShadow = colors.shadow;
+            }}
         >
             {/* Indicador de posición destacada en mobile */}
             {isMobile && medal && (
@@ -262,10 +277,10 @@ const CardRanking = ({ titulo, index, subtitulo, monedas = "52.425", avatar = "/
             )}
 
             {/* Sección izquierda: número, avatar, nombre */}
-            <div style={{ 
-                display: "flex", 
-                alignItems: "center", 
-                justifyContent: "center", 
+            <div style={{
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
                 gap: isMobile ? "8px" : "12px",
                 flex: isMobile ? "1" : "0 0 auto",
                 minWidth: isMobile ? "0" : "auto",
@@ -322,11 +337,11 @@ const CardRanking = ({ titulo, index, subtitulo, monedas = "52.425", avatar = "/
                 </div>
 
                 {/* Información del usuario */}
-                <div style={{ 
-                    display: "flex", 
-                    flexDirection: "column", 
-                    alignItems: "flex-start", 
-                    justifyContent: "center", 
+                <div style={{
+                    display: "flex",
+                    flexDirection: "column",
+                    alignItems: "flex-start",
+                    justifyContent: "center",
                     gap: "2px",
                     minWidth: 0, // Permite truncar texto
                     flex: "1",
@@ -357,23 +372,23 @@ const CardRanking = ({ titulo, index, subtitulo, monedas = "52.425", avatar = "/
             </div>
 
             {/* Sección derecha: monedas y tendencia */}
-            <div style={{ 
-                display: "flex", 
-                alignItems: "center", 
-                justifyContent: "flex-end", 
+            <div style={{
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "flex-end",
                 gap: isMobile ? "6px" : "12px",
                 flexShrink: 0,
                 marginLeft: isMobile ? "auto" : "0",
                 paddingLeft: isMobile ? "8px" : "0",
             }}>
-                <img 
-                    src="/kpis/coin.png" 
-                    alt="monedas" 
-                    style={{ 
-                        width: sizes.coinSize, 
+                <img
+                    src="/kpis/coin.png"
+                    alt="monedas"
+                    style={{
+                        width: sizes.coinSize,
                         height: sizes.coinSize,
                         objectFit: "contain",
-                    }} 
+                    }}
                 />
                 <p style={{
                     color: "black",
@@ -392,16 +407,16 @@ const CardRanking = ({ titulo, index, subtitulo, monedas = "52.425", avatar = "/
                     gap: "2px",
                     color: index % 2 === 0 ? "#4CAF50" : "#F44336",
                 }}>
-                    <img 
-                        src="/up.png" 
+                    <img
+                        src="/up.png"
                         alt={index % 2 === 0 ? "subir" : "bajar"}
-                        style={{ 
-                            width: isMobile ? "16px" : "24px", 
+                        style={{
+                            width: isMobile ? "16px" : "24px",
                             height: isMobile ? "16px" : "24px",
                             transform: index % 2 === 0 ? "rotate(0deg)" : "rotate(180deg)",
                             transition: "transform 0.3s ease",
                             objectFit: "contain",
-                        }} 
+                        }}
                     />
                     {!isMobile && (
                         <span style={{

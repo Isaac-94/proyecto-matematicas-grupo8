@@ -4,11 +4,20 @@ import { Link, useNavigate } from 'react-router-dom';
 import '../../header/header.css';
 import { FaUser, FaCog, FaSignOutAlt } from "react-icons/fa";
 import { useAuth } from '../../../../context/AuthContext';
+import { LuChevronDown, LuChevronUp } from 'react-icons/lu';
+import { useMediaQuery } from '../../../../hooks/useMediaQuery';
+import ButtonFloat from '../../../ui/ButtonFloat/ButtonFloat';
 
-export default function Header() {
+export default function Header({ showHeader, setShowHeader }) {
   const navigate = useNavigate();
   const [expanded, setExpanded] = useState(false);
   const { logout } = useAuth();
+
+  const isMobile = useMediaQuery("(max-width: 768px)");
+
+  const toggleHeader = () => {
+    setShowHeader(!showHeader);
+  };
 
   const handleScrollToTop = () => {
     setExpanded(false);
@@ -102,6 +111,56 @@ export default function Header() {
             </Dropdown.Menu>
           </Dropdown>
         </div>
+        <ButtonFloat
+          className="btn btn-primary"
+          onClick={toggleHeader}
+          style={{
+            backgroundColor: showHeader ? '#FF6B6B' : '#FFDB54',
+            border: 'none',
+            top: isMobile ? "1rem" : "100%",
+            right: 10,
+            padding: isMobile ? "0 1rem" : "1rem",
+            position: 'absolute',
+            boxShadow: showHeader
+              ? "0 8px 24px rgba(255, 107, 107, 0.4)"
+              : "0 4px 16px rgba(0, 0, 0, 0.2)",
+            borderTopLeftRadius: '0',
+            borderBottomLeftRadius: '14px',
+            borderTopRightRadius: '0',
+            borderBottomRightRadius: '14px',
+            zIndex: 100,
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            gap: isMobile ? "4px" : "8px",
+            transition: "all 0.3s cubic-bezier(0.4, 0, 0.2, 1)",
+            transform: showHeader ? "scale(1.05)" : "scale(1)",
+            cursor: "pointer",
+            minWidth: isMobile ? "auto" : "auto",
+          }}
+          onMouseEnter={(e) => {
+            if (!showHeader) {
+              e.currentTarget.style.transform = "scale(1.05)";
+            }
+          }}
+          onMouseLeave={(e) => {
+            if (!showHeader) {
+              e.currentTarget.style.transform = "scale(1)";
+            }
+          }}
+        >
+          {showHeader ? (
+            <LuChevronUp
+              color="white"
+              size={isMobile ? 16 : 24}
+            />
+          ) : (
+            <LuChevronDown
+              color="black"
+              size={isMobile ? 16 : 24}
+            />
+          )}
+        </ButtonFloat>
       </Container>
     </Navbar>
   );

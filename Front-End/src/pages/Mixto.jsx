@@ -3,6 +3,8 @@ import { Button, Container, Row, Col } from "react-bootstrap";
 import HeaderDash from '../components/layouts/Desafios/headerDash/HeaderDash';
 import { useMediaQuery } from "../hooks/useMediaQuery";
 import { BiJoystick } from "react-icons/bi";
+import { useState } from "react";
+import HeaderSection from "../components/layouts/HeaderDashboardCollapse/HeaderDashboardCollapse";
 
 // Assets 
 const MIXTOS = [
@@ -54,6 +56,7 @@ const MIXTOS = [
 ]
 
 const MixtoPage = () => {
+    const [showHeader, setShowHeader] = useState(false);
     const isMobile = useMediaQuery("(max-width: 768px)");
 
     return (
@@ -66,7 +69,7 @@ const MixtoPage = () => {
             justifyContent: "space-between",
             overflow: "hidden"
         }}>
-            <HeaderDash />
+            <HeaderDash showHeader={showHeader} setShowHeader={setShowHeader} />
             <Container
                 fluid
                 className="d-flex align-items-start justify-content-between gap-0 flex-column text-white"
@@ -97,6 +100,23 @@ const MixtoPage = () => {
                         zIndex: 0,
                     }}
                 />
+
+                <div style={{
+                    display: "grid",
+                    gridTemplateRows: showHeader ? "1fr" : "0fr",
+                    transition: "grid-template-rows 0.4s cubic-bezier(0.4, 0, 0.2, 1)",
+                    marginBottom: showHeader ? "1rem" : "0",
+                    width: "100%"
+                }}>
+                    <div style={{
+                        overflow: "hidden",
+                        opacity: showHeader ? 1 : 0,
+                        transform: showHeader ? "translateY(0)" : "translateY(-20px)",
+                        transition: "opacity 0.4s cubic-bezier(0.4, 0, 0.2, 1), transform 0.4s cubic-bezier(0.4, 0, 0.2, 1)",
+                    }}>
+                        <HeaderSection />
+                    </div>
+                </div>
 
                 {/* Grid de tarjetas */}
                 <div style={{
