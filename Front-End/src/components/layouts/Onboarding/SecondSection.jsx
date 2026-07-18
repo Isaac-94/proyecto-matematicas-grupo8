@@ -64,7 +64,7 @@ function SecondSection() {
     };
 
     try {
-      await api.post('/usuarios/registro', dataToSubmit);
+      await api.post('/api/usuarios/registro', dataToSubmit);
       setStatus({ loading: false, error: '', success: 'Formulario enviado correctamente.' });
 
       setTimeout(() => {

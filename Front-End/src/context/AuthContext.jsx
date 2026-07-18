@@ -191,7 +191,7 @@ export const AuthProvider = ({ children }) => {
             setLoading(false);
             if (err.message === "SUPABASE_UNAVAILABLE_MOCK" || err.status === 400) {
                 console.warn("⚠️ Supabase no disponible. Entrando en modo de autenticación local (Mock)");
-                const response = await api.post('/usuarios/registro', {
+                const response = await api.post('/api/usuarios/registro', {
                     uid: 'mock-' + Date.now(),
                     email,
                     password,
