@@ -34,6 +34,15 @@ const useLoginForm = () => {
     }
   };
 
+  useEffect(() => {
+    if(profile && (profile?.sentimiento || profile?.desafio || profile?.edad)) {
+        navigate("/dashboard", { replace: true });
+    } else if(profile) {
+        navigate("/onboarding", { replace: true });
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [profile])
+
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -58,6 +67,9 @@ const useLoginForm = () => {
       setToastMessage("✅ ¡Inicio de sesión exitoso! Redirigiendo...");
       setToastVariant("success");
       setShowToast(true);
+      setTimeout(() => {
+        navigate("/onboarding", { replace: true });
+      }, 1500);
     } catch (error) {
       console.error("Error al iniciar sesión:", error);
       setToastMessage("❌ Error al iniciar sesión. Verificá tus credenciales.");

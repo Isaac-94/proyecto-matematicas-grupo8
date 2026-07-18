@@ -36,11 +36,16 @@ const PublicRoute = ({ children, forceRedirect = true }) => {
 
     // Solo redireccionamos si hay sesión Y perfil cargado.
     // Si hay sesión pero no perfil (error de red), dejamos que vea la página pública.
-    if(profile && (profile?.sentimiento || profile?.desafio || profile?.edad)) {
-        return <Navigate to="/dashboard" /> 
+    
+    if(isAuthenticated && profile && forceRedirect) {
+        if(profile?.sentimiento || profile?.desafio || profile?.edad) {
+            return <Navigate to="/dashboard" /> 
+        }
+        
+        return <Navigate to="/onboarding" />
     }
 
-    return (isAuthenticated && profile && forceRedirect) ? <Navigate to="/onboarding" /> : children;
+    return children
 };
 
 export default function AppRouter() {
