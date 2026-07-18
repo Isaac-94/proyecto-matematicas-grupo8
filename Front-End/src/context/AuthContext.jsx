@@ -32,7 +32,7 @@ export const AuthProvider = ({ children }) => {
         
         isFetching.current = true;
         try {
-            const { data } = await api.post('/usuarios/registro', {
+            const { data } = await api.post('/api/usuarios/registro', {
                 uid: user.id,
                 email: user.email,
                 nombre: user.user_metadata?.full_name || user.email.split('@')[0]
