@@ -4,21 +4,27 @@ import HeaderDash from '../components/layouts/Desafios/headerDash/HeaderDash';
 import { LuBookText } from "react-icons/lu";
 import ButtonFloat from "../components/ui/ButtonFloat/ButtonFloat";
 import CursoSection from "../components/cursos/Section";
+import { useMediaQuery } from "../hooks/useMediaQuery";
+import FooterDash from "../components/layouts/FooterDash/FooterDash";
 
 // Assets 
 
 const DashboardPage = () => {
+    const isMobile = useMediaQuery("(max-width: 768px)");
     return (
-        <main style={{ backgroundColor: "#A3DFFD", minHeight: "100vh" }}>
+        <main style={{ backgroundColor: "#A3DFFD", minHeight: "100vh", height: "100vh", display: "flex", flexDirection: "column", justifyContent: "space-between" }}>
             <HeaderDash />
             <Container
                 fluid
                 className="d-flex align-items-start justify-content-between gap-0 flex-column text-white"
                 style={{
-                    minHeight: '100vh',
+                    height: "calc(100vh - 90px)",
                     width: '100%',
-                    paddingTop: "90px",
-                    position: 'relative'
+                    paddingLeft: "1rem",
+                    paddingRight: "1rem",
+                    paddingBottom: "1rem",
+                    position: 'relative',
+                    marginTop: "auto"
                 }}
             >
                 {/* <HeaderSection /> */}
@@ -42,7 +48,7 @@ const DashboardPage = () => {
                     <LuBookText color="black" size={30} />
                 </ButtonFloat>
                 <CursoSection />
-                <Footer />
+                {!isMobile && <FooterDash />}
             </Container>
         </main>
     );
@@ -97,16 +103,5 @@ const DashboardPage = () => {
 //     )
 // }
 
-const Footer = () => {
-    return (
-        <div className="d-flex align-items-center justify-content-between px-5" style={{ width: "100%", height: "40px", gap: "1rem" }}>
-            <p style={{ color: "#1A202C", fontSize: 16, fontWeight: 600 }}>©2026 Equipo 8. Innova Lab</p>
-            <div className="d-flex align-items-center justify-content-center gap-5" style={{ height: "100%" }}>
-                <p style={{ color: "#1A202C", fontSize: 16, fontWeight: 600 }}>Privacy & Policy</p>
-                <p style={{ color: "#1A202C", fontSize: 16, fontWeight: 600 }}>Terms & Conditions</p>
-            </div>
-        </div>
-    )
-}
 
 export default DashboardPage;
