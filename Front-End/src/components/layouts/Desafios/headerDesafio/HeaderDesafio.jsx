@@ -1,10 +1,7 @@
-import { Navbar, Container, ProgressBar } from "react-bootstrap";
 import { Link } from "react-router-dom";
-import { useNavigate } from "react-router-dom";
 import "./headerDesafio.css";
 
-export default function HeaderDesafio({ progreso = 50 }) {
-  const navigate = useNavigate();
+export default function HeaderDesafio({ progreso = 100 }) {
 
   return (
     <div className="header-desafio">
