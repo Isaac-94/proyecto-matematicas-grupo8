@@ -67,9 +67,6 @@ const useLoginForm = () => {
       setToastMessage("✅ ¡Inicio de sesión exitoso! Redirigiendo...");
       setToastVariant("success");
       setShowToast(true);
-      setTimeout(() => {
-        navigate("/onboarding", { replace: true });
-      }, 1500);
     } catch (error) {
       console.error("Error al iniciar sesión:", error);
       setToastMessage("❌ Error al iniciar sesión. Verificá tus credenciales.");
