@@ -14,6 +14,11 @@ enum Rol {
   superadmin
 }
 
+enum TipoEjercicio {
+  opcion_multiple
+  numerico
+}
+
 model Usuario {
   id                 String              @id
   email              String              @unique
@@ -59,6 +64,7 @@ model Seccion {
   escenarios       Escenario[]
   aprobadaPor      SeccionAprobada[]
   recursoOtorgado  Recurso?
+  lecciones        Leccion[]
 }
 
 model SeccionAprobada {
@@ -70,23 +76,28 @@ model SeccionAprobada {
 }
 
 model Escenario {
-  id          Int        @id @default(autoincrement())
-  titulo      String
-  descripcion String
-  pregunta    String
-  explicacion String?
-  categoria   String
-  seccionId   Int
-  seccion     Seccion    @relation(fields: [seccionId], references: [id])
-  opciones    Opcion[]
-  insignias   Insignia[]
-  progreso    Progreso[]
+  id                Int        @id @default(autoincrement())
+  titulo            String
+  descripcion       String
+  pregunta          String
+  explicacion       String?
+  categoria         String
+  tipo              TipoEjercicio @default(opcion_multiple)
+  respuestaCorrecta String?
+  imagenUrl         String?
+  seccionId         Int
+  seccion           Seccion    @relation(fields: [seccionId], references: [id])
+  opciones          Opcion[]
+  insignias         Insignia[]
+  progreso          Progreso[]
+  consejos          Consejo[]
 }
 
 model Opcion {
   id          Int       @id @default(autoincrement())
   texto       String
   puntos      Int       @default(0)
+  esCorrecta  Boolean   @default(false)
   escenarioId Int
   escenario   Escenario @relation(fields: [escenarioId], references: [id])
 }
@@ -124,4 +135,21 @@ model Progreso {
   usuario          Usuario   @relation(fields: [usuarioId], references: [id])
   escenario        Escenario @relation(fields: [escenarioId], references: [id])
   updatedAt        DateTime  @updatedAt
+}
+
+model Leccion {
+  id        Int      @id @default(autoincrement())
+  seccionId Int
+  seccion   Seccion  @relation(fields: [seccionId], references: [id])
+  titulo    String
+  videoUrl  String
+  orden     Int      @default(0)
+}
+
+model Consejo {
+  id          Int       @id @default(autoincrement())
+  descripcion String
+  activo      Boolean   @default(true)
+  escenarioId Int
+  escenario   Escenario @relation(fields: [escenarioId], references: [id])
 }

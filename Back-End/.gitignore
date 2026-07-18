@@ -14,7 +14,6 @@ logs
 .settings
 .DS_Store
 Thumbs.db
-prisma/migrations
 *.db
 *.db-journal
 src/generated
