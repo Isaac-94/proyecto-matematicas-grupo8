@@ -3,8 +3,6 @@ import React, { useState } from 'react';
 import ButtonBack from '../../ui/ButtonBack/ButtonBack';
 import ButtonContinue from '../../ui/ButtonContinue/ButtonContinue';
 import './Ejercicio.css';
-import HeaderDesafio from '../Desafios/headerDesafio/HeaderDesafio';
-import HeaderMate from '../HeaderMate/HeaderMate';
 
 function EjercicioInput({ 
   pregunta, 
@@ -39,11 +37,13 @@ function EjercicioInput({
 
   return (
     <div className="ejercicio-page-container">
+
       <main className="ejercicio-page-content">
-        {/* Header con barra de progreso y botones */}
-        <HeaderMate />
-        <HeaderDesafio progreso={100} />
-        
+        {/* Barra superior común */}
+        <div className="ejercicio-top-bar">
+          <ButtonBack onClick={onBack} />
+        </div>
+
         {/* Layout principal de dos columnas */}
         <div className="ejercicio-grid">
           

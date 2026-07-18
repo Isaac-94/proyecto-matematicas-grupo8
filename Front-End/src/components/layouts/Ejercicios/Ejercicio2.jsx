@@ -3,9 +3,6 @@ import HeaderEjercicios from '../../layouts/Header/Header';
 import ButtonBack from '../../ui/ButtonBack/ButtonBack';
 import ButtonContinue from '../../ui/ButtonContinue/ButtonContinue';
 import './Ejercicios.css';
-import HeaderDesafio from '../Desafios/headerDesafio/HeaderDesafio';
-import HeaderMate from '../HeaderMate/HeaderMate';
-
 
 function EjercicioChoice({
     pregunta,
@@ -49,10 +46,13 @@ function EjercicioChoice({
 
     return (
         <div className="ejercicio-page-container">
-           
+            <HeaderEjercicios />
+
             <main className="ejercicio-page-content">
-                <HeaderMate />
-                <HeaderDesafio progreso={100}  />
+                {/* Barra superior con botón volver */}
+                <div className="ejercicio-top-bar">
+                    <ButtonBack onClick={onBack} />
+                </div>
 
                 {/* Contenedor central enfocado en la pregunta Choice */}
                 <div className="ejercicio-choice-container">

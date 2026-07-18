@@ -94,20 +94,10 @@ const Footer = () => {
                         </p>
                     </Col>
                     <Col xs={12} md={6} className="d-flex justify-content-center justify-content-md-end gap-4 gap-md-5 mt-2 mt-md-0">
-                        <a
-                            href="#"
-                            onClick={(e) => { e.preventDefault(); navigate('/TermsOfService', { state: { tab: 'privacidad' } }); }}
-                            className="footer-copyright"
-                            style={{ textDecoration: 'none', cursor: 'pointer' }}
-                        >
+                        <a href="#" className="footer-copyright" style={{ textDecoration: 'none', cursor: 'pointer' }}>
                             Privacy & Policy
                         </a>
-                        <a
-                            href="#"
-                            onClick={(e) => { e.preventDefault(); navigate('/TermsOfService', { state: { tab: 'terminos' } }); }}
-                            className="footer-copyright"
-                            style={{ textDecoration: 'none', cursor: 'pointer' }}
-                        >
+                        <a href="#" className="footer-copyright" style={{ textDecoration: 'none', cursor: 'pointer' }}>
                             Terms & Conditions
                         </a>
                     </Col>

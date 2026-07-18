@@ -1,6 +1,5 @@
 .header_mate {
-  width: 100%;
-  max-width: 100%;
+  width: 100vw; /* Asegura todo el ancho de la pantalla */
   height: 90px;
   background-color: #ffffff;
   display: flex;
@@ -8,11 +7,8 @@
   justify-content: center;
   box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.08);
   margin: 0;
-  padding: 0 20px;
-  box-sizing: border-box;
+  padding: 0;
   position: relative;
-  left: 50%;
-  transform: translateX(-50%);
   z-index: 10;
 }
 

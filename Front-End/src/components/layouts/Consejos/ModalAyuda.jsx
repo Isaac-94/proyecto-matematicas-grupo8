@@ -1,6 +1,5 @@
 import React from 'react';
 import './ModalAyuda.css';
-import imagenFondo from '../../../assets/fondo_consejo.png'; 
 
 function ModalAyuda({ 
   isOpen, 
@@ -16,15 +15,8 @@ function ModalAyuda({
 
   return (
     <div className="modal-ayuda-overlay" onClick={onClose}>
-      {/* 
-        Detiene la propagación del click y aplica la imagen de fondo directamente en línea, 
-        manteniendo un color de respaldo blanco sólido detrás.
-      */}
-      <div 
-        className="modal-ayuda-content" 
-        onClick={(e) => e.stopPropagation()}
-        style={{ backgroundImage: `url(${imagenFondo})` }}
-      >
+      {/* Detiene la propagación del click para evitar que se cierre al tocar dentro del cuadro */}
+      <div className="modal-ayuda-content" onClick={(e) => e.stopPropagation()}>
         
         {/* Botón de cerrar de la esquina superior derecha */}
         <button className="modal-ayuda-close-btn" onClick={onClose} aria-label="Cerrar modal">
@@ -56,19 +48,3 @@ function ModalAyuda({
 }
 
 export default ModalAyuda;
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

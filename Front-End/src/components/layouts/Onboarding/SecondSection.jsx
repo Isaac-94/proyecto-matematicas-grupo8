@@ -3,7 +3,6 @@ import { useAuth } from '../../../context/AuthContext';
 import api from '../../../config/api';
 import { useNavigate } from 'react-router-dom';
 import './onboarding.css';
-import HeaderMate from '../HeaderMate/HeaderMate';
 
 const initialFormState = {
   nombre: '',
@@ -64,7 +63,7 @@ function SecondSection() {
     };
 
     try {
-      await api.post('/api/usuarios/registro', dataToSubmit);
+      await api.post('/usuarios/registro', dataToSubmit);
       setStatus({ loading: false, error: '', success: 'Formulario enviado correctamente.' });
 
       setTimeout(() => {
@@ -84,7 +83,7 @@ function SecondSection() {
     'Porcentajes',
     'Finanzas cotidianas',
     'Fracciones y proporciones',
-    'Geometría básica',
+    'Números básicos',
     'Estimulación cognitiva'
   ];
 
@@ -98,7 +97,7 @@ function SecondSection() {
 
   return (
     <div className="onboarding-container">
-      <HeaderMate />
+      
       <div className="progress-bar">
         {stepLabels.map((label, index) => (
           <div

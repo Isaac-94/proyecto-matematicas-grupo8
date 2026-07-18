@@ -1,10 +1,9 @@
-import NotFound from '../components/layouts/NotFound/NotFound';
-
-
-
 const NotFoundPage = () => {
     return (
-        <NotFound />
+        <div>
+            <h1>404 - Página No Encontrada</h1>
+            <p>Lo sentimos, la página que buscas no existe.</p>
+        </div>
     );
 }
 

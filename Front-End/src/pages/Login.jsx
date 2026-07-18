@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import {
   Container,
   Form,
@@ -16,7 +16,7 @@ import RecuperarContrasena from "./RecuperarContrasena.jsx";
 // Hook personalizado para manejar el estado del formulario de inicio de sesión
 const useLoginForm = () => {
   const navigate = useNavigate();
-  const { login, loginWithGoogle, googleLoading, profile } = useAuth();
+  const { login, loginWithGoogle, googleLoading } = useAuth();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showToast, setShowToast] = useState(false);
@@ -33,15 +33,6 @@ const useLoginForm = () => {
       setPassword(value);
     }
   };
-
-  useEffect(() => {
-    if(profile && (profile?.sentimiento || profile?.desafio || profile?.edad)) {
-        navigate("/dashboard", { replace: true });
-    } else if(profile) {
-        navigate("/onboarding", { replace: true });
-    }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [profile])
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -67,6 +58,9 @@ const useLoginForm = () => {
       setToastMessage("✅ ¡Inicio de sesión exitoso! Redirigiendo...");
       setToastVariant("success");
       setShowToast(true);
+      setTimeout(() => {
+        navigate("/onboarding", { replace: true });
+      }, 1500);
     } catch (error) {
       console.error("Error al iniciar sesión:", error);
       setToastMessage("❌ Error al iniciar sesión. Verificá tus credenciales.");
@@ -209,48 +203,48 @@ const LoginPage = () => {
             <Form onSubmit={handleSubmit} className="px-2">
               <Form.Group className="mb-3" controlId="loginEmail">
                 <Form.Label className="visually-hidden">Email</Form.Label>
-                <div
+                 <div
                   className="d-flex align-items-center"
                   style={{ gap: "4px" }}
-                >
-                  <div style={{ position: "relative", flex: 1 }}>
-                    <InputGroup>
-                      <Form.Control
-                        type="email"
-                        name="email"
-                        placeholder="Email"
-                        value={email}
-                        onChange={handleChangeValue}
-                        style={{
-                          width: "100%",
-                          backgroundColor: "#f5f5f5",
-                          border: "none",
-                          borderBottom: "1px solid #e0e0e0",
-                          borderRadius: 0,
-                          boxShadow: "none",
-                          paddingRight: "10px",
-                        }}
-                      />
-                    </InputGroup>
-                    {email && (
-                      <img
-                        src="/login/icon2.png"
-                        alt="Cerrar"
-                        onClick={() => setEmail("")}
-                        style={{
-                          position: "absolute",
-                          right: 10,
-                          top: "50%",
-                          transform: "translateY(-50%)",
-                          width: 16,
-                          height: 16,
-                          cursor: "pointer",
-                          opacity: 0.6,
-                        }}
-                      />
-                    )}
-                  </div>
-                  <div
+                > 
+                <div style={{ position: "relative", flex: 1 }}>
+                  <InputGroup>
+                    <Form.Control
+                      type="email"
+                      name="email"
+                      placeholder="Email"
+                      value={email}
+                      onChange={handleChangeValue}
+                      style={{
+                        width: "100%",
+                        backgroundColor: "#f5f5f5",
+                        border: "none",
+                        borderBottom: "1px solid #e0e0e0",
+                        borderRadius: 0,
+                        boxShadow: "none",
+                        paddingRight: "10px",
+                      }}
+                    />
+                  </InputGroup>
+                  {email && (
+                    <img
+                      src="/login/icon2.png"
+                      alt="Cerrar"
+                      onClick={() => setEmail("")}
+                      style={{
+                        position: "absolute",
+                        right: 10,
+                        top: "50%",
+                        transform: "translateY(-50%)",
+                        width: 16,
+                        height: 16,
+                        cursor: "pointer",
+                        opacity: 0.6,
+                      }}
+                    />
+                  )}
+                </div>
+                <div
                     style={{
                       visibility: "hidden",
                       display: "flex",
@@ -267,52 +261,52 @@ const LoginPage = () => {
                   className="d-flex align-items-center"
                   style={{ gap: "4px" }}
                 >
-                  <div style={{ position: "relative", flex: 1 }}>
-                    <Form.Control
-                      type={showPassword ? "text" : "password"}
-                      name="password"
-                      placeholder="Contraseña"
-                      value={password}
-                      onChange={handleChangeValue}
+                <div style={{ position: "relative",flex: 1 }}>
+                  <Form.Control
+                    type={showPassword ? "text" : "password"}
+                    name="password"
+                    placeholder="Contraseña"
+                    value={password}
+                    onChange={handleChangeValue}
+                    style={{
+                      width: "100%",
+                      backgroundColor: "#f5f5f5",
+                      border: "none",
+                      borderBottom: "1px solid #e0e0e0",
+                      borderRadius: 0,
+                      boxShadow: "none",
+                      paddingRight: "10px",
+                    }}
+                  />
+                  {password && (
+                    <img
+                      src="/login/icon2.png"
+                      alt="borrar"
+                      onClick={() => setPassword("")}
                       style={{
-                        width: "100%",
-                        backgroundColor: "#f5f5f5",
-                        border: "none",
-                        borderBottom: "1px solid #e0e0e0",
-                        borderRadius: 0,
-                        boxShadow: "none",
-                        paddingRight: "10px",
+                        position: "absolute",
+                        right: 10,
+                        top: "50%",
+                        transform: "translateY(-50%)",
+                        width: 16,
+                        height: 16,
+                        cursor: "pointer",
+                        opacity: 0.6,
                       }}
                     />
-                    {password && (
-                      <img
-                        src="/login/icon2.png"
-                        alt="borrar"
-                        onClick={() => setPassword("")}
-                        style={{
-                          position: "absolute",
-                          right: 10,
-                          top: "50%",
-                          transform: "translateY(-50%)",
-                          width: 16,
-                          height: 16,
-                          cursor: "pointer",
-                          opacity: 0.6,
-                        }}
-                      />
-                    )}
-                  </div>
-                  <div
-                    onClick={() => setShowPassword(!showPassword)}
-                    style={{
-                      display: "flex",
-                      alignItems: "center",
-                      cursor: "pointer",
-                    }}
-                  >
-                    {showPassword ? <FaEyeSlash size={18} /> : <FaEye size={18} />}
-                  </div>
+                  )}
                 </div>
+                <div
+                  onClick={() => setShowPassword(!showPassword)}
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    cursor: "pointer",
+                  }}
+                >
+                  {showPassword ? <FaEyeSlash size={18}/> : <FaEye  size={18}/>}
+                </div>
+                 </div>
               </Form.Group>
               <div className="d-flex justify-content-between align-items-center mb-3">
                 <Form.Check

@@ -1,11 +1,9 @@
 import { motion } from "framer-motion";
 import { Button } from "react-bootstrap";
 import { IoPlayCircleOutline } from "react-icons/io5";
-import { useMediaQuery } from "../../hooks/useMediaQuery";
 
 export default function SectionItem({ leccion, currentIndex, isTransitioning, setCurrentIndex, index, handleShow }) {
     const isActive = index === currentIndex;
-    const isMobile = useMediaQuery("(max-width: 768px)");
 
     // Calcular posición relativa (distancia desde el índice activo)
     const distance = index - currentIndex;
@@ -23,12 +21,12 @@ export default function SectionItem({ leccion, currentIndex, isTransitioning, se
         scale = 1;
     } else if (distance === 1) {
         opacity = 0.5;
-        yOffset = isMobile ? -150 : -150;
+        yOffset = -150;
         zIndex = 5;
         scale = 0.9;
     } else if (distance === 2) {
         opacity = 0.15;
-        yOffset = isMobile ? -250 : -250;
+        yOffset = -250;
         zIndex = 3;
         scale = 0.8;
     }
@@ -39,8 +37,8 @@ export default function SectionItem({ leccion, currentIndex, isTransitioning, se
             className="d-flex align-items-center justify-content-center"
             style={{
                 position: "absolute",
-                width: isMobile ? "90%" : "80%",
-                height: isMobile ? "40%" : "50%",
+                width: "80%",
+                height: "50%",
                 margin: "0 auto",
                 borderTopLeftRadius: "80px",
                 borderTopRightRadius: "80px",
@@ -101,20 +99,16 @@ export default function SectionItem({ leccion, currentIndex, isTransitioning, se
                     {leccion.id}
                 </h3>
 
-                <div className="d-flex flex-column align-items-start justify-content-center" style={{ gap: "1rem", flex: 1 }}>
-                    <Button style={{ height: "auto", backgroundColor: "transparent", border: "none", padding: 0, display: "flex", alignItems: "center", justifyContent: "center" }} onClick={() => handleShow()}>
-                        <IoPlayCircleOutline
-                            style={{
-                                width: "5rem",
-                                height: "5rem",
-                                color: isActive ? "#52C5FE" : "white"
-                            }}
-                        />
+                <Button style={{ height: "auto", backgroundColor: "transparent", border: "none", padding: 0, display: "flex", alignItems: "center", justifyContent: "center" }} onClick={() => handleShow()}>
+                    <IoPlayCircleOutline
+                        style={{
+                            width: "5rem",
+                            height: "5rem",
+                            color: isActive ? "#52C5FE" : "white"
+                        }}
+                    />
 
-                    </Button>
-
-                    <p className="" style={{ color: "#52C5FE", fontWeight: 700, fontSize: "1.25rem" }}>{leccion.titulo}</p>
-                </div>
+                </Button>
             </div>
         </motion.div>
     )

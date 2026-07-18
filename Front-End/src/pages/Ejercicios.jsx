@@ -1,8 +1,7 @@
 
 import { useState } from 'react';
-import EjercicioPage from '../components/layouts/Ejercicios/Ejercicio1';
+import EjercicioInput from '../components/layouts/Ejercicios/Ejercicio1'; 
 import { ejerciciosDePrueba } from '../components/layouts/Ejercicios/datosPrueba'; 
-import { useNavigate } from 'react-router-dom';
 
 function ModuloEjercicios() {
   const navigate = useNavigate();

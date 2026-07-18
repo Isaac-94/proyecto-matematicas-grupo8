@@ -14,7 +14,7 @@
   /* Variables para ajustar posiciones */
   --man-position-y: -105px; /* Ajusta la posición vertical del hombre (usa px o %) */
   --man-image-width: 100%; /* Ajusta el ancho de la imagen del hombre */
-  --man-image-max-width: 500px; /* Ajusta el ancho máximo */
+  --man-image-max-width: 350px; /* Ajusta el ancho máximo */
   --background-position-y: -625px; /* Ajusta la posición vertical del fondo */
 }
 
