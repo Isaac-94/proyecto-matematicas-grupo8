@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { useLocation, useNavigate } from 'react-router-dom';
 const Footer = React.lazy(() => import('../components/layouts/Footer/Footer'));
 const Header = React.lazy(() => import('../components/layouts/header/Header'));
 import ButtonBack from '../components/ui/ButtonBack/ButtonBack';
@@ -8,9 +9,19 @@ import './TermsOfService.css';
 
 function TermsOfService() {
  const [activeTab, setActiveTab] = useState('privacidad');
+ const location = useLocation();
+ const navigate = useNavigate();
+
+ useEffect(() => {
+   const tabFromState = location?.state?.tab;
+   const params = new URLSearchParams(location.search);
+   const tabFromQuery = params.get('tab');
+   if (tabFromState) setActiveTab(tabFromState);
+   else if (tabFromQuery) setActiveTab(tabFromQuery);
+ }, [location]);
 
   const manejarRegresar = () => {
-    console.log("Regresar");
+    navigate('/');
   };
 
   return (
