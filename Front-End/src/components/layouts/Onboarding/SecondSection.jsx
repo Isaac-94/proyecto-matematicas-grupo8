@@ -1,36 +1,40 @@
-import { useState, useEffect } from 'react';
-import { useAuth } from '../../../context/AuthContext';
-import api from '../../../config/api';
-import { useNavigate } from 'react-router-dom';
-import './onboarding.css';
-import HeaderMate from '../HeaderMate/HeaderMate';
+import { useState, useEffect } from "react";
+import { useAuth } from "../../../context/AuthContext";
+import api from "../../../config/api";
+import { useNavigate } from "react-router-dom";
+import "./onboarding.css";
+import HeaderMate from "../HeaderMate/HeaderMate";
 
 const initialFormState = {
-  nombre: '',
-  apellidos: '',
-  uid: '',
-  desafio: '',
-  edad: '',
-  genero: '',
-  sentimiento: '',
-  email: ''
+  nombre: "",
+  apellidos: "",
+  uid: "",
+  desafio: "",
+  edad: "",
+  genero: "",
+  sentimiento: "",
+  email: "",
 };
 
 function SecondSection() {
   const { user } = useAuth();
-  const navigate = useNavigate()
+  const navigate = useNavigate();
   const [currentStep, setCurrentStep] = useState(0);
   const [formData, setFormData] = useState(initialFormState);
-  const [status, setStatus] = useState({ loading: false, error: '', success: '' });
+  const [status, setStatus] = useState({
+    loading: false,
+    error: "",
+    success: "",
+  });
 
-  const stepLabels = ['Paso 1', 'Paso 2', 'Paso 3', 'Paso 4'];
+  const stepLabels = ["Paso 1", "Paso 2", "Paso 3", "Paso 4"];
 
   useEffect(() => {
     if (user) {
-      setFormData(prev => ({
+      setFormData((prev) => ({
         ...prev,
         uid: user.id,
-        email: user.email
+        email: user.email,
       }));
     }
   }, [user]);
@@ -53,48 +57,62 @@ function SecondSection() {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-    setStatus({ loading: true, error: '', success: '' });
+    setStatus({ loading: true, error: "", success: "" });
 
     const fechaActual = new Date().toISOString();
 
     const dataToSubmit = {
       ...formData,
       fechaRespuesta: fechaActual,
-      nombre: `${formData.nombre} ${formData.apellidos}`.trim()
+      nombre: `${formData.nombre} ${formData.apellidos}`.trim(),
     };
 
     try {
-      await api.post('/api/usuarios/registro', dataToSubmit);
-      setStatus({ loading: false, error: '', success: 'Formulario enviado correctamente.' });
+      await api.post("/usuarios/registro", dataToSubmit);
+      setStatus({
+        loading: false,
+        error: "",
+        success: "Formulario enviado correctamente.",
+      });
 
       setTimeout(() => {
-        navigate("/dashboard")
+        navigate("/dashboard");
       }, 1500);
     } catch (error) {
       const errorMsg = error.response?.data?.error || error.message;
-      setStatus({ loading: false, error: errorMsg, success: '' });
+      setStatus({ loading: false, error: errorMsg, success: "" });
     } finally {
       setTimeout(() => {
-        navigate("/dashboard")
+        navigate("/dashboard");
       }, 1500);
     }
   };
 
   const opcionesDesafios = [
-    'Porcentajes',
-    'Finanzas cotidianas',
-    'Fracciones y proporciones',
-    'Geometría básica',
-    'Estimulación cognitiva'
+    "Porcentajes",
+    "Finanzas cotidianas",
+    "Fracciones y proporciones",
+    "Geometría básica",
+    "Estimulación cognitiva",
   ];
 
-  const opcionesSentimientos = ['Relajado', 'Ansioso', 'Confundido', 'Estresado'];
+  const opcionesSentimientos = [
+    "Relajado",
+    "Ansioso",
+    "Confundido",
+    "Estresado",
+  ];
 
-  const opcionesTiempo = ['5 minutos', '10 minutos', '15 minutos', '+15 minutos'];
+  const opcionesTiempo = [
+    "5 minutos",
+    "10 minutos",
+    "15 minutos",
+    "+15 minutos",
+  ];
 
-  const opcionesGeneros = ['masculino', 'femenino', 'otro'];
+  const opcionesGeneros = ["masculino", "femenino", "otro"];
 
-  const opcionesEdades = ['20 a 30 años', '30 a 50 años', '+ 50 años'];
+  const opcionesEdades = ["20 a 30 años", "30 a 50 años", "+ 50 años"];
 
   return (
     <div className="onboarding-container">
@@ -102,11 +120,11 @@ function SecondSection() {
       <div className="progress-bar">
         {stepLabels.map((label, index) => (
           <div
-            className={`step ${index < currentStep ? 'completed' : ''} ${index === currentStep ? 'current' : ''}`}
+            className={`step ${index < currentStep ? "completed" : ""} ${index === currentStep ? "current" : ""}`}
             key={label}
           >
-            <p className={index <= currentStep ? 'active' : ''}>{label}</p>
-            <div className={`bullet ${index <= currentStep ? 'active' : ''}`}>
+            <p className={index <= currentStep ? "active" : ""}>{label}</p>
+            <div className={`bullet ${index <= currentStep ? "active" : ""}`}>
               <span>{index + 1}</span>
             </div>
           </div>
@@ -114,18 +132,22 @@ function SecondSection() {
       </div>
 
       <div className="form-outer">
-        <form onSubmit={handleSubmit} style={{ marginLeft: `-${currentStep * 100}%` }}>
-
+        <form
+          onSubmit={handleSubmit}
+          style={{ marginLeft: `-${currentStep * 100}%` }}
+        >
           {/* PASO 1: DESAFÍOS */}
           <div className="page">
-            <div className="title">¿Qué desafío de tu vida diaria te gustaría dominar primero?</div>
+            <div className="title">
+              ¿Qué desafío de tu vida diaria te gustaría dominar primero?
+            </div>
             <div className="options-grid">
               {opcionesDesafios.map((opcion) => (
                 <button
                   key={opcion}
                   type="button"
-                  className={`option-btn ${formData.desafio === opcion ? 'selected' : ''}`}
-                  onClick={() => handleSelectOption('desafio', opcion)}
+                  className={`option-btn ${formData.desafio === opcion ? "selected" : ""}`}
+                  onClick={() => handleSelectOption("desafio", opcion)}
                 >
                   {opcion}
                 </button>
@@ -146,14 +168,17 @@ function SecondSection() {
 
           {/* PASO 2: SENTIMIENTOS */}
           <div className="page">
-            <div className="title">¿Cómo te sentís normalmente cuando tenés que hacer cuentas frente a otras personas?</div>
+            <div className="title">
+              ¿Cómo te sentís normalmente cuando tenés que hacer cuentas frente
+              a otras personas?
+            </div>
             <div className="options-grid">
               {opcionesSentimientos.map((opcion) => (
                 <button
                   key={opcion}
                   type="button"
-                  className={`option-btn ${formData.sentimiento === opcion ? 'selected' : ''}`}
-                  onClick={() => handleSelectOption('sentimiento', opcion)}
+                  className={`option-btn ${formData.sentimiento === opcion ? "selected" : ""}`}
+                  onClick={() => handleSelectOption("sentimiento", opcion)}
                 >
                   {opcion}
                 </button>
@@ -177,22 +202,33 @@ function SecondSection() {
 
           {/* PASO 3: TIEMPO (Para alimentar el gráfico PIE) */}
           <div className="page">
-            <div className="title">¿Cuánto tiempo podés dedicarle a tu agilidad mental por día?</div>
+            <div className="title">
+              ¿Cuánto tiempo podés dedicarle a tu agilidad mental por día?
+            </div>
             <div className="options-grid">
               {opcionesTiempo.map((opcion) => (
                 <button
                   key={opcion}
                   type="button"
-                  className={`option-btn ${formData.tiempo === opcion ? 'selected' : ''}`}
-                  onClick={() => handleSelectOption('tiempo', opcion)}
+                  className={`option-btn ${formData.tiempo === opcion ? "selected" : ""}`}
+                  onClick={() => handleSelectOption("tiempo", opcion)}
                 >
                   {opcion.charAt(0).toUpperCase() + opcion.slice(1)}
                 </button>
               ))}
             </div>
             <div className="field btns">
-              <button type="button" className="prev" onClick={prevStep}>Atrás</button>
-              <button type="button" className="next" onClick={nextStep} disabled={!formData.tiempo}>Siguiente</button>
+              <button type="button" className="prev" onClick={prevStep}>
+                Atrás
+              </button>
+              <button
+                type="button"
+                className="next"
+                onClick={nextStep}
+                disabled={!formData.tiempo}
+              >
+                Siguiente
+              </button>
             </div>
           </div>
 
@@ -204,8 +240,8 @@ function SecondSection() {
                 <button
                   key={opcion}
                   type="button"
-                  className={`option-btn ${formData.edad === opcion ? 'selected' : ''}`}
-                  onClick={() => handleSelectOption('edad', opcion)}
+                  className={`option-btn ${formData.edad === opcion ? "selected" : ""}`}
+                  onClick={() => handleSelectOption("edad", opcion)}
                 >
                   {opcion}
                 </button>
@@ -216,8 +252,12 @@ function SecondSection() {
               <button type="button" className="prev" onClick={prevStep}>
                 Atrás
               </button>
-              <button type="submit" className="submit" disabled={status.loading || !formData.edad}>
-                {status.loading ? 'Enviando...' : 'Enviar'}
+              <button
+                type="submit"
+                className="submit"
+                disabled={status.loading || !formData.edad}
+              >
+                {status.loading ? "Enviando..." : "Enviar"}
               </button>
             </div>
           </div>
