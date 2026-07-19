@@ -19,10 +19,12 @@ export default function CursoSection() {
     api
       .get("/secciones")
       .then((res) => {
-        const secciones = (res.data || []).map((s) => ({
-          ...s,
-          titulo: s.nombre,
-        }));
+        // Las secciones id 1-6 son del seed original del repo y no tienen
+        // Opciones cargadas (opciones.csv viene vacío) — se filtran hasta
+        // que el equipo complete ese contenido o se borren esos registros.
+        const secciones = (res.data || [])
+          .filter((s) => s.id >= 7)
+          .map((s) => ({ ...s, titulo: s.nombre }));
         setLecciones(secciones);
       })
       .catch((err) => console.error("Error al cargar secciones:", err));
