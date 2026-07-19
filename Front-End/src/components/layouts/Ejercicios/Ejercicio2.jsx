@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-import HeaderEjercicios from "../../layouts/Header/Header";
 import ButtonBack from "../../ui/ButtonBack/ButtonBack";
 import ButtonContinue from "../../ui/ButtonContinue/ButtonContinue";
 import "./Ejercicio.css";
