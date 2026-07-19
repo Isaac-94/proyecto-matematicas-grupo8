@@ -40,12 +40,16 @@ const ProtectedRoute = ({ children }) => {
 const PublicRoute = ({ children, forceRedirect = true }) => {
   const { isAuthenticated, profile } = useAuth();
 
-  // Solo redireccionamos si hay sesión Y perfil cargado.
-  // Si hay sesión pero no perfil (error de red), dejamos que vea la página pública.
-  return isAuthenticated && profile && forceRedirect ? (
-    <Navigate to="/Onboarding" />
+  if (!(isAuthenticated && profile && forceRedirect)) {
+    return children;
+  }
+
+  const onboardingCompleto =
+    profile?.sentimiento || profile?.desafio || profile?.edad;
+  return onboardingCompleto ? (
+    <Navigate to="/dashboard" />
   ) : (
-    children
+    <Navigate to="/onboarding" />
   );
 };
 
