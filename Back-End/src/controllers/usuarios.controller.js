@@ -82,7 +82,13 @@ export const registrarUsuario = async (req, res, next) => {
       },
     });
     console.log(`✅ Usuario sincronizado: ${usuario.email} [${usuario.rol}]`);
-    res.status(201).json(usuario);
+
+    const [totalSecciones, seccionesAprobadasCount] = await Promise.all([
+      prisma.seccion.count(),
+      prisma.seccionAprobada.count({ where: { usuarioId: uid } }),
+    ]);
+
+    res.status(201).json({ ...usuario, totalSecciones, seccionesAprobadasCount });
   } catch (error) {
     next(error);
   }

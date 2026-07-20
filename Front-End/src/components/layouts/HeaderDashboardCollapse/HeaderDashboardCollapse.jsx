@@ -14,6 +14,10 @@ const HeaderSection = () => {
         { title: "Experiencia", value: profile?.puntos ?? 0, icon: "kpis/experience.png" },
     ];
 
+    const progresoPorcentaje = profile?.totalSecciones
+        ? Math.round(((profile?.seccionesAprobadasCount ?? 0) / profile.totalSecciones) * 100)
+        : 0;
+
     // Tamaños responsive
     const getSizes = () => {
         if (isMobile) {
@@ -128,7 +132,7 @@ const HeaderSection = () => {
                                 overflow: "hidden",
                             }}>
                                 <div style={{
-                                    width: "45%",
+                                    width: `${progresoPorcentaje}%`,
                                     height: "100%",
                                     backgroundColor: "#FFDB54",
                                     borderRadius: "20px",
@@ -140,7 +144,7 @@ const HeaderSection = () => {
                             fontSize: sizes.fontSize,
                             fontWeight: 400
                         }}>
-                            Progreso 45%
+                            Progreso {progresoPorcentaje}%
                         </span>
                     </div>
 

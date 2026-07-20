@@ -3,6 +3,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import EjercicioInput from '../components/layouts/Ejercicios/Ejercicio1';
 import EjercicioChoice from '../components/layouts/Ejercicios/Ejercicio2';
 import api from '../config/api';
+import { useAuth } from '../context/AuthContext';
 
 // Sección de respaldo si se entra a /ejercicios sin indicar cuál (ej. durante pruebas)
 const SECCION_ID_POR_DEFECTO = 7;
@@ -10,6 +11,7 @@ const SECCION_ID_POR_DEFECTO = 7;
 function ModuloEjercicios() {
   const navigate = useNavigate();
   const { seccionId } = useParams();
+  const { refreshProfile } = useAuth();
   const idSeccionActual = seccionId || SECCION_ID_POR_DEFECTO;
 
   const [escenarios, setEscenarios] = useState([]);
@@ -53,6 +55,10 @@ function ModuloEjercicios() {
         ...(opcionId ? { opcionId } : { respuestaUsuario }),
       });
       setUltimoResultado(res.data);
+
+      if (res.data.esCorrecto) {
+        refreshProfile();
+      }
 
       if (res.data.seccionAprobada) {
         console.log(`🏆 ¡Sección "${res.data.seccionAprobada}" aprobada! +${res.data.tokensGanados} tokens`);
