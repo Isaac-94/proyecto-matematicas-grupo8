@@ -7,43 +7,39 @@ import HeaderMate from "../HeaderMate/HeaderMate";
 
 function EjercicioChoice({
   pregunta,
-  opciones = [],
-  respuestaCorrecta,
+  opciones = [], // [{ id, texto, esCorrecta }]
   onBack,
   onContinue,
+  onResponder, // (opcionId) => void — informa al padre para registrar el progreso
 }) {
   const datosChoiceDePrueba = {
     pregunta: "¿Cuánto es el 25% de 300?",
-    opciones: ["75", "100", "50"],
-    respuestaCorrecta: "75",
+    opciones: [
+      { id: -1, texto: "75", esCorrecta: true },
+      { id: -2, texto: "100", esCorrecta: false },
+      { id: -3, texto: "50", esCorrecta: false },
+    ],
   };
 
   const preguntaActual = pregunta || datosChoiceDePrueba.pregunta;
-  const opcionesActuales = opciones.length
-    ? opciones
-    : datosChoiceDePrueba.opciones;
-  const respuestaCorrectaActual =
-    respuestaCorrecta || datosChoiceDePrueba.respuestaCorrecta;
+  const opcionesActuales = opciones.length ? opciones : datosChoiceDePrueba.opciones;
 
   const [seleccionado, setSeleccionado] = useState(null);
   const [esCorrecto, setEsCorrecto] = useState(null);
 
-  // Reiniciar los estados internos si la pregunta cambia en el mismo componente
   useEffect(() => {
     setSeleccionado(null);
     setEsCorrecto(null);
   }, [preguntaActual]);
 
   const manejarSeleccion = (opcion) => {
-    // Si ya contestó correctamente, bloquear cambios adicionales (opcional)
     if (esCorrecto) return;
 
-    setSeleccionado(opcion);
+    setSeleccionado(opcion.id);
+    setEsCorrecto(opcion.esCorrecta);
 
-    if (opcion === respuestaCorrecta) {
-      setEsCorrecto(true);
-    } else {
-      setEsCorrecto(false);
+    if (onResponder) {
+      onResponder(opcion.id);
     }
   };
 
@@ -53,59 +49,45 @@ function EjercicioChoice({
         <HeaderMate />
         <HeaderDesafio progreso={100} />
 
-        {/* Contenedor central enfocado en la pregunta Choice */}
         <div className="ejercicio-choice-container">
           <h2 className="ejercicio-pregunta-centered">{preguntaActual}</h2>
 
-          {/* Listado de Opciones Múltiples */}
           <div className="options-grid">
-            {opcionesActuales.map((opcion, index) => {
-              // Determinar clases dinámicas para cada botón
+            {opcionesActuales.map((opcion) => {
               let buttonClass = "option-button";
-              if (seleccionado === opcion) {
-                buttonClass += esCorrecto
-                  ? " option-correct"
-                  : " option-incorrect";
+              if (seleccionado === opcion.id) {
+                buttonClass += esCorrecto ? " option-correct" : " option-incorrect";
               }
 
               return (
                 <button
-                  key={index}
+                  key={opcion.id}
                   className={buttonClass}
                   onClick={() => manejarSeleccion(opcion)}
                   type="button"
                 >
-                  {opcion}
+                  {opcion.texto}
                 </button>
               );
             })}
           </div>
 
-          {/* Carteles Mensajes de Feedback */}
           <div className="feedback-wrapper">
             {esCorrecto === true && (
               <div className="alert-message alert-success animate-pop">
-                <span>
-                  🎉 ¡Excelente trabajo! Respuesta correcta. ¡Sigue así!
-                </span>
+                <span>🎉 ¡Excelente trabajo! Respuesta correcta. ¡Sigue así!</span>
               </div>
             )}
             {esCorrecto === false && (
               <div className="alert-message alert-danger animate-pop">
-                <span>
-                  💪 ¡Casi lo tienes! Intenta analizar la pregunta nuevamente.
-                </span>
+                <span>💪 ¡Casi lo tienes! Intenta analizar la pregunta nuevamente.</span>
               </div>
             )}
           </div>
         </div>
 
-        {/* Barra inferior con el botón continuar */}
         <div className="ejercicio-footer">
-          <ButtonContinue
-            onClick={onContinue}
-            disabled={esCorrecto !== true} // Deshabilitado hasta que seleccione la correcta
-          />
+          <ButtonContinue onClick={onContinue} disabled={esCorrecto !== true} />
         </div>
       </main>
     </div>

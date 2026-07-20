@@ -11,7 +11,8 @@ function EjercicioInput({
   imagenUrl, 
   respuestaCorrecta, 
   onBack, 
-  onContinue 
+  onContinue,
+  onResponder, // (respuestaUsuario) => void — informa al padre para registrar el progreso
 }) {
   const [inputValue, setInputValue] = useState('');
   const [resultado, setResultado] = useState(null); // 'correcto' | 'incorrecto' | null
@@ -34,6 +35,10 @@ function EjercicioInput({
       setResultado('correcto');
     } else {
       setResultado('incorrecto');
+    }
+
+    if (onResponder) {
+      onResponder(inputValue);
     }
   };
 

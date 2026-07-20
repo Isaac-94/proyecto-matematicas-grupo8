@@ -1,15 +1,17 @@
 import { useMediaQuery } from "../../../hooks/useMediaQuery";
+import { useAuth } from "../../../context/AuthContext";
 
 // ============= HEADER SECTION =============
 const HeaderSection = () => {
     const isMobile = useMediaQuery("(max-width: 768px)");
     const isTablet = useMediaQuery("(min-width: 769px) and (max-width: 1024px)");
+    const { profile } = useAuth();
 
     const KPIs = [
-        { title: "Racha", value: 1, icon: "kpis/streak.png" },
-        { title: "Monedas", value: 0, icon: "kpis/coin.png" },
+        { title: "Racha", value: profile?.racha ?? 0, icon: "kpis/streak.png" },
+        { title: "Monedas", value: profile?.tokens ?? 0, icon: "kpis/coin.png" },
         { title: "Trofeos", value: 0, icon: "kpis/cup.png" },
-        { title: "Experiencia", value: 0, icon: "kpis/experience.png" },
+        { title: "Experiencia", value: profile?.puntos ?? 0, icon: "kpis/experience.png" },
     ];
 
     // Tamaños responsive
