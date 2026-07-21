@@ -1,6 +1,6 @@
 import React, { useState, useRef } from 'react';
-import HeaderDashboard from '../Header/HeaderDashboard'; // Ajusta según tu proyecto
-import avatarUser from '../../assets/avatar.png'; // Tu imagen de la oveja
+import HeaderDashboard from '../Desafios/headerDash/HeaderDash';
+import avatarUser from '../../../assets/Foto_perfil.png'; 
 import './Configuracion.css';
 
 function Configuracion() {

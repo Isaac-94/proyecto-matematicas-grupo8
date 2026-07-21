@@ -1,8 +1,7 @@
 import React, { useState } from 'react';
-import Header from '../Desafios/headerDash/HeaderDash'; // Ajusta la ruta a tu Header
-import fondoCuadrille from '../../../assets/fondo_consejo.png'; // Tu fondo celeste
-import mascotaPlaceholder from '../../../assets/Foto_perfil.jpg'; // Imagen de mascota de referencia
-import './Perfil.css';
+import Header from '../Desafios/headerDash/HeaderDash';
+import fondoCuadrille from '../../../assets/Fondo_error.png'; 
+import mascotaPlaceholder from '../../../assets/Mascota_perfil.png'; 
 
 function Perfil() {
   // Estado para controlar cuál opción del menú lateral está seleccionada
