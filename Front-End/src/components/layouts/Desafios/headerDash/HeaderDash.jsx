@@ -7,6 +7,7 @@ import { useAuth } from '../../../../context/AuthContext';
 import { LuChevronDown, LuChevronUp } from 'react-icons/lu';
 import { useMediaQuery } from '../../../../hooks/useMediaQuery';
 import ButtonFloat from '../../../ui/ButtonFloat/ButtonFloat';
+import Configuracion from '../../Configuracion/Configuracion';
 
 export default function Header({ showHeader, setShowHeader }) {
   const navigate = useNavigate();
@@ -70,6 +71,7 @@ export default function Header({ showHeader, setShowHeader }) {
             <Nav.Link onClick={() => navigate("/mixto")}>Mixto</Nav.Link>
             <Nav.Link onClick={() => navigate("/ranking")}>Ranking</Nav.Link>
             <Nav.Link onClick={() => navigate("/calculadora")}>Calculadora</Nav.Link>
+            <Nav.Link onClick={() => navigate("/configuracion")}>Configuración</Nav.Link>
           </Nav>
         </Navbar.Collapse>
 
