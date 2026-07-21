@@ -2,21 +2,30 @@
 
 Una plataforma de entrenamiento para actividades matemáticas de la vida diaria
 
-![imagen identidad](Front-End\src\assets\logo_mate.png)
+![imagen identidad](Front-End/src/assets/logo_mate.png)
 
-![imagen identidad](Front-End\src\assets\image.png)
+![imagen identidad](Front-End/src/assets/image.png)
 
 ## Nuestro equipo
 
-![Sol](Front-End\src\assets\Fotos\Sol.jpg)
-![Sofia](Front-End\src\assets\Fotos\Sofia.jpg)
-![Romina](Front-End\src\assets\Fotos\Romina.jpg)
-![Lisandro](Front-End\src\assets\Fotos\Lisandro.jpg)
-![Isaac](Front-End\src\assets\Fotos\Isaac.jpg)
-![Hernan](Front-End\src\assets\Fotos\hernan.jpg)
-![Gustavo](Front-End\src\assets\Fotos\Gustavo.jpg)
-![Flor](Front-End\src\assets\Fotos\Flor.jpg)
-![César](Front-End\src\assets\Fotos\Cesar.jpg)
+
+<img src="Front-End/src/assets/Fotos/Sol.jpg" alt="Sol" width="80">
+
+<img src="Front-End/src/assets/Fotos/Sofia.jpg" alt="Sofia" width="80">
+
+<img src="Front-End/src/assets/Fotos/Romina.jpg" alt="Romina" width="80">
+
+<img src="Front-End/src/assets/Fotos/Lisandro.jpg" alt="Lisandro" width="80">
+
+<img src="Front-End/src/assets/Fotos/Isaac.jpg" alt="Isaac" width="80">
+
+<img src="Front-End/src/assets/Fotos/hernan.jpg" alt="Hernán" width="80">
+
+<img src="Front-End/src/assets/Fotos/Gustavo.jpg" alt="Gustavo" width="80">
+
+<img src="Front-End/src/assets/Fotos/Flor.jpg" alt="Flor" width="80">
+
+<img src="Front-End/src/assets/Fotos/Cesar.jpg" alt="César" width="80">
 
 ## Backend Core
 
