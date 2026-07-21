@@ -56,7 +56,7 @@ function EjercicioInput({
                 <input
                   type="text"
                   inputMode="decimal"
-                  placeholder="Introduce tu respuesta..."
+                  placeholder="Escribí tu respuesta..."
                   value={inputValue}
                   onChange={handleInputChange}
                   className="ejercicio-input"
@@ -73,7 +73,7 @@ function EjercicioInput({
             )}
             {resultado === 'incorrecto' && (
               <div className="alert-message alert-danger">
-                <span>❌ Inténtalo de nuevo. Respuesta incorrecta.</span>
+                <span>❌ Intentálo de nuevo. Respuesta incorrecta.</span>
               </div>
             )}
           </div>

@@ -6,7 +6,7 @@ function FirstSection() {
         <div className="container-nosotros">
             <div className='container-firstSection'>
                 <h1 className="title-nosotros">
-                    CONOCE AL EQUIPO<br />DETRÁS DE MATE+
+                    CONOCÉ AL EQUIPO<br />DETRÁS DE MATE+
                 </h1>
                 
                 <p className="subtitle-nosotros">

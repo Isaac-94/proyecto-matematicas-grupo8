@@ -13,7 +13,7 @@ export default function ModalConfirmacion({ show, handleToDesafios, handleToEjer
                 </Modal.Title>
             </Modal.Header>
             <Modal.Body className="text-center" style={{ margin: "0 2rem", backgroundColor: "white", borderRadius: "20px", padding: "1rem", fontWeight: "bold", fontSize: "18px" }}>
-                ¿Quéres ver un video explicativo antes de arrancar? Esto te ayudará a entender mejor el desafio
+                ¿Querés ver un video explicativo antes de arrancar? Esto te ayudará a entender mejor el desafío
             </Modal.Body>
             <Modal.Footer className="d-flex justify-content-around" style={{ border: "none" }}>
                 <Button

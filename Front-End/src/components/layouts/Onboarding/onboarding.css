@@ -36,7 +36,9 @@
   justify-content: flex-start;
 }
 
-.onboarding-container header {
+
+
+.onboarding-container header{
   font-size: 32px;
   font-weight: 700;
   margin-bottom: 30px;
@@ -59,7 +61,7 @@
   line-height: 1.4;
 }
 
-.onboarding-container .button2 {
+.onboarding-container .button2  {
   width: 100%;
   padding: 14px 12px;
   background: #34495e;
