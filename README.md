@@ -2,21 +2,21 @@
 
 Una plataforma de entrenamiento para actividades matemáticas de la vida diaria
 
-![imagen identidad](Front-End\src\assets\logo_mate.png)
+![imagen identidad](Front-End/src/assets/logo_mate.png)
 
-![imagen identidad](Front-End\src\assets\image.png)
+![imagen identidad](Front-End/src/assets/image.png)
 
 ## Nuestro equipo
 
-![Sol](Front-End\src\assets\Fotos\Sol.jpg)
-![Sofia](Front-End\src\assets\Fotos\Sofia.jpg)
-![Romina](Front-End\src\assets\Fotos\Romina.jpg)
-![Lisandro](Front-End\src\assets\Fotos\Lisandro.jpg)
-![Isaac](Front-End\src\assets\Fotos\Isaac.jpg)
-![Hernan](Front-End\src\assets\Fotos\hernan.jpg)
-![Gustavo](Front-End\src\assets\Fotos\Gustavo.jpg)
-![Flor](Front-End\src\assets\Fotos\Flor.jpg)
-![César](Front-End\src\assets\Fotos\Cesar.jpg)
+![Sol](Front-End/src/assets/Fotos/Sol.jpg)
+![Sofia](Front-End/src/assets/Fotos/Sofia.jpg)
+![Romina](Front-End/src/assets/Fotos/Romina.jpg)
+![Lisandro](Front-End/src/assets/Fotos/Lisandro.jpg)
+![Isaac](Front-End/src/assets/Fotos/Isaac.jpg)
+![Hernan](Front-End/src/assets/Fotos/hernan.jpg)
+![Gustavo](Front-End/src/assets/Fotos/Gustavo.jpg)
+![Flor](Front-End/src/assets/Fotos/Flor.jpg)
+![César](Front-End/src/assets/Fotos/Cesar.jpg)
 
 ## Backend Core
 
