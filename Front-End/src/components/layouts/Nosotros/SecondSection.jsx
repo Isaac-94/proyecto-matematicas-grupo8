@@ -64,7 +64,7 @@ const teamMembers = [
     github: 'https://github.com/florencialu',
   },
   {
-    name: 'Sofia Digiano',
+    name: 'Sofía Digiano',
     role: 'Diseñadora UX/UI',
     quote: 'Estudio cómo interactúan los usuarios para diseñar caminos sencillos, intuitivos y libres de frustraciones.',
     image: SofiaPhoto,
@@ -88,7 +88,7 @@ const teamMembers = [
     github: '#',
   },
   {
-    name: 'Hernan Luciano',
+    name: 'Hernán Luciano',
     role: 'Tester QA',
     quote: 'Desafío al código y automatizo pruebas para que cada actualización de Mate+ salga a la luz sin fricciones.',
     image: hernanPhoto,

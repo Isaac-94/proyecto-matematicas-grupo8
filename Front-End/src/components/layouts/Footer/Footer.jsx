@@ -100,7 +100,7 @@ const Footer = () => {
                             className="footer-copyright"
                             style={{ textDecoration: 'none', cursor: 'pointer' }}
                         >
-                            Privacy & Policy
+                            Política de Privacidad
                         </a>
                         <a
                             href="#"
@@ -108,7 +108,7 @@ const Footer = () => {
                             className="footer-copyright"
                             style={{ textDecoration: 'none', cursor: 'pointer' }}
                         >
-                            Terms & Conditions
+                            Términos y Condiciones
                         </a>
                     </Col>
                 </Row>

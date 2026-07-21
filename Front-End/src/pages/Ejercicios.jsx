@@ -24,7 +24,7 @@ function ModuloEjercicios() {
     if (indexActual < ejerciciosDePrueba.length - 1) {
       setIndexActual(indexActual + 1);
     } else {
-      alert("🎉 ¡Felicidades! Has completado todos los ejercicios de prueba.");
+      alert("🎉 ¡Felicidades! Completaste todos los ejercicios de prueba.");
     }
   };
 

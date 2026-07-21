@@ -89,7 +89,7 @@ function EjercicioChoice({
                         )}
                         {esCorrecto === false && (
                             <div className="alert-message alert-danger animate-pop">
-                                <span>💪 ¡Casi lo tienes! Intenta analizar la pregunta nuevamente.</span>
+                                <span>💪 ¡Casi lo tenés! Intenta analizar la pregunta nuevamente.</span>
                             </div>
                         )}
                     </div>
