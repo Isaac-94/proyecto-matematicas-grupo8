@@ -8,24 +8,17 @@ Una plataforma de entrenamiento para actividades matemáticas de la vida diaria
 
 ## Nuestro equipo
 
-
+<p>
 <img src="Front-End/src/assets/Fotos/Sol.jpg" alt="Sol" width="80">
-
 <img src="Front-End/src/assets/Fotos/Sofia.jpg" alt="Sofia" width="80">
-
 <img src="Front-End/src/assets/Fotos/Romina.jpg" alt="Romina" width="80">
-
 <img src="Front-End/src/assets/Fotos/Lisandro.jpg" alt="Lisandro" width="80">
-
 <img src="Front-End/src/assets/Fotos/Isaac.jpg" alt="Isaac" width="80">
-
 <img src="Front-End/src/assets/Fotos/hernan.jpg" alt="Hernán" width="80">
-
 <img src="Front-End/src/assets/Fotos/Gustavo.jpg" alt="Gustavo" width="80">
-
 <img src="Front-End/src/assets/Fotos/Flor.jpg" alt="Flor" width="80">
-
 <img src="Front-End/src/assets/Fotos/Cesar.jpg" alt="César" width="80">
+</p>
 
 ## Backend Core
 
