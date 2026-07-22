@@ -5,7 +5,7 @@
    ========================================================================== */
 
 .onboarding {
-  height: 100vh;
+  height: 100dvh;
   width: 100vw;
   background-image: url('../../../assets/background.png');
   background-repeat: no-repeat;
@@ -18,8 +18,8 @@
 }
 
 .onboarding-container {
-  width: 60%;
-  max-width: 1100px;
+  width: 80%;
+  height: 100%;
   background-image: url('../../../assets/fondo_onboarding.png');
   background-repeat: no-repeat;
   background-size: 100% 100%;
@@ -36,7 +36,9 @@
   justify-content: flex-start;
 }
 
-.onboarding-container header {
+
+
+.onboarding-container header{
   font-size: 32px;
   font-weight: 700;
   margin-bottom: 30px;
@@ -59,7 +61,7 @@
   line-height: 1.4;
 }
 
-.onboarding-container .button2 {
+.onboarding-container .button2  {
   width: 100%;
   padding: 14px 12px;
   background: #34495e;
@@ -142,8 +144,8 @@
   margin: 0 auto 35px auto;
   width: 100%;
   user-select: none;
-  margin-bottom: 30px;
-  margin-top: 50px;
+  margin-bottom: 5px;
+  margin-top: 5px;
 }
 
 .onboarding-container .progress-bar .step {
@@ -172,7 +174,7 @@
   display: inline-block;
   border-radius: 50%;
   position: relative;
-  background: #2c3e50;
+  background: #A9A9A9;
   z-index: 2;
   font-weight: 600;
   font-size: 13px;
@@ -181,12 +183,12 @@
 }
 
 .onboarding-container .progress-bar .step .bullet.active {
-  border-color: #A9A9A9;
-  color: #A9A9A9;
+  border-color: #2c3e50;
+  color: #2c3e50;
 }
 
 .onboarding-container .progress-bar .step.completed .bullet {
-  background: #A9A9A9;
+  background: #2c3e50;
   color: #fff;
 }
 
@@ -249,11 +251,11 @@
   font-size: 18px;
   font-weight: 700;
   line-height: 1.4;
-  margin-bottom: 30px;
+  margin-bottom: 10px;
   color: #000000;
   min-height: 60px;
   flex: 0 0 auto;
-  margin-top: 20px;
+  margin-top: 30px;
 }
 
 /* ==========================================================================

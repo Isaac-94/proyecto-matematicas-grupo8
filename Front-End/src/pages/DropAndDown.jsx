@@ -182,7 +182,7 @@ export default function DragConstraints() {
             </div>
           ) : (
             <span style={styles.placeholder}>
-              🎯 Arrastra aquí
+              🎯 Arrastra acá
             </span>
           )}
         </motion.div>

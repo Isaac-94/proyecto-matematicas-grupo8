@@ -208,7 +208,7 @@ const LoginPage = () => {
             </h3>
             <Form onSubmit={handleSubmit} className="px-2">
               <Form.Group className="mb-3" controlId="loginEmail">
-                <Form.Label className="visually-hidden">Email</Form.Label>
+                <Form.Label className="visually-hidden">Correo electrónico</Form.Label>
                 <div
                   className="d-flex align-items-center"
                   style={{ gap: "4px" }}
@@ -218,7 +218,7 @@ const LoginPage = () => {
                       <Form.Control
                         type="email"
                         name="email"
-                        placeholder="Email"
+                        placeholder="Correo electrónico"
                         value={email}
                         onChange={handleChangeValue}
                         style={{

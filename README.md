@@ -1,237 +1,550 @@
-# proyecto-matematicas-grupo8
+# Mate+
 
-## MATE+ : Plataforma de Aprendizaje Matemático
+Una plataforma de entrenamiento para actividades matemáticas de la vida diaria
 
-Plataforma educativa diseñada para adultos, enfocada en la gamificación y micro-lecciones. Este proyecto utiliza una arquitectura de Monorepo para integrar de forma eficiente el Front-End (React) y el Back-End (Node.js/Express).
+![imagen identidad](Front-End/src/assets/logo_mate.png)
 
-### 🚀 Arquitectura Dual-Source (Exclusivo)
-El sistema cuenta con una lógica de **Resiliencia Total**. Puede operar en dos modos:
+![imagen identidad](Front-End/src/assets/image.png)
 
----
+## Nuestro equipo
 
-### ⚠️ Checkpoint antes del Push
-Antes de realizar un `git push` a las ramas de producción o test, es **obligatorio** ejecutar:
-`pnpm build`
-Esto asegura que no existan errores de compilación ni conflictos con el cliente de Prisma.
 
----
+<img src="Front-End/src/assets/Fotos/Sol.jpg" alt="Sol" width="80">
 
-### 🛠️ Comandos Globales
+<img src="Front-End/src/assets/Fotos/Sofia.jpg" alt="Sofia" width="80">
 
-Desde la raíz del proyecto, utilizá `pnpm` para gestionar ambos mundos:
+<img src="Front-End/src/assets/Fotos/Romina.jpg" alt="Romina" width="80">
 
-| Comando             | Descripción                                                                                                                                       |
-| :------------------ | :------------------------------------------------------------------------------------------------------------------------------------------------ |
-| `pnpm install`      | Instala dependencias en todo el monorepo.                                                                                                         |
-| `pnpm dev:all`      | Inicia Front y Back conectados a la **Base de Datos real**.                                                                                       |
-| `pnpm dev:all-mock` | Inicia Front y Back en **Modo Offline (CSV + Auth Simulado)**. *Nota: Este comando fuerza `DATA_SOURCE=MOCK` ignorando lo definido en el `.env`.* |
-| `pnpm build:back`   | Regenera el cliente de Prisma (necesario si cambia el schema).                                                                                    |
-| `pnpm build`        | Genera la versión de producción para despliegue.                                                                                                  |
+<img src="Front-End/src/assets/Fotos/Lisandro.jpg" alt="Lisandro" width="80">
 
----
+<img src="Front-End/src/assets/Fotos/Isaac.jpg" alt="Isaac" width="80">
 
-### 📦 Estructura del Monorepo
+<img src="Front-End/src/assets/Fotos/hernan.jpg" alt="Hernán" width="80">
 
-```text
-proyecto-matematicas-grupo8/
-├── Back-End/               # API Express + Prisma ORM
-│   ├── data/               # Archivos CSV para el modo Mock
-│   ├── prisma/             # Esquemas de base de datos
-│   └── src/                # Controladores, Rutas y Lógica de IA (Gemini)
-├── Front-End/              # React + Bootstrap (Vite)
-│   ├── src/context/        # Auth Bridge y estados globales
-│   └── src/pages/          # Vistas y flujos de usuario
-└── package.json            # Scripts de orquestación pnpm
-```
+<img src="Front-End/src/assets/Fotos/Gustavo.jpg" alt="Gustavo" width="80">
 
----
+<img src="Front-End/src/assets/Fotos/Flor.jpg" alt="Flor" width="80">
 
-### 🔐 Autenticación y Seguridad
+<img src="Front-End/src/assets/Fotos/Cesar.jpg" alt="César" width="80">
 
-El proyecto utiliza **Supabase Auth** para la gestión de usuarios. Si las llaves de Supabase no están configuradas en el `.env`, el sistema activa un modo de bypass que permite:
-- Login con cualquier contraseña para cuentas como `admin@test.com` o `invitado@test.com`.
-- Persistencia simulada en `Back-End/data/usuarios.csv`.
+## Backend Core
 
-### 🤖 Integración con IA
-Se utiliza la API de **Gemini 1.5 Flash** para proporcionar feedback pedagógico en tiempo real ante errores en los ejercicios. Si la API Key no está presente, el sistema utiliza un fallback con explicaciones estáticas predefinidas.
+Pre-Beta 1.0 para el Back End del proyecto "Aplicación de aprendizaje de Matemática" en **InnovaLab**. La arquitectura está diseñada para ser escalable, profesional y compatible con entornos de despliegue serverless en **Vercel** y **PostgreSQL** en **Supabase**.
 
----
+### Arquitectura
 
-### 👥 Equipo
-Desarrollado para la Simulación **Innova Lab 2026**.
-*Identidad Git: motero / cesar*
+El proyecto se gestiona bajo una estructura de **Monorepo** utilizando `pnpm workspaces`. Esta configuración permite mantener el código del Back-End y del Front-End en un único repositorio "serverless", facilitando la gestión de dependencias compartidas y scripts de automatización desde la raíz del proyecto.
 
-## Instalación y Ejecución
+#### Stack Tecnológico
 
-1. Clonar el repositorio y posicionarse en el directorio raíz para ejecutar los siguientes comandos:
+- **Runtime:** **Node.js** v24+
+- **Framework:** **Express.js** v5 (Beta/LTS compatible)
+- **ORM:** **Prisma** v6.4.1 (Stable - Native Engines)
+- **Gestor de Paquetes:** `pnpm`
+- **Base de Datos:** **PostgreSQL** (vía **Supabase**)
+- **Gestor de Registro e Inicio de Sesión:** **Supabase Auth**
+- **Despliegue:** **Vercel**
+- **Integración LLM-CLI:** **Groq (Llama 3.1 / Qwen)**
+- **UX/UI:** Plantilla **FIGMA**
 
-2. Instalar dependencias globales:
-   `pnpm install:all`
+#### Roles y Permisos
+- **usuario:** Perfil estándar para participantes. Acceso a escenarios interactivos y seguimiento de progreso.
+- **admin:** Perfil con permisos de edición sobre contenidos (Secciones y Escenarios), edición de "prompt" de modelado del CLI pedagógico y acceso a Cuadros Estadísticos.
+- **superadmin:** Perfil de gestión total, incluyendo edición de contenidos y manejo de credenciales/permisos.
 
-3. Generar el cliente de **Prisma**:
-   `pnpm build:back`
+#### Resiliencia en respuesta LLM-CLI (Fallback):
+En caso de que no haya una Key configurada o se excedan los límites de cuota, el sistema activará automáticamente un modo de respaldo. En lugar de fallar, el servidor responderá utilizando la explicación técnica predefinida en el campo `explicacion` de la tabla **Escenarios**.
 
-4. Iniciar el servidor en modo desarrollo (elegí según tu necesidad):
+#### Auditoría
+Se mantiene un seguimiento de las actividades de modificación en la tabla Auditoría.
 
-   **Modo Local (Mock con CSV):** Ideal para el sub-equipo de Front-End.
-   `pnpm dev:local`
+### Nodo Administrativo
 
-   **Modo Database (Supabase):** Para pruebas de persistencia real.
-   `pnpm dev:db`
+Consola de relevamiento y actividades administrativas, con acceso desde dirección web [/admin-be](https://deploy-mate-mas-front-end.vercel.app/admin-be) y requerimientos de inicio de sesión para su uso, brinda información relativa al estado y funcionamiento del Back-End, el LLM-CLI y la conexión de datos y también es el punto de acceso para los administradores desde el que pueden manejar condiciones y probar resultados del LLM-CLI, crear, editar buscar o eliminar en las tablas de Secciones y Escenarios y acceder a los gráficos en tiempo real
 
-*Nota: El comando `pnpm dev` estándar utilizará la fuente definida en la variable `DATA_SOURCE`, configurable como `DB` o `MOCK`, en tu archivo `.env` para simplificar el uso en desarrollo.*
-
-### Integración con Gemini AI (Google Studio)
-Para la generación de feedback pedagógico, la API utiliza el modelo **Gemini 2.5 Flash**. Por motivos de seguridad y para evitar el agotamiento de cuotas compartidas, **cada desarrollador debe configurar su propia API Key**.
-
-**Pasos para obtener la Key:**
-1. Ingresá al [Google AI Studio](https://aistudio.google.com/) de tu cuenta Google.
-2. Generá una nueva **API Key** (podés hacerlo en el plan gratuito, no pide requisitos).
-3. Copiá la llave y pegala en tu archivo `.env` local en la variable `GOOGLE_API_KEY`. (podés crear este archivo basandote en el `.env.example` que se incluye en el repositorio)
-
-# Gemini API Key
-`GOOGLE_API_KEY="api_key"`
-En tu archivo `.env` de la carpeta `/Back-End`, cambiá lo que está **dentro** de las comillas por tu propia Key.
-
-**Límites de la Capa Gratuita:**
-- **RPM (Requests Per Minute):** 15 solicitudes.
-- **RPD (Requests Per Day):** 1,500 solicitudes.
-- **TPM (Tokens Per Minute):** 1,000,000 tokens.
-
-**Mecanismo de Resiliencia (Fallback):**
-En caso de que no haya una Key configurada o se excedan los límites de cuota, el sistema activará automáticamente un modo de respaldo. En lugar de fallar, el servidor responderá utilizando la explicación técnica predefinida en el campo `explicacion` del módulo CSV de **Escenarios**.
-
-### 📂 Requisitos para Modo Mock (Plug & Play)
-Para que el sistema de respaldo funcione correctamente en desarrollo local, es **imprescindible** que la carpeta `Back-End/data/` cuente con los archivos de tablas base:
-- `usuarios.csv`: Tabla maestra de usuarios (mínimo requerido para login/registro simulado).
-- `auditoria.csv`: Registro de acciones del sistema.
-
-Si estos archivos no están presentes en el directorio designado, el servidor Mock no podrá inicializar la persistencia local.
-
-### Auditoría en Modo Mock
-Las acciones de escritura (POST, PUT, DELETE) se registran automáticamente en el archivo `Back-End/data/auditoria.csv`. Esto permite simular la persistencia de logs de auditoría sin depender de una base de datos externa.
-
-Para limpiar el historial de auditoría local y empezar una sesión de pruebas limpia, ejecutá desde la raíz:
-`pnpm clean:audit`
-
-### Pruebas de Endpoints (REST Client)
-Para facilitar el testeo sin salir de VS Code, se incluye un archivo `requests.http` en la carpeta de scripts que se puede modificar segun las necesidades.
-1. Instalá la extensión **REST Client** de Huachao Mao en VS Code.
-2. Abrí el archivo `requests.http`.
-3. Hacé clic en el texto `Send Request` que aparece sobre cada endpoint para ejecutarlo y ver la respuesta en tiempo real.
-
-El servidor estará disponible en http://localhost:3001.
-
-## Endpoints Disponibles
-
-### Salud de API
-- `GET /api/health`: Estado de salud de la API y timestamp.
-
-### Endpoints de la API
-
-| Módulo         | Método | Endpoint                              | Descripción                            |
-| :------------- | :----- | :------------------------------------ | :------------------------------------- |
-| **Salud**      | GET    | `/api/health`                         | Estado del servidor                    |
-| **Usuarios**   | POST   | `/api/usuarios/registro`              | Sincronización con Auth                |
-| **Usuarios**   | POST   | `/api/usuarios/login`                 | Login local (Modo Mock)                |
-| **Usuarios**   | PUT    | `/api/usuarios/perfil`                | Actualiza datos personales             |
-| **Usuarios**   | GET    | `/api/usuarios`                       | Lista los Usuarios                     |
-| **Secciones**  | GET    | `/api/secciones`                      | Lista las Secciones                    |
-| **Secciones**  | GET    | `/api/secciones/:id`                  | Trae una Sección completa              |
-| **Secciones**  | POST   | `/api/secciones`                      | Crea una Sección nueva (Admin)         |
-| **Secciones**  | PUT    | `/api/secciones/:id`                  | Edita una Sección (Admin)              |
-| **Secciones**  | DELETE | `/api/secciones/:id`                  | Eliminar una Sección (Admin)           |
-| **Escenarios** | GET    | `/api/secciones/:sId/escenarios`      | Lista los Escenarios de esa Sección    |
-| **Escenarios** | GET    | `/api/secciones/:sId/escenarios/:eId` | Detalles del Escenario                 |
-| **Escenarios** | POST   | `/api/secciones/:sId/escenarios`      | Crea un Escenario nuevo (Admin)        |
-| **Escenarios** | PUT    | `/api/secciones/:sId/escenarios/:eId` | Edita el Escenario (Admin)             |
-| **Escenarios** | DELETE | `/api/secciones/:sId/escenarios/:eId` | Elimina el Escenario (Admin)           |
-| **Progreso**   | POST   | `/api/progreso`                       | Registra solución y gana Tk            |
-| **Progreso**   | GET    | `/api/progreso/usuario/:uid`          | Historial del usuario                  |
-| **Auditoría**  | GET    | `/api/logs`                           | Trazabilidad de actividades (SupAdmin) |
-
-## Estructura del Proyecto
+### Estructura del Proyecto
 
 ```bash
-proyecto-matematicas-grupo8/        # Directorio principal
-├── Back-End/                       # Lógica de servidor
+proyecto-matematicas-grupo8/
+├── Back-End/
+│   ├── api/
+│   │   └── index.js
 │   ├── prisma/
-│   │   ├── schema.prisma           # Modelos de datos (PostgreSQL)
-│   │   └── seed.js                 # Datos iniciales para la DB
-│   ├── scripts/                    # Scripts de utilidad en tests del desarrollo
+│   │   ├── schema.prisma
+│   │   └── seed.js
 │   ├── src/
+│   │   ├── assets
+│   │   │   ├── logonodo.png
+│   │   │   ├── mascota_32.webp
+│   │   │   └── mascota_510.webp
 │   │   ├── config/
-│   │   │   ├── mock-database.js    # Inicialización del servidor modular local
-│   │   │   ├── prisma.js           # Inicialización del Cliente Prisma
-│   │   │   └── supabase.js         # Inicialización del Cliente Supabase
-│   │   ├── controllers/            # Controladores de ruta (Lógica de negocio)
-│   │   ├── services/               # Lógica de aplicación y cálculos complejos
-│   │   ├── middlewares/            # Auth, Logging y Filtros de seguridad
-│   │   ├── routes/                 # Definición de rutas Express
-│   │   ├── validators/             # Validación de esquemas de datos (Zod/Express-Validator)
-│   │   ├── exceptions/             # Manejo de errores personalizados
-│   │   ├── utils/                  # Funciones de utilidad y constantes
-│   │   └── app.js                  # Punto de entrada de la aplicación
-│   ├── .env.example                # Plantilla de variables de entorno
-│   └── package.json                # Scripts y dependencias del Back End
-├── Front-End/                      # Espacio para desarrollo de interfaz
-├── pnpm-workspace.yaml             # Configuración del monorepo
-└── README.md                       # Documentación general
+│   │   │   ├── prisma.js
+│   │   │   └── supabase.js
+│   │   ├── controllers/
+│   │   │   ├── admin.controller.js
+│   │   │   ├── auditoria.controller.js
+│   │   │   ├── debug.controller.js
+│   │   │   ├── escenario.controller.js
+│   │   │   ├── progreso.controller.js
+│   │   │   ├── seccion.controller.js
+│   │   │   └── usuarios.controller.js
+│   │   ├── exceptions/
+│   │   │   └── api.exception.js
+│   │   ├── middlewares/
+│   │   │   ├── auth.middleware.js
+│   │   │   ├── audit.middleware.js
+│   │   │   └── error.middleware.js
+│   │   ├── routes/
+│   │   │   ├── api.routes.js
+│   │   │   ├── progreso.routes.js
+│   │   │   ├── seccion.routes.js
+│   │   │   └── usuarios.routes.js
+│   │   ├── services/
+│   │   │   └── llm-cli.service.js
+│   │   ├── validators/
+│   │   │   ├── seccion.validator.js
+│   │   │   └── usuarios.validator.js
+│   │   └── app.js
+│   ├── supabase/
+│   │   ├── .gitignore
+│   │   └── config.toml
+│   ├── .gitignore
+│   ├── nodemon.json
+│   ├── package.json
+│   ├── vercel.json
+│   ├── Readme.md
+│   └── test.sql
+├── Front-End/
+├── .gitignore
+├── .npmrc
+├── package.json
+├── pnpm-lock.yaml
+├── pnpm-workspace.yaml
+└── Readme.md
 ```
 
-## Diagrama de Entidad-Relación (ERD)
+### Diagrama de Entidad-Relación (ERD)
 
 ```mermaid
 erDiagram
-USUARIO ||--o{ PROGRESO : "registra"
-USUARIO ||--o{ RECURSO : "obtiene"
-USUARIO }o--o{ INSIGNIA : gana
-SECCION ||--o{ ESCENARIO : "contiene"
-SECCION ||--o| RECURSO : "desbloquea"
-ESCENARIO ||--o{ INSIGNIA : valída
-ESCENARIO ||--o{ PROGRESO : evaluado_en
+    Usuario ||--o{ Progreso : "registra"
+    Usuario ||--o{ SeccionAprobada : "aprueba"
+    Usuario ||--o{ Recurso : "posee"
+    Usuario ||--o{ Auditoria : "genera"
+    Usuario }o--o{ Insignia : "gana"
+
+    Seccion ||--o{ Escenario : "contiene"
+    Seccion ||--o{ SeccionAprobada : "es_aprobada_por"
+    Seccion ||--o| Recurso : "otorga"
+
+    Escenario ||--o{ Opcion : "ofrece"
+    Escenario ||--o{ Insignia : "recompensa_con"
+    Escenario ||--o{ Progreso : "mide"
+
+    Usuario {
+        string id PK
+        string email UK
+        string nombre
+        int puntos
+        int tokens
+        Rol rol
+        string password
+        string edad
+        string genero
+        string lugar
+        string desafio
+        string sentimiento
+        int racha
+        DateTime ultimaConexion
+        DateTime createdAt
+    }
+
+    Auditoria {
+        int id PK
+        string usuarioId FK
+        string accion
+        string entidad
+        string entidadId
+        Json detalles
+        DateTime timestamp
+    }
+
+    Seccion {
+        int id PK
+        string nombre
+        string descripcion
+        int grado
+        int puntosRequeridos
+        int puntosRecompensa
+        float umbralAprobacion
+    }
+
+    SeccionAprobada {
+        string usuarioId PK, FK
+        int seccionId PK, FK
+    }
+
+    Escenario {
+        int id PK
+        string titulo
+        string descripcion
+        string pregunta
+        string explicacion
+        string categoria
+        int seccionId FK
+    }
+
+    Opcion {
+        int id PK
+        string texto
+        int puntos
+        int escenarioId FK
+    }
+
+    Recurso {
+        string id PK
+        string nombre
+        int valor
+        string usuarioId FK
+        int seccionId UK, FK
+        DateTime createdAt
+    }
+
+    Insignia {
+        string id PK
+        string nombre
+        string descripcion
+        string imagenUrl
+        int puntosRequeridos
+        int escenarioId FK
+        DateTime createdAt
+    }
+
+    Progreso {
+        int id PK
+        string usuarioId FK
+        int escenarioId FK
+        int puntosObtenidos
+        boolean resuelto
+        int intentosFallidos
+        DateTime updatedAt
+    }
 ```
 
-## Diagrama de Clases
+---
+
+
+### Diagrama de Clases
 
 ```mermaid
 classDiagram
-    class Seccion {
-        +Int id
-        +String nombre
-        +String descripcion
-        +Int nivel
-        +Int grado
-    }
-    class Usuario {
-        +String id
-        +String email
-        +String nombre
-        +Int puntos
-        +DateTime createdAt
-    }
-    class Escenario {
-        +Int id
-        +String titulo
-        +String descripcion
-        +String pregunta
-        +String explicacion
-        +String categoria
-    }
-    class Progreso {
-        +Int id
-        +Boolean resuelto
-        +Int intentosFallidos
-        +DateTime updatedAt
-    }
-    class Insignia {
-        +String id
-        +String nombre
-        +String descripcion
+    class SeccionController {
+        +getSecciones(req, res, next)
+        +getSeccionById(req, res, next)
+        +crearSeccion(req, res, next)
+        +eliminarSeccion(req, res, next)
+        +actualizarSeccion(req, res, next)
     }
 
-    Usuario "1" -- "*" Progreso : "registra"
-    Usuario "*" -- "*" Insignia : gana
-    Seccion "1" -- "*" Escenario : "contiene"
-    Escenario "1" -- "*" Progreso : "evaluado_en"
+    class UsuariosController {
+        +registrarUsuario(req, res, next)
+        +loginUsuario(req, res, next)
+        +eliminarUsuario(req, res, next)
+        +getUsuarios(req, res, next)
+        +actualizarPerfil(req, res, next)
+        -cleanEnv(val: String) List
+    }
+
+    class AdminController {
+        <<Protected_Route>>
+        +getAdminMain(req, res)
+        +getCheckupStatus(req, res, next)
+        +testFeedback(req, res, next)
+        +getAnalyticsData(req, res, next)
+        -checkIA(models: List, retries: int) Object
+    }
+
+    class PrismaClient {
+        +usuario
+        +seccion
+        +auditoria
+        +progreso
+        +$queryRaw()
+    }
+
+    class GroqSDK {
+        +chat.completions.create(config)
+    }
+
+    class Validators {
+        <<Utility>>
+        +crearEditarSeccionSchema
+        +registroSchema
+        +perfilSchema
+        +loginSchema
+    }
+
+    %% Relaciones de uso y dependencia
+    SeccionController --> PrismaClient : "consulta / muta datos"
+    SeccionController ..> Validators : "valida con Zod"
+
+    UsuariosController --> PrismaClient : "upsert / auth usuarios"
+    UsuariosController ..> Validators : "valida credenciales"
+
+    AdminController --> PrismaClient : "agrega métricas y logs"
+    AdminController --> GroqSDK : "verifica estado e interactúa"
+
+    note for AdminController "Middleware de Autenticación
+    Acceso como admin / superadmin"
 ```
+
+---
+### Historial
+
+- Revisión de tecnologías y arquitectura propuesta.
+- Planteo de Proyecto “Math-Path”.
+- Planteo de uso de tecnologías ‘pnpm’ y Prisma.
+- Planteo de despliegue Vercel “serverless”.
+- Primer commit.
+- Definición e implementación de Stack.
+  · Configuración de modelo y entorno para la base de datos remota (Prisma).
+- Esquema de entidades: Usuarios, Sección, Escenario.
+  . Lógica en controladores de Secciones y Escenarios.
+  · Lógica en controladores de Usuarios, Admin y Superadmin.
+- Documentación en “Back-End Readme.md”.
+- Actualización en repositorio
+- Configuración de Bd de test en PostgreSQL.
+  · Migración de esquema ‘Prisma’.
+  · Sembrado de datos mock.
+  · Configuración de ‘Auth’.
+- Configuración e implementación de ‘servidor modular local’ funcional.
+- Listado e implementación de endpoints base para testing y pruebas de impacto.
+- Actualización de Documentación y repositorio.
+- Implementación de Test de LogIn y Registro.
+  · Test “local” de ruteo del CRUD de endpoints.
+  · Branch de oficio, acceso para Q&A.
+- Infraestructura para Prueba de Concepto.
+  · Cuentas Google, Supabase y Vercel.
+- Inicio de implementación de validaciones.
+  · Implementación de biblioteca y esquemas de validación Zod.
+Actualización de Back-End en "main"
+- Implementación de doble origen de datos
+ · con archivos locales y WebDb
+- Mecanismo para respuestas de inicio de sesión,
+ · registro de usuarios persistente en archivo local
+- Nodo administrativo (beta)
+ · Gestión de estado Back-End
+ · Gestión de asistencia CLI-LLM (beta)
+ · Gestión de CRUDs de contenidos (beta)
+ · Gestión de grafos estadísticos
+Reunión con integrantes de Front-End y Q&A
+Actualización de rama “producción-test” eliminando las implementaciones de simulación para Registro, Inicio de sesión y Db, actualización de Documentación
+Test de despliegue de Producción activa en Vercel con conexión a WebDb
+Revisión y optimización de Back-End
+
+---
+
+*Propuesta desarrollada para el equipo de Back End - InnovaLab 2026*
+
+
+## INNOVALAB FRONT-END
+
+Aplicación web educativa enfocada en el aprendizaje de matemática para adultos mediante ejercicios interactivos y elementos de gamificación.
+
+El objetivo del proyecto es ofrecer una experiencia de aprendizaje accesible, dinámica y progresiva para personas que desean reforzar conocimientos matemáticos sin frustración ni presión académica tradicional.
+
+--------------------------------------------------------------------------------------
+
+# Tecnologías utilizadas
+
+- React
+- Vite
+- React Router DOM
+- Bootstrap
+- React Bootstrap
+
+--------------------------------------------------------------------------------------
+
+# Gestor de paquetes
+
+El proyecto utiliza **pnpm** como gestor de paquetes dentro de una arquitectura monorepo.
+
+## Instalar pnpm globalmente
+
+```bash
+npm install -g pnpm
+```
+
+---------------------------------------------------------------------------------------
+
+# Instalación y ejecución
+
+## 1. Clonar el repositorio
+
+```bash
+git clone <url-del-repositorio>
+```
+
+---------------------------------------------------------------------------------------
+
+## 2. Ingresar a la carpeta del Front-End
+
+```bash
+cd Front-End
+```
+
+---------------------------------------------------------------------------------------
+
+## 3. Instalar dependencias
+
+```bash
+pnpm install
+```
+
+---------------------------------------------------------------------------------------
+
+## 4. Ejecutar entorno de desarrollo
+
+```bash
+pnpm dev
+```
+
+La aplicación se ejecutará en:
+
+```bash
+http://localhost:5173
+```
+
+---------------------------------------------------------------------------------------
+
+# Dependencias instaladas
+
+## Crear proyecto con Vite
+
+```bash
+pnpm create vite@latest
+```
+
+## Bootstrap + React Bootstrap
+
+```bash
+pnpm add bootstrap react-bootstrap
+```
+
+## React Router DOM
+
+```bash
+pnpm add react-router-dom
+```
+
+## React Iconos
+
+```bash
+pnpm install font-awesome
+pnpm install @fortawesome/react-fontawesome @fortawesome/free-solid-svg-icons @fortawesome/fontawesome-svg-core
+pnpm install @fortawesome/free-regular-svg-icons @fortawesome/free-brands-svg-icons
+```
+
+
+
+-----------------------------------------------------------------------------------------
+
+# Estructura inicial del proyecto
+
+![alt text](image.png)
+
+```text
+Front-End/
+├── public/
+├── src/
+│   ├── assets/          # Imágenes, iconos y recursos estáticos
+|       ├──              # Carpeta con el nombre (con los archivos de .jsx y .css)
+│   ├── components/      # Componentes reutilizables
+│   ├── pages/           # Vistas principales
+│   ├── routes/          # Configuración de rutas
+│   ├── App.jsx
+│   └── main.jsx
+├── package.json
+├── pnpm-lock.yaml
+└── README.md
+```
+
+--------------------------------------------------------------------------------------------
+
+# Objetivos iniciales del Front-End
+
+- Construir una interfaz accesible y amigable
+- Implementar navegación entre pantallas
+- Crear sistema de módulos y micro-lecciones
+- Diseñar experiencia gamificada
+- Mantener una estructura escalable para trabajo en equipo
+
+---------------------------------------------------------------------------------------------
+
+# Estado actual del proyecto
+
+🚧 Proyecto en etapa inicial de desarrollo.
+
+Actualmente se encuentra en:
+- planificación de arquitectura
+- organización de componentes
+- definición de flujo de usuario
+- armado inicial de vistas y navegación
+
+------------------------------------------------------------------------------------------------
+
+# Futuras tecnologías a evaluar
+
+Estas herramientas podrían incorporarse más adelante según las necesidades del proyecto:
+
+- Axios
+- Zustand
+- React Hook Form
+- Zod
+
+-------------------------------------------------------------------------------------------------
+
+# Arquitectura del proyecto
+
+El proyecto forma parte de una arquitectura **Monorepo**, donde Front-End y Back-End conviven dentro de un mismo repositorio para facilitar:
+- trabajo colaborativo
+- organización del código
+- manejo centralizado de dependencias
+- scripts compartidos
+
+Ejemplo:
+
+```text
+proyecto-matematicas/
+├── Front-End/
+├── Back-End/
+└── package.json
+```
+
+-------------------------------------------------------------------------------------------------
+
+# Scripts útiles
+
+## Iniciar entorno de desarrollo
+
+```bash
+pnpm dev
+```
+
+## Generar build de producción
+
+```bash
+pnpm build
+```
+
+## Visualizar build localmente
+
+```bash
+pnpm preview
+```
+
+--------------------------------------------------------------------------------------------------
+
+# Equipo Front-End
+
+*Proyecto desarrollado para InnovaLab 2026.*

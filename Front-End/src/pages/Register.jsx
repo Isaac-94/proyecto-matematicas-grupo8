@@ -45,7 +45,7 @@ const useRegisterForm = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
     if (!email || !password) {
-      setToastMessage("❌ Por favor, completa todos los campos");
+      setToastMessage("❌ Por favor, completá todos los campos");
       setToastVariant("danger");
       setShowToast(true);
       return;

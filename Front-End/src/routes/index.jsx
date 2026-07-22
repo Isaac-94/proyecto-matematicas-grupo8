@@ -23,6 +23,9 @@ import AuthCallback from "../pages/AuthCallback.jsx";
 import ModuloEjercicios from "../pages/Ejercicios.jsx";
 import DragConstraints from "../pages/DropAndDown.jsx";
 import TermsOfService from "../pages/TermsOfService.jsx";
+import MixtoPage from "../pages/Mixto.jsx";
+import RankingPage from "../pages/Ranking.jsx";
+import Configuracion from "../components/layouts/Configuracion/Configuracion.jsx";
 
 // Componente para proteger rutas autenticadas
 const ProtectedRoute = ({ children }) => {
@@ -157,6 +160,24 @@ export default function AppRouter() {
           element={
             <ProtectedRoute>
               <ConsolaAdmin />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/ranking"
+          element={
+            <ProtectedRoute>
+              <RankingPage />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/configuracion"
+          element={
+            <ProtectedRoute>
+              <Configuracion />
             </ProtectedRoute>
           }
         />

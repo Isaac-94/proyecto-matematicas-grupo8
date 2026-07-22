@@ -72,6 +72,7 @@ function EjercicioChoice({
             })}
           </div>
 
+
           <div className="feedback-wrapper">
             {esCorrecto === true && (
               <div className="alert-message alert-success animate-pop">
@@ -84,6 +85,7 @@ function EjercicioChoice({
               </div>
             )}
           </div>
+
         </div>
 
         <div className="ejercicio-footer">

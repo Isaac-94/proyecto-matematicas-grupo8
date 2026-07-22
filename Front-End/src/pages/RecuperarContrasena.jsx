@@ -19,7 +19,7 @@ const RecuperarContrasena = ({ show, onHide }) => {
     e.preventDefault();
 
     if (!email) {
-      setToastMessage("❌ Ingresá tu email");
+      setToastMessage("❌ Ingresá tu correo electrónico");
       setToastVariant("danger");
       setShowToast(true);
       return;
@@ -40,7 +40,7 @@ const RecuperarContrasena = ({ show, onHide }) => {
 
       if (error) throw error;
 
-      setToastMessage("✅ Te enviamos un mail para restablecer tu contraseña");
+      setToastMessage("✅ Te enviamos un correo electrónico para restablecer tu contraseña");
       setToastVariant("success");
       setShowToast(true);
       setEmail("");
@@ -63,7 +63,7 @@ const RecuperarContrasena = ({ show, onHide }) => {
         <Form onSubmit={handleSubmit}>
           <Modal.Body>
             <p className="text-muted mb-3">
-              Ingresá tu email y te enviaremos un link para restablecer tu
+              Ingresá tu correo electrónico y te enviaremos un link para restablecer tu
               contraseña.
             </p>
             <Form.Group controlId="forgotEmail">
