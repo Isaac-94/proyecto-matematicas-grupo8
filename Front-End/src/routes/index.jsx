@@ -165,6 +165,15 @@ export default function AppRouter() {
         />
 
         <Route
+          path="/mixto"
+          element={
+            <ProtectedRoute>
+              <MixtoPage />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
           path="/ranking"
           element={
             <ProtectedRoute>
