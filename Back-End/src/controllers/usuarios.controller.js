@@ -6,15 +6,14 @@ import {
   loginSchema,
 } from "../validators/usuarios.validator.js";
 import { obtenerUbicacionPorIP } from "../services/geolocation.service.js";
-console.log(
-  "🔍 POST /registro recibido — mascota:",
-  req.body.mascota,
-  "— email:",
-  req.body.email,
-);
-
 
 export const registrarUsuario = async (req, res, next) => {
+  console.log(
+    "🔍 POST /registro recibido — mascota:",
+    req.body.mascota,
+    "— email:",
+    req.body.email,
+  );
   try {
     const validacion = registroSchema.safeParse(req.body);
 
