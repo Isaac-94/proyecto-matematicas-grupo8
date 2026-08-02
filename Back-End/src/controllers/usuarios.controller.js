@@ -79,7 +79,7 @@ export const registrarUsuario = async (req, res, next) => {
         lugar: lugarFinal,
         desafio,
         sentimiento,
-        mascota,
+        ...(mascota && { mascota }),
       },
       create: {
         id: uid,
