@@ -13,6 +13,7 @@ console.log(
   req.body.email,
 );
 
+
 export const registrarUsuario = async (req, res, next) => {
   try {
     const validacion = registroSchema.safeParse(req.body);
