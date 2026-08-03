@@ -242,4 +242,26 @@ export const actualizarDesafioActual = async (req, res, next) => {
   } catch (error) {
     next(error);
   }
+
+  export const obtenerPerfilPropio = async (req, res, next) => {
+    try {
+      const uid = req.user.id;
+      const usuario = await prisma.usuario.findUnique({
+        where: { id: uid },
+        include: { desafioActual: true },
+      });
+      if (!usuario) {
+        return res.status(404).json({ error: "Usuario no encontrado" });
+      }
+      const [totalSecciones, seccionesAprobadasCount] = await Promise.all([
+        prisma.seccion.count(),
+        prisma.seccionAprobada.count({ where: { usuarioId: uid } }),
+      ]);
+      return res
+        .status(200)
+        .json({ ...usuario, totalSecciones, seccionesAprobadasCount });
+    } catch (error) {
+      next(error);
+    }
+  };
 };
