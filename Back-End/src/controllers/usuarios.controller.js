@@ -71,14 +71,14 @@ export const registrarUsuario = async (req, res, next) => {
     const usuario = await prisma.usuario.upsert({
       where: { id: uid },
       update: {
-        nombre,
         rol: rolAsignado,
-        password,
-        edad,
-        genero,
-        lugar: lugarFinal,
-        desafio,
-        sentimiento,
+        ...(nombre && { nombre }),
+        ...(password && { password }),
+        ...(edad && { edad }),
+        ...(genero !== undefined && { genero }),
+        ...(lugarFinal && { lugar: lugarFinal }),
+        ...(desafio && { desafio }),
+        ...(sentimiento && { sentimiento }),
         ...(mascota && { mascota }),
       },
       create: {
